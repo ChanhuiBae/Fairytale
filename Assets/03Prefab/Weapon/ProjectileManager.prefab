@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1545132903655313519
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6005372477248424082}
+  - component: {fileID: 7994750497900410826}
+  - component: {fileID: 8116734748759088753}
+  m_Layer: 0
+  m_Name: ProjectileManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6005372477248424082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545132903655313519}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7994750497900410826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545132903655313519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 733f4e1ff483611408f4a8d4fc9202ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pools:
+  - _name: Arrow
+    _component: {fileID: 3134069767294814852, guid: 537d116382ef4ba4aa1b0e94876df4f0,
+      type: 3}
+    _count: 5
+    _container: {fileID: 6005372477248424082}
+    _nonLazy: 1
+  - _name: Fire
+    _component: {fileID: 5482605137979010559, guid: 8aa2591b02011f24d951c29290d88433,
+      type: 3}
+    _count: 5
+    _container: {fileID: 6005372477248424082}
+    _nonLazy: 1
+  - _name: Ice
+    _component: {fileID: 589556761541271888, guid: 62155d4a562a1d444ae93f3b0cd9c6cb,
+      type: 3}
+    _count: 5
+    _container: {fileID: 6005372477248424082}
+    _nonLazy: 1
+--- !u!114 &8116734748759088753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545132903655313519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b50a320a112e4a46aeb475808010dbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

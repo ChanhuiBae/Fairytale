@@ -1,0 +1,69 @@
+fileFormatVersion: 2
+guid: 270331df95c94ad4cb04eb7832421b26
+ScriptedImporter:
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: gameObject/TrackAreaSecondary
+  - first:
+      4: 400000
+    second: gameObject/TrackAreaSecondary/Transform
+  - first:
+      212: 21200000
+    second: gameObject/TrackAreaSecondary/SpriteRenderer
+  - first:
+      213: 21300000
+    second: sprite
+  - first:
+      1001: 100100000
+    second: gameObject
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}
+  svgType: 0
+  texturedSpriteMeshType: 0
+  svgPixelsPerUnit: 100
+  gradientResolution: 128
+  alignment: 9
+  customPivot: {x: 0.5, y: 1}
+  generatePhysicsShape: 0
+  viewportOptions: 0
+  preserveViewport: 0
+  advancedMode: 0
+  predefinedResolutionIndex: 3
+  targetResolution: 480
+  resolutionMultiplier: 1
+  stepDistance: 10
+  samplingStepDistance: 100
+  maxCordDeviationEnabled: 0
+  maxCordDeviation: 1
+  maxTangentAngleEnabled: 0
+  maxTangentAngle: 5
+  keepTextureAspectRatio: 1
+  textureSize: 256
+  textureWidth: 256
+  textureHeight: 256
+  wrapMode: 0
+  filterMode: 1
+  sampleCount: 4
+  preserveSVGImageAspect: 0
+  useSVGPixelsPerUnit: 0
+  spriteData:
+    TessellationDetail: 0
+    SpriteRect:
+      name: TrackAreaSecondarySprite
+      originalName: 
+      pivot: {x: 0.5, y: 1}
+      alignment: 9
+      border: {x: 0, y: 0, z: 0, w: 0}
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 479
+        height: 584
+      spriteID: 380f6ada43de4404dbd72e2b1f4bcd66
+    PhysicsOutlines: []

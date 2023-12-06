@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="10px" height="6px" viewBox="0 0 10 6" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <desc>Created with Lunacy</desc>
+  <g id="Arrow">
+    <path d="M0 5.47623L5.5953 0" transform="translate(4.404663 0)" id="Line-copy" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" />
+    <path d="M0 0L4.40481 5.47624" id="Line" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" />
+  </g>
+</svg>

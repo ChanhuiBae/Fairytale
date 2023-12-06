@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1867735125415888282
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6571068199869369130}
+  - component: {fileID: 3632727460554186553}
+  m_Layer: 8
+  m_Name: MonsterPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6571068199869369130
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867735125415888282}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3632727460554186553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867735125415888282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 733f4e1ff483611408f4a8d4fc9202ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pools:
+  - _name: 10101
+    _component: {fileID: -7329374736041657334, guid: 8531bce9ee8921640b7d5cf9257e0d6d,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10102
+    _component: {fileID: -7329374736041657334, guid: 8531bce9ee8921640b7d5cf9257e0d6d,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10201
+    _component: {fileID: -8365615357476021290, guid: 23f6fcff6761546438369d6c60f7e825,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10202
+    _component: {fileID: -8365615357476021290, guid: 23f6fcff6761546438369d6c60f7e825,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10301
+    _component: {fileID: 4839822931678377726, guid: 8f187235e5ec328428ce82670c47dff7,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10401
+    _component: {fileID: 6843466194320278777, guid: 423a4648ca51cfa4e8274ed3977d92a8,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10402
+    _component: {fileID: 6843466194320278777, guid: 423a4648ca51cfa4e8274ed3977d92a8,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10501
+    _component: {fileID: 8029032512836693513, guid: 3fb7967ce04c04343bee1455ca01d272,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10502
+    _component: {fileID: 8029032512836693513, guid: 3fb7967ce04c04343bee1455ca01d272,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10601
+    _component: {fileID: -3797211152583670468, guid: 9800a7fda83ce4d458d0e939bbe5bc62,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10602
+    _component: {fileID: -3797211152583670468, guid: 9800a7fda83ce4d458d0e939bbe5bc62,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10701
+    _component: {fileID: 1221469152686807877, guid: e57bfd2c2aedf79478a19f5e44ff0d23,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10801
+    _component: {fileID: -2535513746825216840, guid: ea2a826f23befdc4fb11bc8111e1396c,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10802
+    _component: {fileID: -2535513746825216840, guid: ea2a826f23befdc4fb11bc8111e1396c,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0
+  - _name: 10901
+    _component: {fileID: 5160245293367045672, guid: 3b4d0a04a7417454bb2fc58b8bc1871e,
+      type: 3}
+    _count: 0
+    _container: {fileID: 6571068199869369130}
+    _nonLazy: 0

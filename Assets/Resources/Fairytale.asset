@@ -1,0 +1,1022 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 167a11c21c32c654baeededc60e5fc47, type: 3}
+  m_Name: Fairytale
+  m_EditorClassIdentifier: 
+  ItemData:
+  - uid: 20101
+    type: 5
+    name: Helmet
+    resources: Item/Helmet
+    sellGold: 180
+    DEF: 10
+    equip: 1
+    dropIndex: 32
+  - uid: 20102
+    type: 5
+    name: VikingHelmat
+    resources: Item/VikingHelmet
+    sellGold: 200
+    DEF: 15
+    equip: 1
+    dropIndex: 33
+  - uid: 20103
+    type: 5
+    name: Crown
+    resources: Item/Crown
+    sellGold: 500
+    DEF: 20
+    equip: 1
+    dropIndex: 34
+  - uid: 30101
+    type: 6
+    name: DragonHeart
+    resources: Item/DragonHeart
+    sellGold: 1000
+    DEF: 0
+    equip: 0
+    dropIndex: 35
+  - uid: 30102
+    type: 6
+    name: RedGem
+    resources: Item/RedGem
+    sellGold: 300
+    DEF: 0
+    equip: 0
+    dropIndex: 36
+  - uid: 30103
+    type: 7
+    name: DemonHorn
+    resources: Item/DemonHorn
+    sellGold: 250
+    DEF: 0
+    equip: 0
+    dropIndex: 37
+  - uid: 30104
+    type: 7
+    name: DevillHorn
+    resources: Item/DevillHorn
+    sellGold: 150
+    DEF: 0
+    equip: 0
+    dropIndex: 38
+  - uid: 30105
+    type: 6
+    name: BlueGem
+    resources: Item/BlueGem
+    sellGold: 150
+    DEF: 0
+    equip: 0
+    dropIndex: 39
+  - uid: 30106
+    type: 6
+    name: GreenGem
+    resources: Item/GreenGem
+    sellGold: 200
+    DEF: 0
+    equip: 0
+    dropIndex: 40
+  - uid: 30107
+    type: 8
+    name: HpPotion
+    resources: Item/HpPotion
+    sellGold: 100
+    DEF: 0
+    equip: 0
+    dropIndex: 41
+  - uid: 30108
+    type: 8
+    name: StaminaPotion
+    resources: Item/StaminaPotion
+    sellGold: 150
+    DEF: 0
+    equip: 0
+    dropIndex: 42
+  - uid: 30109
+    type: 6
+    name: PurpleGem
+    resources: Item/PurpleGem
+    sellGold: 180
+    DEF: 0
+    equip: 0
+    dropIndex: 43
+  WeaponData:
+  - uid: 10101
+    type: 1
+    name: Axe01
+    resources: Weapon/OneHand/Axe01
+    ATK: 50
+    durability: 400
+    equip: 1
+    dropIndex: 1
+    sellCoin: 150
+    buyCoin: 150
+    fixCoin: 80
+  - uid: 10102
+    type: 1
+    name: Axe02
+    resources: Weapon/OneHand/Axe02
+    ATK: 60
+    durability: 560
+    equip: 1
+    dropIndex: 2
+    sellCoin: 250
+    buyCoin: 0
+    fixCoin: 150
+  - uid: 10103
+    type: 1
+    name: Club01
+    resources: Weapon/OneHand/Club01
+    ATK: 15
+    durability: 160
+    equip: 1
+    dropIndex: 3
+    sellCoin: 50
+    buyCoin: 50
+    fixCoin: 10
+  - uid: 10104
+    type: 1
+    name: Club02
+    resources: Weapon/OneHand/Club02
+    ATK: 25
+    durability: 240
+    equip: 1
+    dropIndex: 4
+    sellCoin: 70
+    buyCoin: 70
+    fixCoin: 40
+  - uid: 10105
+    type: 1
+    name: Club03
+    resources: Weapon/OneHand/Club03
+    ATK: 40
+    durability: 400
+    equip: 1
+    dropIndex: 5
+    sellCoin: 90
+    buyCoin: 0
+    fixCoin: 45
+  - uid: 10106
+    type: 1
+    name: Dagger01
+    resources: Weapon/OneHand/Dagger01
+    ATK: 25
+    durability: 320
+    equip: 1
+    dropIndex: 6
+    sellCoin: 100
+    buyCoin: 100
+    fixCoin: 50
+  - uid: 10107
+    type: 1
+    name: Dagger02
+    resources: Weapon/OneHand/Dagger02
+    ATK: 40
+    durability: 400
+    equip: 1
+    dropIndex: 7
+    sellCoin: 150
+    buyCoin: 0
+    fixCoin: 80
+  - uid: 10108
+    type: 1
+    name: Hammer01
+    resources: Weapon/OneHand/Hammer01
+    ATK: 60
+    durability: 800
+    equip: 1
+    dropIndex: 8
+    sellCoin: 100
+    buyCoin: 100
+    fixCoin: 50
+  - uid: 10109
+    type: 1
+    name: Hammer02
+    resources: Weapon/OneHand/Hammer02
+    ATK: 90
+    durability: 1600
+    equip: 1
+    dropIndex: 9
+    sellCoin: 170
+    buyCoin: 0
+    fixCoin: 70
+  - uid: 10110
+    type: 1
+    name: Scythe01
+    resources: Weapon/OneHand/Scythe01
+    ATK: 60
+    durability: 800
+    equip: 1
+    dropIndex: 10
+    sellCoin: 200
+    buyCoin: 200
+    fixCoin: 90
+  - uid: 10111
+    type: 1
+    name: Sword01
+    resources: Weapon/OneHand/Sword01
+    ATK: 35
+    durability: 480
+    equip: 1
+    dropIndex: 11
+    sellCoin: 100
+    buyCoin: 100
+    fixCoin: 60
+  - uid: 10112
+    type: 1
+    name: Sword02
+    resources: Weapon/OneHand/Sword02
+    ATK: 45
+    durability: 560
+    equip: 1
+    dropIndex: 12
+    sellCoin: 200
+    buyCoin: 200
+    fixCoin: 90
+  - uid: 10113
+    type: 1
+    name: Sword03
+    resources: Weapon/OneHand/Sword03
+    ATK: 60
+    durability: 800
+    equip: 1
+    dropIndex: 13
+    sellCoin: 500
+    buyCoin: 500
+    fixCoin: 130
+  - uid: 10114
+    type: 1
+    name: Sword04
+    resources: Weapon/OneHand/Sword04
+    ATK: 80
+    durability: 1200
+    equip: 1
+    dropIndex: 14
+    sellCoin: 800
+    buyCoin: 0
+    fixCoin: 200
+  - uid: 10115
+    type: 1
+    name: Sword05
+    resources: Weapon/OneHand/Sword05
+    ATK: 100
+    durability: 1600
+    equip: 1
+    dropIndex: 15
+    sellCoin: 1500
+    buyCoin: 0
+    fixCoin: 500
+  - uid: 10201
+    type: 2
+    name: Shield01
+    resources: Weapon/Shield/Shield01
+    ATK: 10
+    durability: 600
+    equip: 1
+    dropIndex: 16
+    sellCoin: 300
+    buyCoin: 300
+    fixCoin: 140
+  - uid: 10202
+    type: 2
+    name: Shield02
+    resources: Weapon/Shield/Shield02
+    ATK: 15
+    durability: 700
+    equip: 1
+    dropIndex: 17
+    sellCoin: 500
+    buyCoin: 500
+    fixCoin: 200
+  - uid: 10203
+    type: 2
+    name: Shield03
+    resources: Weapon/Shield/Shield03
+    ATK: 20
+    durability: 800
+    equip: 1
+    dropIndex: 18
+    sellCoin: 700
+    buyCoin: 700
+    fixCoin: 250
+  - uid: 10204
+    type: 2
+    name: Shield04
+    resources: Weapon/Shield/Shield04
+    ATK: 25
+    durability: 900
+    equip: 1
+    dropIndex: 19
+    sellCoin: 900
+    buyCoin: 0
+    fixCoin: 300
+  - uid: 10205
+    type: 2
+    name: Shield05
+    resources: Weapon/Shield/Shield05
+    ATK: 30
+    durability: 1000
+    equip: 1
+    dropIndex: 20
+    sellCoin: 1000
+    buyCoin: 0
+    fixCoin: 400
+  - uid: 10206
+    type: 2
+    name: Shield06
+    resources: Weapon/Shield/Shield06
+    ATK: 35
+    durability: 1100
+    equip: 1
+    dropIndex: 21
+    sellCoin: 1100
+    buyCoin: 0
+    fixCoin: 450
+  - uid: 10207
+    type: 2
+    name: Shield07
+    resources: Weapon/Shield/Shield07
+    ATK: 40
+    durability: 1200
+    equip: 1
+    dropIndex: 22
+    sellCoin: 1200
+    buyCoin: 0
+    fixCoin: 480
+  - uid: 10301
+    type: 3
+    name: Bow01
+    resources: Weapon/Ranged/Bow/Bow01
+    ATK: 6
+    durability: 400
+    equip: 1
+    dropIndex: 23
+    sellCoin: 100
+    buyCoin: 100
+    fixCoin: 50
+  - uid: 10302
+    type: 3
+    name: Bow02
+    resources: Weapon/Ranged/Bow/Bow02
+    ATK: 8
+    durability: 800
+    equip: 1
+    dropIndex: 24
+    sellCoin: 150
+    buyCoin: 150
+    fixCoin: 80
+  - uid: 10401
+    type: 4
+    name: WandFire01
+    resources: Weapon/Ranged/Wand/WandFire01
+    ATK: 10
+    durability: 360
+    equip: 1
+    dropIndex: 25
+    sellCoin: 300
+    buyCoin: 300
+    fixCoin: 100
+  - uid: 10402
+    type: 4
+    name: WandFire02
+    resources: Weapon/Ranged/Wand/WandFire02
+    ATK: 12
+    durability: 600
+    equip: 1
+    dropIndex: 26
+    sellCoin: 500
+    buyCoin: 0
+    fixCoin: 200
+  - uid: 10403
+    type: 4
+    name: WandFire03
+    resources: Weapon/Ranged/Wand/WandFire03
+    ATK: 14
+    durability: 840
+    equip: 1
+    dropIndex: 27
+    sellCoin: 1000
+    buyCoin: 0
+    fixCoin: 400
+  - uid: 10404
+    type: 4
+    name: WandIce01
+    resources: Weapon/Ranged/Wand/WandIce01
+    ATK: 8
+    durability: 360
+    equip: 1
+    dropIndex: 28
+    sellCoin: 300
+    buyCoin: 300
+    fixCoin: 100
+  - uid: 10405
+    type: 4
+    name: WandIce02
+    resources: Weapon/Ranged/Wand/WandIce02
+    ATK: 10
+    durability: 600
+    equip: 1
+    dropIndex: 29
+    sellCoin: 500
+    buyCoin: 0
+    fixCoin: 200
+  - uid: 10406
+    type: 4
+    name: WandIce03
+    resources: Weapon/Ranged/Wand/WandIce03
+    ATK: 12
+    durability: 840
+    equip: 1
+    dropIndex: 30
+    sellCoin: 1000
+    buyCoin: 0
+    fixCoin: 400
+  - uid: 10501
+    type: 8
+    name: Arrow
+    resources: Weapon/Projectile/Arrow
+    ATK: 15
+    durability: 1
+    equip: 0
+    dropIndex: 31
+    sellCoin: 15
+    buyCoin: 30
+    fixCoin: 0
+  - uid: 10502
+    type: 8
+    name: Fire
+    resources: Weapon/Projectile/Fire
+    ATK: 40
+    durability: 1
+    equip: 0
+    dropIndex: -1
+    sellCoin: 0
+    buyCoin: 0
+    fixCoin: 0
+  - uid: 10503
+    type: 8
+    name: Ice
+    resources: Weapon/Projectile/Ice
+    ATK: 30
+    durability: 1
+    equip: 0
+    dropIndex: -1
+    sellCoin: 0
+    buyCoin: 0
+    fixCoin: 0
+  TipMess:
+  - uid: 10001
+    sceneNumber: 3
+    tipText: A weapon can echant in the village.
+  - uid: 10002
+    sceneNumber: 3
+    tipText: The shop sell potions and arrows.
+  - uid: 10003
+    sceneNumber: 3
+    tipText: The weapon breaks when its durability runs out.
+  - uid: 20001
+    sceneNumber: 4
+    tipText: Some monster drops their helmat.
+  - uid: 20002
+    sceneNumber: 4
+    tipText: If a weapon is wand.
+  - uid: 20003
+    sceneNumber: 4
+    tipText: Dash use more stamina than run.
+  - uid: 20004
+    sceneNumber: 4
+    tipText: You can recover your HP and stamina by lying down.
+  - uid: 20005
+    sceneNumber: 4
+    tipText: Ranged weapon give you can aim shoot.
+  - uid: 20006
+    sceneNumber: 4
+    tipText: You can use jump attack when fight with onehand weapon.
+  MonsterData:
+  - uid: 10101
+    monsterName: Davil
+    monsterType: 1
+    moveSpeed: 0
+    DEF: 1
+    maxHP: 100
+    dropID: 10101
+    spawnType: 2
+    onehand: 10106
+    shield: 10201
+    ranged: 10301
+    projectile: 10501
+    spawnIndex: 0
+  - uid: 10102
+    monsterName: Davil
+    monsterType: 2
+    moveSpeed: 0
+    DEF: 1
+    maxHP: 100
+    dropID: 10101
+    spawnType: 2
+    onehand: 10106
+    shield: 10201
+    ranged: 10301
+    projectile: 10501
+    spawnIndex: 1
+  - uid: 10201
+    monsterName: Demon
+    monsterType: 1
+    moveSpeed: 1
+    DEF: 2
+    maxHP: 150
+    dropID: 10102
+    spawnType: 2
+    onehand: 10111
+    shield: 10202
+    ranged: 10401
+    projectile: 10502
+    spawnIndex: 2
+  - uid: 10202
+    monsterName: Demon
+    monsterType: 2
+    moveSpeed: 1
+    DEF: 2
+    maxHP: 150
+    dropID: 10102
+    spawnType: 2
+    onehand: 10111
+    shield: 10202
+    ranged: 10401
+    projectile: 10502
+    spawnIndex: 3
+  - uid: 10301
+    monsterName: Dragon
+    monsterType: 4
+    moveSpeed: 7
+    DEF: 10
+    maxHP: 800
+    dropID: 10201
+    spawnType: 0
+    onehand: 10115
+    shield: 10207
+    ranged: 10403
+    projectile: 10502
+    spawnIndex: 4
+  - uid: 10401
+    monsterName: Goblin
+    monsterType: 1
+    moveSpeed: 3
+    DEF: 1
+    maxHP: 80
+    dropID: 10301
+    spawnType: 2
+    onehand: 10103
+    shield: 10201
+    ranged: 10301
+    projectile: 10501
+    spawnIndex: 5
+  - uid: 10402
+    monsterName: Goblin
+    monsterType: 2
+    moveSpeed: 3
+    DEF: 1
+    maxHP: 80
+    dropID: 10301
+    spawnType: 2
+    onehand: 10103
+    shield: 10201
+    ranged: 10301
+    projectile: 10501
+    spawnIndex: 6
+  - uid: 10501
+    monsterName: Guardian Fire
+    monsterType: 1
+    moveSpeed: 0
+    DEF: 3
+    maxHP: 180
+    dropID: 10401
+    spawnType: 2
+    onehand: 10101
+    shield: 10202
+    ranged: 10402
+    projectile: 10502
+    spawnIndex: 7
+  - uid: 10502
+    monsterName: Guardian Fire
+    monsterType: 2
+    moveSpeed: 0
+    DEF: 3
+    maxHP: 180
+    dropID: 10401
+    spawnType: 2
+    onehand: 10101
+    shield: 10202
+    ranged: 10402
+    projectile: 10502
+    spawnIndex: 8
+  - uid: 10601
+    monsterName: Guardian Ice
+    monsterType: 1
+    moveSpeed: 0
+    DEF: 3
+    maxHP: 180
+    dropID: 10402
+    spawnType: 2
+    onehand: 10112
+    shield: 10203
+    ranged: 10405
+    projectile: 10503
+    spawnIndex: 9
+  - uid: 10602
+    monsterName: Guardian Ice
+    monsterType: 2
+    moveSpeed: 0
+    DEF: 3
+    maxHP: 180
+    dropID: 10402
+    spawnType: 2
+    onehand: 10112
+    shield: 10203
+    ranged: 10405
+    projectile: 10503
+    spawnIndex: 10
+  - uid: 10701
+    monsterName: Medusa
+    monsterType: 1
+    moveSpeed: 5
+    DEF: 7
+    maxHP: 500
+    dropID: 10501
+    spawnType: 0
+    onehand: 10114
+    shield: 10206
+    ranged: 0
+    projectile: 0
+    spawnIndex: 11
+  - uid: 10801
+    monsterName: One-eyed Giant
+    monsterType: 1
+    moveSpeed: 0
+    DEF: 3
+    maxHP: 200
+    dropID: 10601
+    spawnType: 2
+    onehand: 10108
+    shield: 10204
+    ranged: 10302
+    projectile: 10501
+    spawnIndex: 12
+  - uid: 10802
+    monsterName: One-eyed Giant
+    monsterType: 2
+    moveSpeed: 0
+    DEF: 3
+    maxHP: 200
+    dropID: 10601
+    spawnType: 2
+    onehand: 10108
+    shield: 10204
+    ranged: 10302
+    projectile: 10501
+    spawnIndex: 13
+  - uid: 10901
+    monsterName: Spider Demon
+    monsterType: 3
+    moveSpeed: 5
+    DEF: 7
+    maxHP: 300
+    dropID: 10701
+    spawnType: 0
+    onehand: 10110
+    shield: 0
+    ranged: 10401
+    projectile: 10502
+    spawnIndex: 14
+  DropList:
+  - uid: 10101
+    coin: 50
+    weapon1: 10106
+    weapon2: 10201
+    weapon3: 0
+    p50: 30107
+    p10: 30104
+    p5: 0
+  - uid: 10102
+    coin: 50
+    weapon1: 10301
+    weapon2: 10501
+    weapon3: 0
+    p50: 30107
+    p10: 30104
+    p5: 0
+  - uid: 10201
+    coin: 100
+    weapon1: 10111
+    weapon2: 0
+    weapon3: 0
+    p50: 30107
+    p10: 30103
+    p5: 0
+  - uid: 10202
+    coin: 100
+    weapon1: 10401
+    weapon2: 0
+    weapon3: 0
+    p50: 30107
+    p10: 30103
+    p5: 0
+  - uid: 10301
+    coin: 1000
+    weapon1: 10115
+    weapon2: 10207
+    weapon3: 10403
+    p50: 30108
+    p10: 20103
+    p5: 30101
+  - uid: 10401
+    coin: 50
+    weapon1: 10103
+    weapon2: 10201
+    weapon3: 0
+    p50: 30107
+    p10: 20101
+    p5: 0
+  - uid: 10402
+    coin: 50
+    weapon1: 10103
+    weapon2: 10201
+    weapon3: 0
+    p50: 30107
+    p10: 20101
+    p5: 0
+  - uid: 10501
+    coin: 200
+    weapon1: 10101
+    weapon2: 10202
+    weapon3: 0
+    p50: 30107
+    p10: 30102
+    p5: 0
+  - uid: 10502
+    coin: 200
+    weapon1: 10402
+    weapon2: 0
+    weapon3: 0
+    p50: 30107
+    p10: 30102
+    p5: 0
+  - uid: 10601
+    coin: 200
+    weapon1: 10112
+    weapon2: 10203
+    weapon3: 0
+    p50: 30107
+    p10: 30105
+    p5: 0
+  - uid: 10602
+    coin: 200
+    weapon1: 10405
+    weapon2: 0
+    weapon3: 0
+    p50: 30107
+    p10: 30105
+    p5: 0
+  - uid: 10701
+    coin: 600
+    weapon1: 10114
+    weapon2: 10206
+    weapon3: 0
+    p50: 30107
+    p10: 30106
+    p5: 0
+  - uid: 10801
+    coin: 150
+    weapon1: 10108
+    weapon2: 10204
+    weapon3: 0
+    p50: 30107
+    p10: 20102
+    p5: 0
+  - uid: 10802
+    coin: 150
+    weapon1: 10302
+    weapon2: 10501
+    weapon3: 0
+    p50: 30107
+    p10: 20102
+    p5: 0
+  - uid: 10901
+    coin: 400
+    weapon1: 10110
+    weapon2: 10401
+    weapon3: 0
+    p50: 30108
+    p10: 30109
+    p5: 0
+  Enchant:
+  - uid: 1
+    weaponID: 10101
+    coin: 80
+    itemID: 30104
+    amount: 1
+    rate: 80
+  - uid: 2
+    weaponID: 10102
+    coin: 150
+    itemID: 30103
+    amount: 1
+    rate: 70
+  - uid: 3
+    weaponID: 10103
+    coin: 10
+    itemID: 30104
+    amount: 1
+    rate: 99
+  - uid: 4
+    weaponID: 10104
+    coin: 40
+    itemID: 30104
+    amount: 1
+    rate: 90
+  - uid: 5
+    weaponID: 10105
+    coin: 45
+    itemID: 30104
+    amount: 1
+    rate: 70
+  - uid: 6
+    weaponID: 10106
+    coin: 50
+    itemID: 30104
+    amount: 1
+    rate: 90
+  - uid: 7
+    weaponID: 10107
+    coin: 80
+    itemID: 30104
+    amount: 1
+    rate: 70
+  - uid: 8
+    weaponID: 10108
+    coin: 50
+    itemID: 30104
+    amount: 1
+    rate: 80
+  - uid: 9
+    weaponID: 10109
+    coin: 70
+    itemID: 30103
+    amount: 1
+    rate: 70
+  - uid: 10
+    weaponID: 10110
+    coin: 90
+    itemID: 30104
+    amount: 1
+    rate: 90
+  - uid: 11
+    weaponID: 10111
+    coin: 60
+    itemID: 30104
+    amount: 1
+    rate: 90
+  - uid: 12
+    weaponID: 10112
+    coin: 90
+    itemID: 30104
+    amount: 2
+    rate: 80
+  - uid: 13
+    weaponID: 10113
+    coin: 130
+    itemID: 30103
+    amount: 2
+    rate: 70
+  - uid: 14
+    weaponID: 10114
+    coin: 200
+    itemID: 30106
+    amount: 1
+    rate: 40
+  - uid: 15
+    weaponID: 10115
+    coin: 500
+    itemID: 30101
+    amount: 2
+    rate: 10
+  - uid: 16
+    weaponID: 10201
+    coin: 140
+    itemID: 30104
+    amount: 1
+    rate: 90
+  - uid: 17
+    weaponID: 10202
+    coin: 200
+    itemID: 30103
+    amount: 1
+    rate: 80
+  - uid: 18
+    weaponID: 10203
+    coin: 250
+    itemID: 30104
+    amount: 2
+    rate: 70
+  - uid: 19
+    weaponID: 10204
+    coin: 300
+    itemID: 30103
+    amount: 2
+    rate: 60
+  - uid: 20
+    weaponID: 10205
+    coin: 400
+    itemID: 30109
+    amount: 1
+    rate: 50
+  - uid: 21
+    weaponID: 10206
+    coin: 450
+    itemID: 30106
+    amount: 1
+    rate: 30
+  - uid: 22
+    weaponID: 10207
+    coin: 480
+    itemID: 30101
+    amount: 1
+    rate: 20
+  - uid: 23
+    weaponID: 10301
+    coin: 50
+    itemID: 30104
+    amount: 1
+    rate: 90
+  - uid: 24
+    weaponID: 10302
+    coin: 80
+    itemID: 30103
+    amount: 1
+    rate: 70
+  - uid: 25
+    weaponID: 10401
+    coin: 100
+    itemID: 30102
+    amount: 1
+    rate: 70
+  - uid: 26
+    weaponID: 10402
+    coin: 200
+    itemID: 30102
+    amount: 2
+    rate: 40
+  - uid: 27
+    weaponID: 10403
+    coin: 400
+    itemID: 30102
+    amount: 3
+    rate: 30
+  - uid: 28
+    weaponID: 10404
+    coin: 100
+    itemID: 30105
+    amount: 1
+    rate: 70
+  - uid: 29
+    weaponID: 10405
+    coin: 200
+    itemID: 30105
+    amount: 2
+    rate: 40
+  - uid: 30
+    weaponID: 10406
+    coin: 400
+    itemID: 30105
+    amount: 3
+    rate: 30
+  Respawn:
+  - uid: 1
+    sceneNumber: 4
+    x: 0
+    y: 4
+    z: -60
+  - uid: 2
+    sceneNumber: 4
+    x: -33.5
+    y: 4
+    z: -7
+  - uid: 3
+    sceneNumber: 4
+    x: -27.5
+    y: 4
+    z: 41.5
+  - uid: 4
+    sceneNumber: 5
+    x: 0
+    y: 4
+    z: -7

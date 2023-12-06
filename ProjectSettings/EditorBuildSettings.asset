@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/01Scenes/IntroScene.unity
+    guid: b7e1e52d50464534bacefef412478e58
+  - enabled: 1
+    path: Assets/01Scenes/TitleScene.unity
+    guid: 1fa5a63d755516e45938307d14ddfea9
+  - enabled: 1
+    path: Assets/01Scenes/LoadingScene.unity
+    guid: 0b41b2a99ea0c9949adeb851f40f98d0
+  - enabled: 1
+    path: Assets/01Scenes/HomeScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/01Scenes/DemonScene.unity
+    guid: 69bb048009363994593e61a31fd516b5
+  - enabled: 1
+    path: Assets/01Scenes/SpiderScene.unity
+    guid: df08419f07688d443b470e787fc908fd
+  - enabled: 1
+    path: Assets/01Scenes/GuardianScene.unity
+    guid: 8ddc5bfc4935f2a4ebd6f8c5b8dc72d0
+  - enabled: 1
+    path: Assets/01Scenes/DragonScene.unity
+    guid: 8e3338ffcc7b59846b00b9de6be28b40
+  - enabled: 1
+    path: Assets/01Scenes/GoblinScene.unity
+    guid: e36847cbd3e232a42b20efefde20ba33
+  - enabled: 1
+    path: Assets/01Scenes/MedusaScene.unity
+    guid: 089b5f5e6e706a04e91686d89ba7ee80
+  m_configObjects: {}
