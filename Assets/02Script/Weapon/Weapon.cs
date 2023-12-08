@@ -32,20 +32,4 @@ public class Weapon : MonoBehaviour
     {
         return ATK * 1.2f;
     }
-
-    public bool TryEnchant()
-    {
-        if (!enchant)
-        {
-            int i = UnityEngine.Random.Range(0, 100);
-            if (i > 70)
-            {
-                enchant = true;
-                ATK *= 1.2f;
-            }
-            return enchant;
-        }
-        return false;
-
-    }
 }

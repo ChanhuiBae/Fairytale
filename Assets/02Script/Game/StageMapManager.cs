@@ -77,12 +77,12 @@ public class StageMapManager : MonoBehaviour
     private void GoMedusaScene()
     {
         playerPiece.transform.position = medusaBtn.transform.position;
-        GameManager.Inst.AsyncLoadNextScene(SceneName.MedusaScene);
+        GameManager.Inst.AsyncLoadNextScene(SceneName.GoblinScene);
     }
 
     private void GoDragonScene()
     {
         playerPiece.transform.position = dragonBtn.transform.position;
-        GameManager.Inst.AsyncLoadNextScene(SceneName.DragonScene);
+        GameManager.Inst.AsyncLoadNextScene(SceneName.GuardianScene);
     }
 }

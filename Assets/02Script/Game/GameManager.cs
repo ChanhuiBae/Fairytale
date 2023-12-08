@@ -71,6 +71,7 @@ public class GameManager : Singleton<GameManager>
         for(int i = 0; i < table.WeaponData.Count; i++)
         {
             weaponDataTable.Add(table.WeaponData[i].uid, table.WeaponData[i]);
+            weaponItemID.Add(table.WeaponData[i].uid);
         }
 
         for (int i = 0; i < table.TipMess.Count; i++)
@@ -97,7 +98,7 @@ public class GameManager : Singleton<GameManager>
 
         for(int i = 0; i < table.Enchant.Count; i++)
         {
-            enchantTable.Add(table.Enchant[i].uid, table.Enchant[i]);
+            enchantTable.Add(table.Enchant[i].weaponID, table.Enchant[i]);
         }
 
         for(int i = 0; i < table.Respawn.Count; i++)
@@ -230,6 +231,7 @@ public class GameManager : Singleton<GameManager>
 
     private Fairytale table;
     private Dictionary<int, TableEntity_Item> itemDataTable = new Dictionary<int, TableEntity_Item>();
+    private List<int> weaponItemID = new List<int>();
     private Dictionary<int, TableEntity_Weapon> weaponDataTable = new Dictionary<int, TableEntity_Weapon>();
     private Dictionary<int, TableEntity_DropList> dropDataTable = new Dictionary<int, TableEntity_DropList>();
     private Dictionary<int, TableEntity_Enchant> enchantTable = new Dictionary<int, TableEntity_Enchant>();
@@ -337,7 +339,7 @@ public class GameManager : Singleton<GameManager>
         item.itemID = pData.shield.uid;
         item.type = 2;
         item.amount = 1;
-        item.durability = pData.shield.durability;
+        item.durability = pData.shield.durability-200;
         item.enchant = true;
         pData.inventory.AddWeapon(item);
         pData.i_shield = pData.inventory.FindIndexByItemID(pData.shield.uid);
@@ -370,7 +372,7 @@ public class GameManager : Singleton<GameManager>
         item = new InventoryItemData();
         item.uid = -1;
         item.itemID = 30102;
-        item.amount = 1;
+        item.amount = 3;
         item.durability = 1;
         item.type = 6;
         item.enchant = false;
@@ -679,6 +681,7 @@ public class GameManager : Singleton<GameManager>
         set => pData.shopStaminaPotion = value;
     }
 
+
     public bool CheckItem(int itemID)
     {
         if (pData.inventory == null)
@@ -721,6 +724,21 @@ public class GameManager : Singleton<GameManager>
             }
             return result;
         }
+    }
+
+    public TableEntity_Weapon GetCanBuyWeapon()
+    {
+        int random = UnityEngine.Random.Range(0, weaponItemID.Count -1);
+        TableEntity_Weapon result;
+        random = weaponItemID[random];
+        weaponDataTable.TryGetValue(random, out result);
+        while(result.buyCoin == 0)
+        {
+            random = UnityEngine.Random.Range(0, weaponDataTable.Count - 1);
+            random = weaponItemID[random];
+            weaponDataTable.TryGetValue(random, out result);
+        }
+        return result;
     }
     #endregion
 

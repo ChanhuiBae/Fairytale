@@ -163,11 +163,14 @@ public class SpawnManager : MonoBehaviour
     {
         curCount++;
         monsterBase = monsterPool.GetFromPool<MonsterBase>(monster.spawnIndex);
-
+        
         spawnPos = transform.position;
-        spawnPos.x += Random.Range(-5f, 5f);
-        spawnPos.y = 1;
-        spawnPos.z += Random.Range(-5f, 5f);
+        if(monster.spawnType != 0)
+        {
+            spawnPos.x += Random.Range(-5f, 5f);
+            spawnPos.y = 0.25f;
+            spawnPos.z += Random.Range(-5f, 5f);
+        }
         monsterBase.transform.position = spawnPos;
         monsterBase.InitMonster(monster, spawnPos, this);
         monsterBase.Spawn();

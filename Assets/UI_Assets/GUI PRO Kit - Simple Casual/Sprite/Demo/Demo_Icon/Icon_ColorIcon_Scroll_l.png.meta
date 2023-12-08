@@ -127,11 +127,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 80
+        y: 114
         width: 188
-        height: 79
+        height: 45
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -152,7 +152,7 @@ TextureImporter:
         width: 188
         height: 80
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -160,6 +160,27 @@ TextureImporter:
       bones: []
       spriteID: ec72e8621b1d65f44a009590ff0a5733
       internalID: 1957038156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_ColorIcon_Scroll_l_2
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 107
+        width: 187
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f2033616f5b0fe4ca7bc2f82995856c
+      internalID: 467326111
       vertices: []
       indices: 
       edges: []
@@ -177,6 +198,7 @@ TextureImporter:
     nameFileIdTable:
       Icon_ColorIcon_Scroll_l_0: 96859733
       Icon_ColorIcon_Scroll_l_1: 1957038156
+      Icon_ColorIcon_Scroll_l_2: 467326111
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,5 +1,5 @@
+using Redcode.Pools;
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class ProjectileInfo
@@ -15,7 +15,7 @@ public class ProjectileInfo
     public Transform owner;
     public bool isUse;
 }
-public class Projectile : Weapon
+public class Projectile : Weapon, IPoolObject
 {
     private ProjectileInfo pInfo;
     private Rigidbody rig;
@@ -132,5 +132,15 @@ public class Projectile : Weapon
             pInfo.isUse = false;
             pInfo.pool.TakeProjectile(pInfo.name, this);
         }
+    }
+
+    void IPoolObject.OnCreatedInPool()
+    {
+        //throw new NotImplementedException();
+    }
+
+    void IPoolObject.OnGettingFromPool()
+    {
+        //throw new NotImplementedException();
     }
 }

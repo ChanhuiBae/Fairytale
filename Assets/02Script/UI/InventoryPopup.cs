@@ -391,10 +391,6 @@ public class InventoryPopup : MonoBehaviour
         {
             itemButtons[popupIndex].InitButton();
         }
-        if(SceneManager.GetActiveScene().buildIndex != 3)
-        {
-            Time.timeScale = 0;
-        }
     }
 
     public void ShowNamePopup(string name)
@@ -433,7 +429,10 @@ public class InventoryPopup : MonoBehaviour
         TableEntity_Weapon weapon;
         GameManager.Inst.GetWeaponData(data.itemID, out weapon);
         weaponPopup.GetChild(0).GetComponent<TextMeshProUGUI>().text = weapon.name;
-        weaponPopup.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = weapon.ATK.ToString();
+        if(data.enchant)
+            weaponPopup.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = (weapon.ATK * 1.2f).ToString();
+        else
+            weaponPopup.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = weapon.ATK.ToString();
         weaponPopup.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = data.durability.ToString();
         weaponPopup.GetChild(1).GetChild(4).GetComponent<TextMeshProUGUI>().text = "/ " + weapon.durability.ToString();
         weaponPopup.gameObject.SetActive(true);
@@ -452,7 +451,10 @@ public class InventoryPopup : MonoBehaviour
         TableEntity_Weapon weapon;
         GameManager.Inst.GetWeaponData(data.itemID, out weapon);
         weaponPopup.GetChild(0).GetComponent<TextMeshProUGUI>().text = weapon.name;
-        weaponPopup.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = weapon.ATK.ToString();
+        if (data.enchant)
+            weaponPopup.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = (weapon.ATK * 1.2f).ToString();
+        else
+            weaponPopup.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = weapon.ATK.ToString();
         weaponPopup.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = data.durability.ToString();
         weaponPopup.GetChild(1).GetChild(4).GetComponent<TextMeshProUGUI>().text = "/ " + weapon.durability.ToString();
         weaponPopup.gameObject.SetActive(true);

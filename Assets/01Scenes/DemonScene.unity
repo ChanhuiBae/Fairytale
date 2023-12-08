@@ -297,11 +297,28 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 466219195348150893, guid: 76cba251ddadce54d80b24fa7e3e8c86,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 1b230d12b22c74e459b236f25da024c6, type: 3}
+    - target: {fileID: 466219195348150893, guid: 76cba251ddadce54d80b24fa7e3e8c86,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7607741706569866238, guid: ac794248e9b1e8a4195696f279f2d1cc,
+        type: 2}
     - target: {fileID: 1774570538698514109, guid: 76cba251ddadce54d80b24fa7e3e8c86,
         type: 3}
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: 62b2032b111d8489aadd6b3e1b476a8d, type: 3}
+    - target: {fileID: 1774570538698514109, guid: 76cba251ddadce54d80b24fa7e3e8c86,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 1604718913182635227, guid: ac794248e9b1e8a4195696f279f2d1cc,
+        type: 2}
     - target: {fileID: 4031119703570751627, guid: 76cba251ddadce54d80b24fa7e3e8c86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14987,11 +15004,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MainCamera
-      objectReference: {fileID: 0}
-    - target: {fileID: 2005738668345109241, guid: c116cca0c45e561449350147bb7e2500,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5811507458537470696, guid: c116cca0c45e561449350147bb7e2500,
         type: 3}
@@ -67819,7 +67831,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxCount: 1
   spawnMonsterTableID: 10102
-  spawnRadius: 20
+  spawnRadius: 25
 --- !u!114 &2069159720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67834,7 +67846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxCount: 1
   spawnMonsterTableID: 10101
-  spawnRadius: 20
+  spawnRadius: 25
 --- !u!135 &2069159722
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -67854,7 +67866,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 20
+  m_Radius: 25
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &2069159723
 Transform:

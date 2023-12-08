@@ -139,26 +139,6 @@ public class PlayerController : CharacterBase
         unit.attackType = AttackType.None;
     }
 
-    public void Victory()
-    {
-        StartCoroutine(PlayVictory());
-    }
-
-    private IEnumerator PlayVictory()
-    {
-        isController = false;
-        yield return YieldInstructionCache.WaitForSeconds(1f);
-        while (!anim.IsIdle())
-        {
-            yield return null;
-        }
-        transform.LeanRotateAround(Vector3.up, 180, 1.4f);
-        anim.Victory();
-        yield return YieldInstructionCache.WaitForSeconds(1.4f);
-        anim.StopVictory();
-        isController = true;
-    }
-
     private void OnDie()
     {
         isController = false;
@@ -187,8 +167,10 @@ public class PlayerController : CharacterBase
         if(unit.moveType != MoveType.Dash)
         {
             isController = false;
+            charge.value = 0;
             charge.transform.LeanScale(Vector3.zero, 0f);
             anim.StopMove();
+            anim.StopDefend();
             if(unit.rangedAttack == RangedAttack.Aim)
             {
                 anim.StopBowAim();
@@ -286,7 +268,7 @@ public class PlayerController : CharacterBase
                 isController = false;
                 if (unit.currentHP < unit.maxHP)
                     ChangeHP(-50);
-                GameManager.Inst.INVENTORY.DeleteOneItem(30107);
+                GameManager.Inst.INVENTORY.DeleteItemAmount(30107, 1);
                 unit.state = State.Idle;
                 unit.moveType = MoveType.None;
                 StartCoroutine(IsIdel());
@@ -326,7 +308,7 @@ public class PlayerController : CharacterBase
                 anim.Drink();
                 isController = false;
                 stamina.GetStamina(50);
-                GameManager.Inst.INVENTORY.DeleteOneItem(30108);
+                GameManager.Inst.INVENTORY.DeleteItemAmount(30108, 1);
                 unit.state = State.Idle;
                 unit.moveType = MoveType.None;
                 StartCoroutine(IsIdel());
@@ -682,7 +664,7 @@ public class PlayerController : CharacterBase
                 unit.attackType = AttackType.Onehand;
                 if (unit.onehandAttack != OnehandAttack.Charge)
                 {
-                    charge.gameObject.LeanScale(Vector3.one, 0f);
+                    charge.gameObject.LeanScale(new Vector3(4,4,1), 0f);
                     unit.onehandAttack = OnehandAttack.Charge;
                     charge.value = 0;
                     StartCoroutine(Charging());
@@ -835,7 +817,7 @@ public class PlayerController : CharacterBase
                         unit.ranged.WearOutDurability();
                         StartCoroutine(rangedAttackDelay());
                         if (pInfo.uid == 10501)
-                            GameManager.Inst.INVENTORY.DeleteOneItem(pInfo.uid);
+                            GameManager.Inst.INVENTORY.DeleteItemAmount(pInfo.uid, 1);
                     }
                     else
                     {
@@ -899,7 +881,7 @@ public class PlayerController : CharacterBase
             pInfo.projectile.AimShot(unit.ranged.Shoot());
             unit.ranged.WearOutDurability();
             if (pInfo.uid == 10501)
-                GameManager.Inst.INVENTORY.DeleteOneItem(pInfo.uid);
+                GameManager.Inst.INVENTORY.DeleteItemAmount(pInfo.uid, 1);
         }
         aimPoint.LeanScale(Vector3.zero, 0);
         f_cam.SetPlay();
@@ -1045,6 +1027,11 @@ public class PlayerController : CharacterBase
             GetAttackInput();
             GetMoveInput();
             ApplyMoveState();
+            if(unit.state != State.Attack && unit.attackType != AttackType.Onehand)
+            {
+                charge.value = 0;
+                charge.transform.LeanScale(Vector3.zero, 0);
+            }
         }
         else // 행동불가
         {

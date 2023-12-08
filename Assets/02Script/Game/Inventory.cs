@@ -149,12 +149,12 @@ public class Inventory
             return false;
     }
 
-    public void DeleteOneItem(int itemID)
+    public void DeleteItemAmount(int itemID, int amount)
     {
         int index = FindIndexByItemID(itemID);
         if (-1 < index)
         {
-            items[index].amount -= 1;
+            items[index].amount -= amount;
             if (items[index].amount < 1)
             {
                 items.RemoveAt(index);
@@ -198,6 +198,14 @@ public class Inventory
         GameManager.Inst.GetWeaponData(items[index].itemID, out weapon);
         items[index].durability = weapon.durability;
         items[index].enchant = true;
+    }
+
+    public void FixItem(int uid)
+    {
+        int index = FindIndexByUid(uid);
+        TableEntity_Weapon weapon;
+        GameManager.Inst.GetWeaponData(items[index].itemID, out weapon);
+        items[index].durability = weapon.durability;
     }
 
     // 같은 UID를 갖는 아이템의 정보를 갱신해주는 함수. ItemID 

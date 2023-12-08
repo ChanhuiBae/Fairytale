@@ -54,7 +54,8 @@ public class RespawnPopup : MonoBehaviour
     {
         GameManager.Inst.PlayerSpawn();
         GameManager.Inst.PlayerCoin -= 150;
-        gameObject.LeanScale(Vector3.zero, 0);
+        gameObject.LeanScale(Vector3.zero, 0f);
+        gameObject.SetActive(false);
     }
 
 
@@ -66,8 +67,18 @@ public class RespawnPopup : MonoBehaviour
 
     public void ShowPopup()
     {
+        gameObject.SetActive(true);
         coin.text = price + " / " + GameManager.Inst.PlayerCoin;
         gameObject.LeanScale(Vector3.one, 1f);
-
+        if(GameManager.Inst.PlayerCoin < 150)
+        {
+            respawnBtn.enabled = false;
+            coin.color = Color.red;
+        }
+        else
+        {
+            respawnBtn.enabled = true;
+            coin.color = Color.black;
+        }
     }
 }

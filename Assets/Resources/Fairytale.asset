@@ -356,7 +356,7 @@ MonoBehaviour:
     type: 3
     name: Bow01
     resources: Weapon/Ranged/Bow/Bow01
-    ATK: 6
+    ATK: 12
     durability: 400
     equip: 1
     dropIndex: 23
@@ -367,7 +367,7 @@ MonoBehaviour:
     type: 3
     name: Bow02
     resources: Weapon/Ranged/Bow/Bow02
-    ATK: 8
+    ATK: 18
     durability: 800
     equip: 1
     dropIndex: 24
@@ -444,18 +444,18 @@ MonoBehaviour:
     type: 8
     name: Arrow
     resources: Weapon/Projectile/Arrow
-    ATK: 15
+    ATK: 30
     durability: 1
     equip: 0
     dropIndex: 31
-    sellCoin: 15
-    buyCoin: 30
+    sellCoin: 0
+    buyCoin: 0
     fixCoin: 0
   - uid: 10502
     type: 8
     name: Fire
     resources: Weapon/Projectile/Fire
-    ATK: 40
+    ATK: 30
     durability: 1
     equip: 0
     dropIndex: -1

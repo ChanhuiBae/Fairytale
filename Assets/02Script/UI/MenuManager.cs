@@ -58,7 +58,6 @@ public class MenuManager : MonoBehaviour
     }
     private void CloseInventory()
     {
-        Time.timeScale = 1;
         GameManager.Inst.SaveData();
         inventoryManager.gameObject.LeanScale(Vector3.zero, 0f);
         inventoryManager.CloseWeaponPopup();

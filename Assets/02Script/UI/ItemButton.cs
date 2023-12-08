@@ -257,7 +257,8 @@ public class ItemButton : MonoBehaviour
 
     public void InitButton()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        info.text = "";
+        for (int i = 1; i < transform.childCount-1; i++)
         {
             transform.GetChild(i).gameObject.SetActive(false);
         }

@@ -208,7 +208,7 @@ public class MonsterAI : MonoBehaviour
                 IBase.StopAttack();
                 ChangeAIState(AI_State.Chase);
             }
-            yield return YieldInstructionCache.WaitForSeconds(2f);
+            yield return YieldInstructionCache.WaitForSeconds(1f);
             transform.LookAt(attackTarget.transform);
             targetState = targetBase.GetTargetAttack();
             if(targetState == AttackType.Onehand)
@@ -239,7 +239,7 @@ public class MonsterAI : MonoBehaviour
                     IBase.AttackOnehand();
                 }
             }
-            yield return YieldInstructionCache.WaitForSeconds(2f);
+            yield return YieldInstructionCache.WaitForSeconds(1f);
             IBase.StopAttack();
             
 
