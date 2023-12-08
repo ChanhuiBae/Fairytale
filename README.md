@@ -1,4 +1,5 @@
 # Fairytale
+# FullHD size 작동
 ## 3D Action Game - Fairytale
 ### 제작기간: 2023.09.18 ~ 진행 중
 -   Singleton을 이용한 GameManager 제작, Excellmporter을 이용한 데이터 관리, LeanTween을 이용한 Image object 변환, Pool Module을 활용한 발사체, 몬스터 스폰과 반환
