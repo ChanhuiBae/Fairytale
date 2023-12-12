@@ -28,21 +28,26 @@ public class SpiderDemon : MonsterBase
 
     new public void AttackRanged()
     {
-        random = UnityEngine.Random.Range(0, 99);
-
-        unit.state = State.Attack;
-        unit.attackType = AttackType.Ranged;
-        unit.rangedAttack = RangedAttack.ImmediatelyShoot;
-        anim.BowAim();
-        GetProjectile();
-        anim.BowShoot();
-        StartCoroutine(rangedAttackDelay());
+        if (unit.currentHP < unit.maxHP / 2)
+        {
+            AimShoot();
+        }
+        else
+        {
+            ImmediatelyShoot();
+        }
     }
+
 
     new public void AttackOnehand()
     {
-        unit.onehandAttack = OnehandAttack.Sting;
-        anim.Sting();
-        unit.onehand.Sting();
+        if(unit.currentHP < unit.maxHP / 2)
+        {
+            Swing(2);
+        }
+        else
+        {
+            Sting();
+        }
     }
 }

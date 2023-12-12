@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MonsterBase : CharacterBase
 {
@@ -138,7 +139,7 @@ public class MonsterBase : CharacterBase
         if (unit.ranged.GetDurability() > 0)
         {
             pInfo.isUse = true;
-            GameObject obj = pInfo.pool.SpawnProjectile(pInfo.poolIndex);
+            GameObject obj = pInfo.pool.SpawnProjectile(pInfo.attribute);
             if (!obj.TryGetComponent<Projectile>(out pInfo.projectile))
                 Debug.Log("PlayerController - BowDown - Projectile");
             else
@@ -148,21 +149,20 @@ public class MonsterBase : CharacterBase
         }
     }
 
-    protected IEnumerator rangedAttackDelay()
+    protected IEnumerator rangedAttackDelay(float power)
     {
         while (!anim.IsShooting())
         {
             yield return null;
         }
-        pInfo.projectile.TargetShoot(unit.ranged.ImmediatelyShoot(), transform.forward);
+        pInfo.projectile.TargetShoot(power, transform.forward);
         anim.StopBowAim();
         unit.ranged.InitCurrATK();
         unit.state = State.Idle;
         unit.attackType = AttackType.None;
         unit.rangedAttack = RangedAttack.None;
     }
-
-    public void AttackRanged()
+    protected void ImmediatelyShoot()
     {
         unit.state = State.Attack;
         unit.attackType = AttackType.Ranged;
@@ -170,13 +170,60 @@ public class MonsterBase : CharacterBase
         anim.BowAim();
         GetProjectile();
         anim.BowShoot();
-        StartCoroutine(rangedAttackDelay());
+        StartCoroutine(rangedAttackDelay(unit.ranged.ImmediatelyShoot()));
     }
-    public void AttackOnehand()
+
+    protected void AimShoot()
+    {
+        unit.state = State.Attack;
+        unit.attackType = AttackType.Ranged;
+        unit.rangedAttack = RangedAttack.Aim;
+        anim.BowAim();
+        GetProjectile();
+        anim.BowShoot();
+        StartCoroutine(rangedAttackDelay(unit.ranged.Shoot()));
+    }
+
+    public void AttackRanged()
+    {
+        ImmediatelyShoot();
+    }
+
+    public void SkillRanged()
+    {
+        AimShoot();
+    }
+
+    protected void Sting()
     {
         unit.onehandAttack = OnehandAttack.Sting;
         anim.Sting();
         unit.onehand.Sting();
+    }
+
+    protected void Swing(int charge)
+    {
+        unit.onehandAttack = OnehandAttack.Swing;
+        anim.Swing();
+        unit.onehand.Swing(charge);
+    }
+
+    protected void JumpAttack()
+    {
+        if (!anim.IsJumpAttack())
+        {
+            anim.JumpAttack();
+            Jump();
+        }
+    }
+
+    public void AttackOnhand()
+    {
+        Sting();
+    }
+    public void SkillOnehand()
+    {
+        JumpAttack();
     }
 
     public void StopAttack()
@@ -188,7 +235,6 @@ public class MonsterBase : CharacterBase
         unit.rangedAttack = RangedAttack.None;
         unit.onehandAttack = OnehandAttack.None;
     }
-
     public void Defense()
     {
         unit.shield.Defense();
@@ -217,7 +263,6 @@ public class MonsterBase : CharacterBase
             transform.position += ((float)unit.moveType * Time.deltaTime * (transform.GetChild(0).position - transform.position));
         }
         unit.state = State.Idle;
-        unit.jumpType = JumpType.None;
         unit.moveType = MoveType.None;
         anim.StopRollBack();
     }
@@ -290,9 +335,58 @@ public class MonsterBase : CharacterBase
             }
             else
             {
-                anim.Hit();
+                if(unit.buff != Buff.Rock && unit.buff != Buff.Stun)
+                {
+                    anim.Hit();
+                    Hit(); //effect
+                }
             }
         }
+    }
+    public void TakeBrun(float damage)
+    {
+        Brun();
+        StartCoroutine(Brunning(damage));
+    }
+
+    private IEnumerator Brunning(float damage)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            TakeDamage(damage);
+            yield return YieldInstructionCache.WaitForSeconds(1f);
+        }
+        StopBurn();
+    }
+
+    public void TakeStun()
+    {
+        Stun();
+        ai.TakeDebuff(2);
+        StartCoroutine(WaitStopStun());
+    }
+
+    private IEnumerator WaitStopStun()
+    {
+        yield return YieldInstructionCache.WaitForSeconds(2);
+        StopStun();
+    }
+
+    public void TakeRock(float damage)
+    {
+        Rock();
+        ai.TakeDebuff(2);
+        StartCoroutine(Rocking(damage));
+    }
+
+    private IEnumerator Rocking(float damage)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            TakeDamage(damage);
+            yield return YieldInstructionCache.WaitForSeconds(0.5f);
+        }
+        StopRock();
     }
 
     protected void ChangeHP(float value)

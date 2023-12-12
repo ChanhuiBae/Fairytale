@@ -4,6 +4,13 @@ using UnityEngine;
 public class Shield : Weapon
 {
     private BoxCollider col;
+
+    private void Awake()
+    {
+        if (!transform.Find("Shield/Break").TryGetComponent<ParticleSystem>(out breakEffect))
+            Debug.Log("OnehandWeeapon - Init - ParticleSystem");
+    }
+
     public void InitShield(float ATK, float durability, bool enchant)
     {
         if (!transform.GetChild(0).TryGetComponent<BoxCollider>(out col))
@@ -50,8 +57,14 @@ public class Shield : Weapon
             GameManager.Inst.WarnShield(damage);
             if (durability <= 0)
             {
-                gameObject.SetActive(false);
+                StartCoroutine(WaitDestroy());
             }
         }
+    }
+    private IEnumerator WaitDestroy()
+    {
+        breakEffect.Play();
+        yield return YieldInstructionCache.WaitForSeconds(1);
+        gameObject.SetActive(false);
     }
 }

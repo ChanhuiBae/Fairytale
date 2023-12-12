@@ -1,24 +1,26 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class InventoryPopup : MonoBehaviour
 {
-    private Transform player;
-    private Transform p_onehand;
-    private Transform p_shield;
-    private Transform p_ranged;
-    private Transform p_helmet;
-
     private TextMeshProUGUI coin;
-    private Transform i_onehand;
-    private Transform i_shield;
-    private Transform i_bow;
-    private Transform i_wand;
-    private Transform i_helmet;
+    private Image i_onehand;
+    private Image i_onehand_enchant;
+    private TextMeshProUGUI i_onehand_info;
+    private WearingItemButton i_onehand_btn;
+    private Image i_shield;
+    private Image i_shield_enchant;
+    private TextMeshProUGUI i_shield_info;
+    private WearingItemButton i_shield_btn;
+    private Image i_ranged;
+    private Image i_ranged_enchant;
+    private TextMeshProUGUI i_ranged_info;
+    private WearingItemButton i_ranged_btn;
+    private Image i_helmet;
+    private WearingItemButton i_helmet_btn;
+    private TextMeshProUGUI i_helmet_info;
     private TextMeshProUGUI i_projectile;
     private TextMeshProUGUI i_HpP;
     private TextMeshProUGUI i_StaminaP;
@@ -36,8 +38,6 @@ public class InventoryPopup : MonoBehaviour
     private void Awake()
     {
         transform.LeanScale(Vector3.zero, 0);
-        if (!transform.Find("CharBack/Character/InventoryPlayer").TryGetComponent<Transform>(out player))
-            Debug.Log("InventoryPopupManager -Awake - Transform");
 
         if (!transform.Find("NamePopup").TryGetComponent<Transform>(out namePopup))
             Debug.Log("InventoryPopupManager -Awake - Transform");
@@ -71,20 +71,6 @@ public class InventoryPopup : MonoBehaviour
             itemButtons.Add(pointer.GetChild(i).GetComponent<ItemButton>());
         }
 
-        if (player != null)
-        {
-            if (!player.Find("RigPelvis/RigSpine1/RigSpine2/RigRibcage/RigNeck/RigHead/Dummy Prop Head/Helmet").TryGetComponent<Transform>(out p_helmet))
-                Debug.Log("InventoryPopupManager -Awake - GameObject");
-
-            if (!player.Find("RigPelvis/RigSpine1/RigSpine2/RigRibcage/Dummy Prop Weapon Back/RangedWeapon/Ranged").TryGetComponent<Transform>(out p_ranged))
-                Debug.Log("InventoryPopupManager -Awake - GameObject");
-
-            if (!player.Find("RigPelvis/RigSpine1/RigSpine2/RigRibcage/RigLArm1/RigLArm2/RigLArmPalm/Dummy Prop Left/Shield/Shield").TryGetComponent<Transform>(out p_shield))
-                Debug.Log("InventoryPopupManager -Awake - GameObject");
-
-            if (!player.Find("RigPelvis/RigSpine1/RigSpine2/RigRibcage/RigRArm1/RigRArm2/RigRArmPalm/Dummy Prop Right/OneHand/OneHand").TryGetComponent<Transform>(out p_onehand))
-                Debug.Log("InventoryPopupManager -Awake - GameObject");
-        }
 
         if (!transform.Find("CharBack/Nickname").TryGetComponent<TextMeshProUGUI>(out nickname))
             Debug.Log("InventoryPopupManager - Init - TextMeshProUGUI");
@@ -99,27 +85,47 @@ public class InventoryPopup : MonoBehaviour
         if (!transform.Find("CharBack/DEF/DEFValue").TryGetComponent<TextMeshProUGUI>(out playerDEF))
             Debug.Log("InventoryPopupManager - Awake -TextMeshProUGUI");
 
-        if (!transform.Find("CharBack/OnehandItem/Onehand").TryGetComponent<Transform>(out i_onehand))
-            Debug.Log("InventoryPopupManager -Awake - Transform");
+        if (!transform.Find("CharBack/OnehandItem/Back/Item").TryGetComponent<Image>(out i_onehand))
+            Debug.Log("InventoryPopupManager -Awake - Image");
+        if (!transform.Find("CharBack/OnehandItem/Enchant").TryGetComponent<Image>(out i_onehand_enchant))
+            Debug.Log("InventoryPopupManager -Awake - Image");
+        if (!transform.Find("CharBack/OnehandItem/Info").TryGetComponent<TextMeshProUGUI>(out i_onehand_info))
+            Debug.Log("InventoryPopupManager -Awake - TextMeshProUGUI");
+        if (!i_onehand_info.transform.parent.TryGetComponent<WearingItemButton>(out i_onehand_btn))
+            Debug.Log("InventoryPopupManager -Awake - WearingItemButton");
 
-        if (!transform.Find("CharBack/ShieldItem/Shield").TryGetComponent<Transform>(out i_shield))
-            Debug.Log("InventoryPopupManager -Awake - Transform");
+        if (!transform.Find("CharBack/ShieldItem/Back/Item").TryGetComponent<Image>(out i_shield))
+            Debug.Log("InventoryPopupManager -Awake - Image"); 
+        if (!transform.Find("CharBack/ShieldItem/Enchant").TryGetComponent<Image>(out i_shield_enchant))
+            Debug.Log("InventoryPopupManager -Awake - Image");
+        if (!transform.Find("CharBack/ShieldItem/Info").TryGetComponent<TextMeshProUGUI>(out i_shield_info))
+            Debug.Log("InventoryPopupManager -Awake - TextMeshProUGUI");
+        if (!i_shield_info.transform.parent.TryGetComponent<WearingItemButton>(out i_shield_btn))
+            Debug.Log("InventoryPopupManager -Awake - WearingItemButton");
 
-        if (!transform.Find("CharBack/RangedItem/Bow").TryGetComponent<Transform>(out i_bow))
-            Debug.Log("InventoryPopupManager -Awake - Transform"); 
-        if (!transform.Find("CharBack/RangedItem/Wand").TryGetComponent<Transform>(out i_wand))
-            Debug.Log("InventoryPopupManager -Awake - Transform");
+        if (!transform.Find("CharBack/RangedItem/Back/Item").TryGetComponent<Image>(out i_ranged))
+            Debug.Log("InventoryPopupManager -Awake - Image");
+        if (!transform.Find("CharBack/RangedItem/Enchant").TryGetComponent<Image>(out i_ranged_enchant))
+            Debug.Log("InventoryPopupManager -Awake - Image");
+        if (!transform.Find("CharBack/RangedItem/Info").TryGetComponent<TextMeshProUGUI>(out i_ranged_info))
+            Debug.Log("InventoryPopupManager -Awake - TextMeshProUGUI");
+        if (!i_ranged_info.transform.parent.TryGetComponent<WearingItemButton>(out i_ranged_btn))
+            Debug.Log("InventoryPopupManager -Awake - WearingItemButton");
 
-        if (!transform.Find("CharBack/HelmetItem/Helmet").TryGetComponent<Transform>(out i_helmet))
-            Debug.Log("InventoryPopupManager -Awake - Transform");
+        if (!transform.Find("CharBack/HelmetItem/Back/Item").TryGetComponent<Image>(out i_helmet))
+            Debug.Log("InventoryPopupManager -Awake - Image"); 
+        if (!transform.Find("CharBack/HelmetItem/Info").TryGetComponent<TextMeshProUGUI>(out i_helmet_info))
+            Debug.Log("InventoryPopupManager -Awake - TextMeshProUGUI");
+        if (!i_helmet_info.transform.parent.TryGetComponent<WearingItemButton>(out i_helmet_btn))
+            Debug.Log("InventoryPopupManager -Awake - WearingItemButton");
 
-        if (!transform.Find("CharBack/ProjectileItem/Amount").TryGetComponent<TextMeshProUGUI>(out i_projectile))
+        if (!transform.Find("CharBack/Arrow/Info").TryGetComponent<TextMeshProUGUI>(out i_projectile))
             Debug.Log("InventoryPopupManager -Awake - TextMeshProUGUI");
 
-        if (!transform.Find("CharBack/HpPotionItem/Amount").TryGetComponent<TextMeshProUGUI>(out i_HpP))
+        if (!transform.Find("CharBack/HpPotion/Info").TryGetComponent<TextMeshProUGUI>(out i_HpP))
             Debug.Log("InventoryPopupManager -Awake - TextMeshProUGUI");
 
-        if (!transform.Find("CharBack/StaminaPotionItem/Amount").TryGetComponent<TextMeshProUGUI>(out i_StaminaP))
+        if (!transform.Find("CharBack/StaminaPotion/Info").TryGetComponent<TextMeshProUGUI>(out i_StaminaP))
             Debug.Log("InventoryPopupManager -Awake - TextMeshProUGUI");
     }
 
@@ -127,195 +133,100 @@ public class InventoryPopup : MonoBehaviour
     {
         coin.text = GameManager.Inst.PlayerCoin.ToString();
         playerDEF.text = GameManager.Inst.PlayerInfo.DEF.ToString();
-
-        GameObject obj;
-        MeshFilter meshFilter;
-        MeshRenderer meshRenderer;
-        bool enchant;
-        ParticleSystem ps;
-
-        try
+        InventoryItemData data;
+        if (GameManager.Inst.PlayerInfo.i_onehand != -1)
         {
-            obj = Resources.Load<GameObject>(GameManager.Inst.PlayerInfo.onehand.resources);
-            meshFilter = obj.GetComponent<MeshFilter>();
-            meshRenderer = obj.GetComponent<MeshRenderer>();
-            enchant = GameManager.Inst.INVENTORY.GetItemEnchant(GameManager.Inst.PlayerInfo.i_onehand);
-            p_onehand.gameObject.SetActive(true);
-            p_onehand.gameObject.GetComponent<MeshFilter>().sharedMesh = meshFilter.sharedMesh;
-            p_onehand.gameObject.GetComponent<MeshRenderer>().sharedMaterial = meshRenderer.sharedMaterial;
-            i_onehand.gameObject.SetActive(true);
-            i_onehand.gameObject.GetComponent<MeshFilter>().sharedMesh = meshFilter.sharedMesh;
-            i_onehand.gameObject.GetComponent<MeshRenderer>().sharedMaterial = meshRenderer.sharedMaterial;
-            if (enchant)
+            i_onehand.transform.parent.gameObject.SetActive(true);
+            i_onehand.enabled = true;
+            i_onehand.sprite = Resources.Load<Sprite>(GameManager.Inst.PlayerInfo.onehand.iconResources);
+            data = GameManager.Inst.INVENTORY.GetItem(GameManager.Inst.PlayerInfo.i_onehand);
+            if (data.enchant)
             {
-                p_onehand.GetChild(0).gameObject.SetActive(true);
-                ps = p_onehand.GetChild(0).GetComponent<ParticleSystem>();
-                var sh = ps.shape;
-                sh.mesh = meshFilter.sharedMesh;
-                //sh.texture = meshRenderer.sharedMaterial.GetTexture(0) as Texture2D;
-                i_onehand.GetChild(0).gameObject.SetActive(true);
-                ps = i_onehand.GetChild(0).GetComponent<ParticleSystem>();
-                sh = ps.shape;
-                sh.mesh = meshFilter.sharedMesh;
-                //sh.texture = meshRenderer.sharedMaterial.GetTexture(0) as Texture2D;
+                i_onehand_enchant.enabled = true;
             }
             else
             {
-                p_onehand.GetChild(0).gameObject.SetActive(false);
-                i_onehand.GetChild(0).gameObject.SetActive(false);
+                i_onehand_enchant.enabled = false;
             }
+            i_onehand_info.text = data.durability.ToString();
+            i_onehand_btn.UpdateItemButton(data);
         }
-        catch (NullReferenceException e)
+        else
         {
-            p_onehand.gameObject.SetActive(false);
-            i_onehand.gameObject.SetActive(false);
-            i_onehand.parent.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-            i_onehand.parent.GetComponent<WearingItemButton>().InitButton();
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
+            i_onehand.transform.parent.gameObject.SetActive(false);
+            i_onehand.enabled = false;
+            i_onehand_enchant.enabled = false; 
+            i_onehand_info.text = "";
+            i_onehand_btn.InitButton();
         }
 
-        try
+        if (GameManager.Inst.PlayerInfo.i_shield != -1)
         {
-            obj = Resources.Load<GameObject>(GameManager.Inst.PlayerInfo.shield.resources);
-            meshFilter = obj.GetComponent<MeshFilter>();
-            meshRenderer = obj.GetComponent<MeshRenderer>();
-            enchant = GameManager.Inst.INVENTORY.GetItemEnchant(GameManager.Inst.PlayerInfo.i_shield);
-            p_shield.gameObject.SetActive(true);
-            p_shield.gameObject.GetComponent<MeshFilter>().sharedMesh = meshFilter.sharedMesh;
-            p_shield.gameObject.GetComponent<MeshRenderer>().sharedMaterial = meshRenderer.sharedMaterial;
-            i_shield.gameObject.SetActive(true);
-            i_shield.gameObject.GetComponent<MeshFilter>().sharedMesh = meshFilter.sharedMesh;
-            i_shield.gameObject.GetComponent<MeshRenderer>().sharedMaterial = meshRenderer.sharedMaterial;
-            if (enchant)
+            i_shield.transform.parent.gameObject.SetActive(true);
+            i_shield.enabled = true;
+            i_shield.sprite = Resources.Load<Sprite>(GameManager.Inst.PlayerInfo.shield.iconResources);
+            data = GameManager.Inst.INVENTORY.GetItem(GameManager.Inst.PlayerInfo.i_shield);
+            if (data.enchant) 
             {
-                p_shield.GetChild(0).gameObject.SetActive(true);
-                ps = p_shield.GetChild(0).GetComponent<ParticleSystem>();
-                var sh = ps.shape;
-                sh.mesh = meshFilter.sharedMesh;
-                //sh.texture = meshRenderer.sharedMaterial.GetTexture(0) as Texture2D;
-                i_shield.GetChild(0).gameObject.SetActive(true);
-                ps = i_shield.GetChild(0).GetComponent<ParticleSystem>();
-                sh = ps.shape;
-                sh.mesh = meshFilter.sharedMesh;
-                //sh.texture = meshRenderer.sharedMaterial.GetTexture(0) as Texture2D;
+                i_shield_enchant.enabled = true;
             }
             else
             {
-                p_shield.GetChild(0).gameObject.SetActive(false);
-                i_shield.GetChild(0).gameObject.SetActive(false);
+                i_shield_enchant.enabled = false;
             }
+            i_shield_info.text = data.durability.ToString();
+            i_shield_btn.UpdateItemButton(data);
         }
-        catch (NullReferenceException e)
+        else
         {
-            p_shield.gameObject.SetActive(false);
-            i_shield.gameObject.SetActive(false);
-            i_shield.parent.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-            i_shield.parent.GetComponent<WearingItemButton>().InitButton();
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
+            i_shield.transform.parent.gameObject.SetActive(false);
+            i_shield.enabled = false;
+            i_shield_enchant.enabled = false;
+            i_shield_info.text = "";
+            i_shield_btn.InitButton();
         }
 
-        try
+        if (GameManager.Inst.PlayerInfo.i_ranged != -1)
         {
-            obj = Resources.Load<GameObject>(GameManager.Inst.PlayerInfo.ranged.resources);
-            meshFilter = obj.GetComponent<MeshFilter>();
-            meshRenderer = obj.GetComponent<MeshRenderer>();
-            enchant = GameManager.Inst.INVENTORY.GetItemEnchant(GameManager.Inst.PlayerInfo.i_ranged);
-            p_ranged.gameObject.SetActive(true);
-            p_ranged.gameObject.GetComponent<MeshFilter>().sharedMesh = meshFilter.sharedMesh;
-            p_ranged.gameObject.GetComponent<MeshRenderer>().sharedMaterial = meshRenderer.sharedMaterial;
-            if (enchant)
+            i_ranged.transform.parent.gameObject.SetActive(true);
+            i_ranged.enabled = true;
+            i_ranged.sprite = Resources.Load<Sprite>(GameManager.Inst.PlayerInfo.ranged.iconResources);
+            data = GameManager.Inst.INVENTORY.GetItem(GameManager.Inst.PlayerInfo.i_ranged);
+            if (data.enchant)
             {
-                p_ranged.GetChild(0).gameObject.SetActive(true);
-                ps = p_ranged.GetChild(0).GetComponent<ParticleSystem>();
-                var sh = ps.shape;
-                sh.mesh = meshFilter.sharedMesh;
-                //sh.texture = meshRenderer.sharedMaterial.GetTexture(0) as Texture2D;
+                i_ranged_enchant.enabled = true;
             }
             else
             {
-                p_ranged.GetChild(0).gameObject.SetActive(false);
+                i_ranged_enchant.enabled = false;
             }
-
-            if (GameManager.Inst.PlayerInfo.ranged.type == 3)
-            {
-                i_bow.gameObject.SetActive(true);
-                i_bow.gameObject.GetComponent<MeshFilter>().sharedMesh = meshFilter.sharedMesh;
-                i_bow.gameObject.GetComponent<MeshRenderer>().sharedMaterial = meshRenderer.sharedMaterial;
-                i_wand.gameObject.SetActive(false);
-                if (enchant)
-                {
-                    i_bow.GetChild(0).gameObject.SetActive(true);
-                    ps = i_bow.GetChild(0).GetComponent<ParticleSystem>();
-                    var sh = ps.shape;
-                    sh.mesh = meshFilter.sharedMesh;
-                    //sh.texture = meshRenderer.sharedMaterial.GetTexture(0) as Texture2D;
-                }
-                else
-                {
-                    i_bow.GetChild(0).gameObject.SetActive(false);
-                }
-            }
-            else
-            {
-                i_wand.gameObject.SetActive(true);
-                i_wand.gameObject.GetComponent<MeshFilter>().sharedMesh = meshFilter.sharedMesh;
-                i_wand.gameObject.GetComponent<MeshRenderer>().sharedMaterial = meshRenderer.sharedMaterial;
-                i_bow.gameObject.SetActive(false);
-                if (enchant)
-                {
-                    i_wand.GetChild(0).gameObject.SetActive(true);
-                    ps = i_wand.GetChild(0).GetComponent<ParticleSystem>();
-                    var sh = ps.shape;
-                    sh.mesh = meshFilter.sharedMesh;
-                    //sh.texture = meshRenderer.sharedMaterial.GetTexture(0) as Texture2D;
-                }
-                else
-                {
-                    i_wand.GetChild(0).gameObject.SetActive(false);
-                }
-            }
-
+            i_ranged_info.text = data.durability.ToString();
+            i_ranged_btn.UpdateItemButton(data);
         }
-        catch (NullReferenceException e)
+        else
         {
-            p_ranged.gameObject.SetActive(false);
-            i_bow.gameObject.SetActive(false);
-            i_wand.gameObject.SetActive(false);
-            i_bow.parent.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-            i_bow.parent.GetComponent<WearingItemButton>().InitButton();
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
+            i_ranged.transform.parent.gameObject.SetActive(false);
+            i_ranged_enchant.enabled = false;
+            i_ranged_info.text = "";
+            i_ranged_btn.InitButton();
         }
 
-        try
+        if (GameManager.Inst.PlayerInfo.i_helmet != -1)
         {
-            obj = Resources.Load<GameObject>(GameManager.Inst.PlayerInfo.helmet.resources);
-            p_helmet.gameObject.SetActive(true);
-            p_helmet.gameObject.GetComponent<MeshFilter>().sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
-            p_helmet.gameObject.GetComponent<MeshRenderer>().sharedMaterial = obj.GetComponent<MeshRenderer>().sharedMaterial;
-            i_helmet.gameObject.SetActive(true);
-            i_helmet.gameObject.GetComponent<MeshFilter>().sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
-            i_helmet.gameObject.GetComponent<MeshRenderer>().sharedMaterial = obj.GetComponent<MeshRenderer>().sharedMaterial;
-            i_helmet.parent.GetChild(0).GetComponent<TextMeshProUGUI>().text
-                = GameManager.Inst.PlayerInfo.helmet.DEF.ToString();
-
+            i_helmet.transform.parent.gameObject.SetActive(true);
+            i_helmet.enabled = true;
+            i_helmet.sprite = Resources.Load<Sprite>(GameManager.Inst.PlayerInfo.helmet.iconResources);
+            data = GameManager.Inst.INVENTORY.GetItem(GameManager.Inst.PlayerInfo.i_helmet);
+            i_helmet_info.text = GameManager.Inst.PlayerInfo.helmet.DEF.ToString();
+            i_helmet_btn.UpdateItemButton(data);
         }
-        catch (NullReferenceException e)
+        else
         {
-            p_helmet.gameObject.SetActive(false);
-            i_helmet.gameObject.SetActive(false);
-            i_helmet.parent.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-            i_helmet.parent.GetComponent<WearingItemButton>().InitButton();
+            i_helmet.transform.parent.gameObject.SetActive(false);
+            i_helmet.enabled = false;
+            i_helmet_info.text = "";
+            i_helmet_btn.InitButton();
         }
-
 
         int amount = GameManager.Inst.INVENTORY.GetItemAmount(10501);
         if (amount > -1)
@@ -359,44 +270,24 @@ public class InventoryPopup : MonoBehaviour
             else if (inven[i].type < 5) // weapon
             {
                 itemButtons[popupIndex].UpdateItemButton(inven[i]);
-                
-                if (inven[i].uid == GameManager.Inst.PlayerInfo.i_onehand)
-                {
-                    i_onehand.parent.GetChild(0).GetComponent<TextMeshProUGUI>().text = inven[i].durability.ToString();
-                    i_onehand.parent.GetComponent<WearingItemButton>().UpdateItemButton(inven[i]);
-                }
-                else if (inven[i].uid == GameManager.Inst.PlayerInfo.i_shield)
-                {
-                    i_shield.parent.GetChild(0).GetComponent<TextMeshProUGUI>().text = inven[i].durability.ToString();
-                    i_shield.parent.GetComponent<WearingItemButton>().UpdateItemButton(inven[i]);
-                }
-                else if (inven[i].uid == GameManager.Inst.PlayerInfo.i_ranged)
-                {
-                    i_bow.parent.GetChild(0).GetComponent<TextMeshProUGUI>().text = inven[i].durability.ToString();
-                    i_bow.parent.GetComponent<WearingItemButton>().UpdateItemButton(inven[i]);
-                }
             }
             else // item
             {
                 itemButtons[popupIndex].UpdateItemButton(inven[i]);
-
-                if (inven[i].uid == GameManager.Inst.PlayerInfo.i_helmet)
-                {
-                    i_helmet.parent.GetChild(0).GetComponent<TextMeshProUGUI>().text = GameManager.Inst.PlayerInfo.helmet.DEF.ToString();
-                    i_helmet.parent.GetComponent<WearingItemButton>().UpdateItemButton(inven[i]);
-                }
             }
         }
-        for (int i = popupIndex; i < 30; i++)
+        for (int i = popupIndex; i < itemButtons.Count; i++)
         {
-            itemButtons[popupIndex].InitButton();
+            itemButtons[i].InitButton();
         }
+        Time.timeScale = 0;
     }
 
-    public void ShowNamePopup(string name)
+    public void ShowNamePopup(string name, string amount)
     {
         namePopup.GetChild(0).GetComponent<TextMeshProUGUI>().text = name;
-        namePopup.gameObject.SetActive(true); 
+        namePopup.GetChild(1).GetComponent<TextMeshProUGUI>().text = amount;
+        namePopup.gameObject.SetActive(true);
         helmetPopup.gameObject.SetActive(false);
         weaponPopup.gameObject.SetActive(false);
     }
@@ -430,16 +321,14 @@ public class InventoryPopup : MonoBehaviour
         GameManager.Inst.GetWeaponData(data.itemID, out weapon);
         weaponPopup.GetChild(0).GetComponent<TextMeshProUGUI>().text = weapon.name;
         if(data.enchant)
-            weaponPopup.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = (weapon.ATK * 1.2f).ToString();
+            weaponPopup.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = (weapon.ATK * 1.2f).ToString();
         else
-            weaponPopup.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = weapon.ATK.ToString();
-        weaponPopup.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = data.durability.ToString();
-        weaponPopup.GetChild(1).GetChild(4).GetComponent<TextMeshProUGUI>().text = "/ " + weapon.durability.ToString();
+            weaponPopup.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = weapon.ATK.ToString();
+        weaponPopup.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>().text = data.durability.ToString() + " / " + weapon.durability.ToString();
         weaponPopup.gameObject.SetActive(true);
         namePopup.gameObject.SetActive(false);
         helmetPopup.gameObject.SetActive(false);
         deleteButton.gameObject.SetActive(false);
-        
     }
 
     public void ShowDeleteWeaponPopup(InventoryItemData data)
@@ -452,11 +341,10 @@ public class InventoryPopup : MonoBehaviour
         GameManager.Inst.GetWeaponData(data.itemID, out weapon);
         weaponPopup.GetChild(0).GetComponent<TextMeshProUGUI>().text = weapon.name;
         if (data.enchant)
-            weaponPopup.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = (weapon.ATK * 1.2f).ToString();
+            weaponPopup.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = (weapon.ATK * 1.2f).ToString();
         else
-            weaponPopup.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = weapon.ATK.ToString();
-        weaponPopup.GetChild(1).GetChild(3).GetComponent<TextMeshProUGUI>().text = data.durability.ToString();
-        weaponPopup.GetChild(1).GetChild(4).GetComponent<TextMeshProUGUI>().text = "/ " + weapon.durability.ToString();
+            weaponPopup.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = weapon.ATK.ToString();
+        weaponPopup.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>().text = data.durability.ToString() + " / " + weapon.durability.ToString();
         weaponPopup.gameObject.SetActive(true);
         deleteButton.gameObject.SetActive(true);
         namePopup.gameObject.SetActive(false);

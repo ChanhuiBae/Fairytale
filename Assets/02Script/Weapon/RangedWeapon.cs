@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class RangedWeapon : Weapon
 {
+    private void Awake()
+    {
+        if (!transform.Find("Ranged/Break").TryGetComponent<ParticleSystem>(out breakEffect))
+            Debug.Log("RangedWeeapon - Init - ParticleSystem");
+    }
     public void InitRangedWeapon(float ATK, float durability, bool enchant)
     {
         this.durability = durability;
@@ -32,8 +37,15 @@ public class RangedWeapon : Weapon
             GameManager.Inst.WarnRanged(ATK);
             if (durability < 0)
             {
-                gameObject.SetActive(false);
+                StartCoroutine(WaitDestroy());
             }
         }
+    }
+
+    private IEnumerator WaitDestroy()
+    {
+        breakEffect.Play();
+        yield return YieldInstructionCache.WaitForSeconds(1);
+        gameObject.SetActive(false);
     }
 }

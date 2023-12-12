@@ -15,12 +15,12 @@ public class CharacterUI : MonoBehaviour
         switch (transform.tag.ToString())
         {
             case "Shop":
-                source = Resources.Load<Sprite>("ItemIcon/itemicon_flask_red");
+                source = Resources.Load<Sprite>("ItemIcon/HpPotion");
                 if (!GameObject.Find("HomeSceneManager").TryGetComponent<HomeSceneManager>(out homeSceneManager))
                     Debug.Log("CharacterUI - Awake - HomeSceneManager");
                 break;
             case "Blacksmith":
-                source = Resources.Load<Sprite>("ItemIcon/itemicon_anvil");
+                source = Resources.Load<Sprite>("ItemIcon/Anvil");
                 if (!GameObject.Find("HomeSceneManager").TryGetComponent<HomeSceneManager>(out homeSceneManager))
                     Debug.Log("CharacterUI - Awake - HomeSceneManager");
                 break;
@@ -42,12 +42,10 @@ public class CharacterUI : MonoBehaviour
         if(other.CompareTag("Player") && transform.tag.ToString() == "Shop")
         {
             homeSceneManager.ShowPotionShopPopup();
-            GameManager.Inst.PlayerIsController(false);
         }
         else if(other.CompareTag("Player") && transform.tag.ToString() == "Blacksmith")
         {
             homeSceneManager.ShowSmithyPopup();
-            GameManager.Inst.PlayerIsController(false);
         }
     }
 }

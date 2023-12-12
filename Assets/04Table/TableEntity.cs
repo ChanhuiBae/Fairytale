@@ -5,6 +5,7 @@ public class TableEntity_Item
     public int type;
     public string name;
     public string resources;
+    public string iconResources;
     public int sellGold;
     public int DEF;
     public bool equip;
@@ -17,6 +18,8 @@ public class TableEntity_Weapon
     public int type;
     public string name;
     public string resources;
+    public string iconResources;
+    public int attribute;
     public int ATK;
     public int durability;
     public bool equip;

@@ -30,9 +30,6 @@ public class SmithyPopup : MonoBehaviour
     private Transform sellSword;
     private Transform enchantSword;
     private Transform fixSword;
-    
-    private List<MeshFilter> enchantItemMesh;
-    private List<MeshRenderer> enchantItemMaterial;
 
     private TextMeshProUGUI buyCoin;
     private TextMeshProUGUI sellCoin;
@@ -43,6 +40,8 @@ public class SmithyPopup : MonoBehaviour
     private TextMeshProUGUI enchantItemValue;
     private TextMeshProUGUI enchantPercent;
     private TextMeshProUGUI fixDurability;
+
+    private Image itemImage;
 
     private List<InventoryItemData> inventory;
     private List<InventoryItemData> buyList;
@@ -107,13 +106,7 @@ public class SmithyPopup : MonoBehaviour
             Debug.Log("SmithyPopup - Awake - Transform");
         else
         {
-            enchantItemMesh = new List<MeshFilter>();
-            enchantItemMaterial = new List<MeshRenderer>();
-            for(int i = 0; i < 2 ; i++)
-            {
-                enchantItemMesh.Add(enchantPopup.Find("Item").GetChild(i).GetComponent<MeshFilter>());
-                enchantItemMaterial.Add(enchantPopup.Find("Item").GetChild(i).GetComponent<MeshRenderer>());
-            }
+
             if (!enchantPopup.Find("ItemValue").TryGetComponent<TextMeshProUGUI>(out enchantItemValue))
                 Debug.Log("SmithyPopup - Awake - TextMeshProUGUI");
             if (!enchantPopup.Find("Coin").TryGetComponent<TextMeshProUGUI>(out enchantCoin))
@@ -124,6 +117,8 @@ public class SmithyPopup : MonoBehaviour
                 Debug.Log("SmithyPopup - Awake - TextMeshProUGUI");
             if (!enchantPopup.Find("Percent").TryGetComponent<TextMeshProUGUI>(out enchantPercent))
                 Debug.Log("SmithyPopup - Awake - TextMeshProUGUI");
+            if (!enchantPopup.Find("ItemBackground/Item").TryGetComponent<Image>(out itemImage))
+                Debug.Log("SmithyPopup - Awake - Image");
             if (!enchantPopup.GetChild(0).TryGetComponent<Button>(out enchantButton))
                 Debug.Log("SmithyPopup - Awake - Button");
             else
@@ -210,7 +205,7 @@ public class SmithyPopup : MonoBehaviour
 
     private void InitFirstBuyPopup()
     {
-        buySword.LeanMoveLocalX(-682f, 1);
+        buySword.LeanMoveLocalX(-430f, 1);
         sellPopup.gameObject.SetActive(false);
         enchantPopup.gameObject.SetActive(false);
         fixPopup.gameObject.SetActive(false);
@@ -218,7 +213,7 @@ public class SmithyPopup : MonoBehaviour
         buyCoin.text = "0 / " + GameManager.Inst.PlayerCoin.ToString();
         choseList.Clear();
 
-        for(int i = 0; i < 6; i++)
+        for(int i = 0; i < 8; i++)
         {
             InventoryItemData  item = new InventoryItemData();
             item.uid = -7 + i;
@@ -231,7 +226,7 @@ public class SmithyPopup : MonoBehaviour
             buyList.Add(item);
             boxes[i].SetWeaponBox(item, WeaponBoxType.Buy);
         }
-        for (int i = 6; i < 30; i++)
+        for (int i = 8; i < 30; i++)
         {
             boxes[i].gameObject.SetActive(false);
         }
@@ -239,10 +234,10 @@ public class SmithyPopup : MonoBehaviour
 
     private void InitBuyPopup()
     {
-        buySword.LeanMoveLocalX(-682f, 1);
-        sellSword.LeanMoveLocalX(-710f, 1);
-        enchantSword.LeanMoveLocalX(-710f, 1);
-        fixSword.LeanMoveLocalX(-710f, 1);
+        buySword.LeanMoveLocalX(-430f, 1);
+        sellSword.LeanMoveLocalX(-445f, 1);
+        enchantSword.LeanMoveLocalX(-445f, 1);
+        fixSword.LeanMoveLocalX(-445f, 1);
         sellPopup.gameObject.SetActive(false);
         enchantPopup.gameObject.SetActive(false);
         fixPopup.gameObject.SetActive(false);
@@ -265,10 +260,10 @@ public class SmithyPopup : MonoBehaviour
     private void InitSellPopup()
     {
         inventory = GameManager.Inst.INVENTORY.GetItemList();
-        buySword.LeanMoveLocalX(-710f, 1);
-        sellSword.LeanMoveLocalX(-682f, 1);
-        enchantSword.LeanMoveLocalX(-710f, 1);
-        fixSword.LeanMoveLocalX(-710f, 1);
+        buySword.LeanMoveLocalX(-445f, 1);
+        sellSword.LeanMoveLocalX(-430f, 1);
+        enchantSword.LeanMoveLocalX(-445f, 1);
+        fixSword.LeanMoveLocalX(-445f, 1);
         sellPopup.gameObject.SetActive(true);
         enchantPopup.gameObject.SetActive(false);
         fixPopup.gameObject.SetActive(false);
@@ -281,9 +276,9 @@ public class SmithyPopup : MonoBehaviour
         {
             if (inventory[i].itemID < 20000
                 && inventory[i].itemID != 10501
-                && inventory[i].itemID != GameManager.Inst.PlayerInfo.onehand.uid
-                && inventory[i].itemID != GameManager.Inst.PlayerInfo.shield.uid
-                && inventory[i].itemID != GameManager.Inst.PlayerInfo.ranged.uid)
+                && inventory[i].uid != GameManager.Inst.PlayerInfo.i_onehand
+                && inventory[i].uid != GameManager.Inst.PlayerInfo.i_shield
+                && inventory[i].uid != GameManager.Inst.PlayerInfo.i_ranged)
             {
                 boxes[weaponCount].gameObject.SetActive(true);
                 boxes[weaponCount].SetWeaponBox(inventory[i], WeaponBoxType.Sell);
@@ -300,12 +295,11 @@ public class SmithyPopup : MonoBehaviour
     private void InitEnchantPopup()
     {
         enchantButton.enabled = false;
-        inventory = GameManager.Inst.INVENTORY.GetItemList(); 
-        enchantItemMesh[0].transform.parent.gameObject.SetActive(false);
-        buySword.LeanMoveLocalX(-710f, 1);
-        sellSword.LeanMoveLocalX(-710f, 1);
-        enchantSword.LeanMoveLocalX(-682f, 1);
-        fixSword.LeanMoveLocalX(-710f, 1);
+        inventory = GameManager.Inst.INVENTORY.GetItemList();
+        buySword.LeanMoveLocalX(-445f, 1);
+        sellSword.LeanMoveLocalX(-445f, 1);
+        enchantSword.LeanMoveLocalX(-430f, 1);
+        fixSword.LeanMoveLocalX(-445f, 1);
         enchantPopup.gameObject.SetActive(true);
         fixPopup.gameObject.SetActive(false);
         chose = -1;
@@ -315,6 +309,7 @@ public class SmithyPopup : MonoBehaviour
         enchantDurability.text =" -> ";
         enchantPercent.text = "";
         enchantItemValue.text = "";
+        itemImage.enabled = false;
 
         weaponCount = 0;
         for (int i = 0; i < inventory.Count; i++)
@@ -336,10 +331,10 @@ public class SmithyPopup : MonoBehaviour
     private void InitFixPopup()
     {
         inventory = GameManager.Inst.INVENTORY.GetItemList();
-        buySword.LeanMoveLocalX(-710f, 1);
-        sellSword.LeanMoveLocalX(-710f, 1);
-        enchantSword.LeanMoveLocalX(-710f, 1);
-        fixSword.LeanMoveLocalX(-682f, 1);
+        buySword.LeanMoveLocalX(-445f, 1);
+        sellSword.LeanMoveLocalX(-445f, 1);
+        enchantSword.LeanMoveLocalX(-445f, 1);
+        fixSword.LeanMoveLocalX(-430f, 1);
         enchantPopup.gameObject.SetActive(false);
         fixPopup.gameObject.SetActive(true);
         price = 0;
@@ -399,7 +394,6 @@ public class SmithyPopup : MonoBehaviour
 
     public void ChangeEnchant(int price, InventoryItemData item)
     {
-        enchantItemMesh[0].transform.parent.gameObject.SetActive(true);
         choseList.Add(item);
         GameManager.Inst.GetEnchantData(item.itemID, out enchantInfo);
         TableEntity_Weapon weapon;
@@ -407,27 +401,15 @@ public class SmithyPopup : MonoBehaviour
         TableEntity_Item needItem;
         GameManager.Inst.GetItemData(enchantInfo.itemID, out needItem);
         GameObject obj = Resources.Load<GameObject>(needItem.resources);
-        if(needItem.type == 6)
-        {
-            enchantItemMesh[0].gameObject.SetActive(true);
-            enchantItemMesh[1].gameObject.SetActive(false);
-            enchantItemMesh[0].sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
-            enchantItemMaterial[0].sharedMaterial = obj.GetComponent<MeshRenderer>().sharedMaterial;
-        }
-        else if(needItem.type == 7)
-        {
-            enchantItemMesh[0].gameObject.SetActive(false);
-            enchantItemMesh[1].gameObject.SetActive(true);
-            enchantItemMesh[1].sharedMesh = obj.GetComponent<MeshFilter>().sharedMesh;
-            enchantItemMaterial[1].sharedMaterial = obj.GetComponent<MeshRenderer>().sharedMaterial;
-        }
 
-        enchantCoin.text = price.ToString() + " / " + GameManager.Inst.PlayerCoin.ToString();
+        enchantCoin.text = price.ToString() + "\n/ " + GameManager.Inst.PlayerCoin.ToString();
         enchantATK.text = weapon.ATK.ToString() + " -> " + (weapon.ATK *1.2f).ToString();
         enchantDurability.text = item.durability.ToString() + " - > " + weapon.durability.ToString();
         enchantPercent.text = enchantInfo.rate.ToString() + "%";
         int amount = GameManager.Inst.INVENTORY.GetItemAmount(needItem.uid);
-        enchantItemValue.text = enchantInfo.amount.ToString() + " / " + amount;
+        enchantItemValue.text = enchantInfo.amount.ToString() + "\n/ " + amount;
+        itemImage.enabled = true;
+        itemImage.sprite = Resources.Load<UnityEngine.Sprite>(needItem.iconResources);
         if (price <= GameManager.Inst.PlayerCoin && amount >= enchantInfo.amount)
             enchantButton.enabled = true;
         else 
@@ -437,12 +419,12 @@ public class SmithyPopup : MonoBehaviour
     public void ResetEnchat()
     {
         choseList.Clear();
-        enchantItemMesh[0].transform.parent.gameObject.SetActive(false);
-        enchantCoin.text = "0 / " + GameManager.Inst.PlayerCoin.ToString();
+        enchantCoin.text = "0\n/ " + GameManager.Inst.PlayerCoin.ToString();
         enchantATK.text = " -> ";
         enchantDurability.text = " -> ";
         enchantPercent.text = "";
         enchantItemValue.text = "";
+        itemImage.enabled = false;
     }
 
     public void ChangeFix(int price, InventoryItemData item)
@@ -451,7 +433,7 @@ public class SmithyPopup : MonoBehaviour
         TableEntity_Weapon weapon;
         GameManager.Inst.GetWeaponData(item.itemID, out weapon);
         
-        fixCoin.text = price.ToString() + " / " + GameManager.Inst.PlayerCoin.ToString();
+        fixCoin.text = price.ToString() + "\n/ " + GameManager.Inst.PlayerCoin.ToString();
         fixDurability.text = item.durability.ToString() + " -> " + weapon.durability.ToString();
         if (price <= GameManager.Inst.PlayerCoin)
             fixButton.enabled = true;

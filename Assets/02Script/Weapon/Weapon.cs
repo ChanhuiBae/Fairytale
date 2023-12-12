@@ -1,23 +1,21 @@
 using UnityEngine;
 
+public enum Attribute
+{
+    None = 0,
+    Fire = 1,
+    Ice = 2,
+    Rock = 3,
+}
+
 public class Weapon : MonoBehaviour 
 {
     protected float ATK;
     protected float durability;
     protected bool enchant;
-
     protected float curATK;
-
-
-    public float GetATK() // 정보 제공
-    {
-        return ATK;
-    }
-    public float GetInflictATK()
-    {
-        return curATK;
-    }
-
+    protected int attribute;
+    protected ParticleSystem breakEffect;
     public float GetDurability()
     {
         return durability;
@@ -26,10 +24,5 @@ public class Weapon : MonoBehaviour
     public void InitCurrATK()
     {
         curATK = 0f;
-    }
-
-    public float ShowEnchant() // 강화 시 변화한 공격력
-    {
-        return ATK * 1.2f;
     }
 }

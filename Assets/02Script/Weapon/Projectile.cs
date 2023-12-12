@@ -5,7 +5,7 @@ using UnityEngine;
 public class ProjectileInfo
 {
     public ProjectilePool pool;
-    public int poolIndex;
+    public int attribute; // poolIndex
     public int uid;
     public string name;
     public Projectile projectile;
@@ -31,6 +31,7 @@ public class Projectile : Weapon, IPoolObject
     {
         pInfo = info;
         pInfo.isUse = true;
+        attribute = info.attribute;
         transform.position = pInfo.owner.position + pInfo.projectilePos + (pInfo.owner.forward * 0.3f) + (pInfo.owner.right * 0.15f);
         transform.rotation = pInfo.owner.rotation;
         rig.useGravity = false;
@@ -86,7 +87,22 @@ public class Projectile : Weapon, IPoolObject
                 pInfo.isUse = false;
                 rig.velocity = Vector3.zero;
                 if (monster != null)
+                {
                     monster.TakeDamage(curATK);
+                    switch (attribute)
+                    {
+                        case (int)Attribute.None: break;
+                        case (int)Attribute.Fire:
+                            monster.TakeBrun(curATK / 5f);
+                            break;
+                        case (int)Attribute.Ice:
+                            monster.Frozen();
+                            break;
+                        case (int)Attribute.Rock:
+                            monster.TakeRock(curATK / 6f);
+                            break;
+                    }
+                }
                 InitCurrATK();
                 ReturnPool();
             }
@@ -95,6 +111,19 @@ public class Projectile : Weapon, IPoolObject
                 pInfo.isUse = false;
                 rig.velocity = Vector3.zero;
                 player.TakeDamage(curATK);
+                switch (attribute)
+                {
+                    case (int)Attribute.None: break;
+                    case (int)Attribute.Fire:
+                        player.TakeBrun(curATK / 5f);
+                        break;
+                    case (int)Attribute.Ice:
+                        player.Frozen();
+                        break;
+                    case (int)Attribute.Rock:
+                        player.TakeRock(curATK / 6f);
+                        break;
+                }
                 InitCurrATK();
                 ReturnPool();
             }

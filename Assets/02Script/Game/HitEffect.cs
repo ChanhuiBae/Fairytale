@@ -3,8 +3,6 @@ using Redcode.Pools;
 
 public class HitEffect : MonoBehaviour, IPoolObject
 {
-
-    [SerializeField]
     private string poolName;
     private ParticleSystem particle;
     private PoolManager pools;
@@ -16,7 +14,7 @@ public class HitEffect : MonoBehaviour, IPoolObject
         if (!TryGetComponent<ParticleSystem>(out particle))
             Debug.Log("HitEffect - Awake - ParticleSystem");
 
-        // todo: get poolname
+        poolName = gameObject.name;
     }
 
     public void InitHitEffect(GameObject pool)

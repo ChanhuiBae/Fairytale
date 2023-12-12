@@ -1,20 +1,23 @@
 using System.Collections;
 using UnityEngine;
-
+public enum State
+{
+    Idle,
+    Lay,
+    Move,
+    Jump,
+    Debuff,
+    Die,
+    Attack
+}
 public enum MoveType
 {
     None = 0,
+    Debuff = 3,
     Walk = 5,
     Run = 7,
     Dash = 40,
     RollBack = 13
-}
-
-public enum JumpType
-{
-    None,
-    Jump,
-    Attack
 }
 
 public enum AttackType
@@ -43,6 +46,15 @@ public enum RangedAttack
     Cast
 }
 
+public enum Buff
+{
+    None,
+    Stun,
+    Burn,
+    Frozen,
+    Rock,
+}
+
 public class CharacterUnit
 {
     public float currentHP;
@@ -51,15 +63,13 @@ public class CharacterUnit
     public State state;
     public MoveType moveType; // It is used move speed.
     public AttackType attackType;
-    public JumpType jumpType;
     public OnehandAttack onehandAttack;
     public RangedAttack rangedAttack;
-    public float j_Power;
+    public Buff buff;
     public Transform back;
     public Transform lefthand;
     public Transform righthand;
     public Transform helmet;
-    public bool useRanged;
     public OneHandWeapon onehand;
     public Shield shield;
     public RangedWeapon ranged;
@@ -75,24 +85,35 @@ public class CharacterBase : MonoBehaviour
     protected ProjectileInfo pInfo = new ProjectileInfo();
     protected Vector3 moveDir = Vector3.zero;
 
+    protected TrailRenderer trail;
+    private CharacterEffect characterEffect;
+
     public void InitCharBase(float maxhp, float DEF)
     {
         material = GetComponentInChildren<SkinnedMeshRenderer>().material;
+        material.color = Color.white;
 
         if (!TryGetComponent<CharacterAnimationController>(out anim))
             Debug.Log("CharacterBase - Init - CharacterAnimationController");
 
         if (!TryGetComponent<Rigidbody>(out rig))
             Debug.Log("CharacterBase - Init - Rigidbody");
+        if (!TryGetComponent<TrailRenderer>(out trail))
+            Debug.Log("CharacterBase - Init - TrailRender");
+        else
+        {
+            trail.enabled = false;
+        }
+        if (!TryGetComponent<CharacterEffect>(out characterEffect))
+            Debug.Log("CharacterBase - Init - CharacterEffect");
 
         anim.InitAinmController();
 
         unit.state = State.Idle;
         unit.moveType = MoveType.None;
         unit.attackType = AttackType.None;
-        unit.jumpType = JumpType.None;
         unit.onehandAttack = OnehandAttack.None;
-        unit.j_Power = 3f;
+        unit.buff = Buff.None;
 
         if (!transform.Find("RigPelvis/RigSpine1/RigSpine2/RigRibcage/RigNeck/RigHead/Dummy Prop Head/Helmet").TryGetComponent<Transform>(out unit.helmet))
             Debug.Log("CharacterBase -Init - Transform");
@@ -134,8 +155,8 @@ public class CharacterBase : MonoBehaviour
 
     public void InitOneHand(TableEntity_Weapon onehand, bool enchant)
     {
-        unit.onehand.InitOneHandWeapon(onehand.ATK, onehand.durability, enchant);
-        if(onehand.ATK == 0)
+        unit.onehand.InitOneHandWeapon(onehand.ATK, onehand.durability, enchant, onehand.attribute);
+        if (onehand.ATK == 0)
         {
             unit.onehand.gameObject.SetActive(false);
         }
@@ -147,13 +168,12 @@ public class CharacterBase : MonoBehaviour
             unit.onehand.transform.GetChild(0).GetComponent<MeshRenderer>().sharedMaterial = item.GetComponent<MeshRenderer>().sharedMaterial;
             unit.onehand.transform.GetChild(0).GetComponent<BoxCollider>().center = item.GetComponent<BoxCollider>().center;
             unit.onehand.transform.GetChild(0).GetComponent<BoxCollider>().size = item.GetComponent<BoxCollider>().size;
-            if(enchant)
+            if (enchant)
             {
                 unit.onehand.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
                 ParticleSystem ps = unit.onehand.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
                 var sh = ps.shape;
                 sh.mesh = item.GetComponent<MeshFilter>().sharedMesh;
-                //sh.texture = item.GetComponent<MeshRenderer>().sharedMaterial.GetTexture(0) as Texture2D;
             }
             else
             {
@@ -184,7 +204,6 @@ public class CharacterBase : MonoBehaviour
                 ParticleSystem ps = unit.shield.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
                 var sh = ps.shape;
                 sh.mesh = item.GetComponent<MeshFilter>().sharedMesh;
-                //sh.texture = item.GetComponent<MeshRenderer>().sharedMaterial.GetTexture(0) as Texture2D;
             }
             else
             {
@@ -196,7 +215,7 @@ public class CharacterBase : MonoBehaviour
     public void InitRanged(TableEntity_Weapon ranged, bool enchant)
     {
         unit.ranged.InitRangedWeapon(ranged.ATK, ranged.durability, enchant);
-        if(ranged.ATK == 0)
+        if (ranged.ATK == 0)
         {
             unit.ranged.gameObject.SetActive(false);
             unit.back.parent.GetChild(0).gameObject.SetActive(false);
@@ -205,7 +224,7 @@ public class CharacterBase : MonoBehaviour
         {
             GameObject item = Resources.Load<GameObject>(ranged.resources);
             unit.ranged.gameObject.SetActive(true);
-            if(gameObject.tag == "Player")
+            if (gameObject.tag == "Player")
             {
                 if (ranged.type == 3)
                     unit.back.parent.GetChild(0).gameObject.SetActive(true);
@@ -220,7 +239,6 @@ public class CharacterBase : MonoBehaviour
                 ParticleSystem ps = unit.ranged.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
                 var sh = ps.shape;
                 sh.mesh = item.GetComponent<MeshFilter>().sharedMesh;
-                //sh.texture = item.GetComponent<MeshRenderer>().sharedMaterial.GetTexture(0) as Texture2D;
             }
             else
             {
@@ -231,9 +249,9 @@ public class CharacterBase : MonoBehaviour
 
     public void InitProjectileInfo(TableEntity_Weapon projectile)
     {
-        if(projectile.ATK == 0)
+        if (projectile.ATK == 0)
         {
-            pInfo.poolIndex = -1;
+            pInfo.attribute = -1;
             pInfo.uid = -1;
             pInfo.name = "";
             pInfo.ATK = 0;
@@ -243,13 +261,13 @@ public class CharacterBase : MonoBehaviour
             switch (projectile.uid)
             {
                 case 10501:
-                    pInfo.poolIndex = 0;
+                    pInfo.attribute = 0;
                     break;
                 case 10502:
-                    pInfo.poolIndex = 1;
+                    pInfo.attribute = 1;
                     break;
                 case 10503:
-                    pInfo.poolIndex = 2;
+                    pInfo.attribute = 2;
                     break;
             }
             pInfo.uid = projectile.uid;
@@ -261,7 +279,7 @@ public class CharacterBase : MonoBehaviour
 
     public void InitHelmet(TableEntity_Item helmet)
     {
-        if(helmet.uid == -1 || helmet.resources == "")
+        if (helmet.uid == -1 || helmet.resources == "")
         {
             unit.helmet.gameObject.SetActive(false);
         }
@@ -269,7 +287,7 @@ public class CharacterBase : MonoBehaviour
         {
             unit.helmet.gameObject.SetActive(true);
             GameObject item = Resources.Load<GameObject>(helmet.resources);
-            if(item != null)
+            if (item != null)
             {
                 unit.helmet.gameObject.GetComponent<MeshFilter>().sharedMesh = item.GetComponent<MeshFilter>().sharedMesh;
                 unit.helmet.gameObject.GetComponent<MeshRenderer>().sharedMaterial = item.GetComponent<MeshRenderer>().sharedMaterial;
@@ -285,13 +303,20 @@ public class CharacterBase : MonoBehaviour
 
     protected void Move()
     {
-        transform.position += ((float)unit.moveType * Time.deltaTime * moveDir);
+        if (unit.buff == Buff.Frozen)
+        {
+            transform.position += ((float)MoveType.Debuff * Time.deltaTime * moveDir);
+        }
+        else
+        {
+            transform.position += ((float)unit.moveType * Time.deltaTime * moveDir);
+        }
         transform.LookAt(transform.position + moveDir);
     }
 
     protected void Jump()
     {
-        rig.velocity = Vector3.up * unit.j_Power;
+        rig.velocity = Vector3.up * 3f;
     }
 
     protected void LieDown()
@@ -305,14 +330,77 @@ public class CharacterBase : MonoBehaviour
         unit.state = State.Idle;
         anim.StandUp();
     }
+
+    protected void Hit()
+    {
+        characterEffect.PlayEffect(0);
+    }
+
+    protected void Stun()
+    {
+        unit.buff = Buff.Stun;
+        anim.Stun();
+        characterEffect.PlayEffect(1);
+    }
+
+    protected void StopStun()
+    {
+        unit.buff = Buff.None;
+        anim.StopStun();
+        characterEffect.PlayEffect(1);
+    }
+
+    protected void Brun()
+    {
+        unit.buff = Buff.Burn;
+        characterEffect.PlayEffect(2);
+    }
+
+    protected void StopBurn()
+    {
+        unit.buff = Buff.None;
+        characterEffect.StopEffect(2);
+    }
+
+    public void Frozen()
+    {
+        unit.buff = Buff.Frozen;
+        characterEffect.PlayEffect(3);
+        StartCoroutine(WaitMeltting());
+    }
+
+    public void StopFrozen()
+    {
+        unit.buff = Buff.None;
+        characterEffect.StopEffect(3);
+    }
+
+    protected IEnumerator WaitMeltting()
+    {
+        yield return YieldInstructionCache.WaitForSeconds(5f);
+        StopFrozen();
+    }
+
+    protected void Rock()
+    {
+        unit.buff = Buff.Rock;
+        anim.Relax();
+        material.color = Color.gray;
+    }
+
+    protected void StopRock()
+    {
+        unit.buff = Buff.None;
+        anim.StopRelax();
+        material.color = Color.white;
+    }
+
     virtual protected IEnumerator RollBack() { yield return null; }
 
     #region Hit&Die
     virtual protected IEnumerator OnDie() { yield return null; }
     virtual public void TakeDamge(float damage) { }
     virtual protected void ChangeHP(float value) { }
-    virtual protected IEnumerator OnStun() { yield return null; }
-    virtual public void TakeStun(int time) { }
     #endregion
 
     public State GetTargetState()
@@ -323,5 +411,29 @@ public class CharacterBase : MonoBehaviour
     public AttackType GetTargetAttack()
     {
         return unit.attackType;
+    }
+
+    public Buff GetTargetBuff()
+    {
+        return unit.buff;
+    }
+
+    public void StartTrail()
+    {
+        unit.onehand.StartTrail();
+    }
+    public void StopTrail()
+    {
+        unit.onehand.StopTrail();
+    }
+
+    public void SpawnEffect()
+    {
+        characterEffect.PlayEffect(4);
+    }
+
+    public void PotionEffect()
+    {
+        characterEffect.PlayEffect(5);
     }
 }

@@ -35,7 +35,6 @@ public class PlayerController : CharacterBase
 
     public void InitPlayerController()
     {
-        
         isDash = -1;
         isController = false;
         usingRanged = false;
@@ -89,7 +88,7 @@ public class PlayerController : CharacterBase
             Debug.Log("PlayerController - Init - Slider");
         else
         {
-            charge.gameObject.LeanScale(Vector3.zero, 0f);
+            charge.gameObject.SetActive(false);
         }
 
         if (!GameObject.Find("HpPotionBtn").TryGetComponent<Button>(out hpPotionBtn))
@@ -128,14 +127,12 @@ public class PlayerController : CharacterBase
         isController = true;
         unit.state = State.Idle;
         unit.moveType = MoveType.None;
-        unit.jumpType = JumpType.None;
         unit.attackType = AttackType.None;
     }
 
     private void SetJumpIdel()
     {
         unit.state = State.Idle;
-        unit.jumpType = JumpType.None;
         unit.attackType = AttackType.None;
     }
 
@@ -143,9 +140,9 @@ public class PlayerController : CharacterBase
     {
         isController = false;
         GameManager.Inst.PlayerDieReset();
-        charge.transform.LeanScale(Vector3.zero, 0f);
+        charge.gameObject.SetActive(false);
         rig.isKinematic = true;
-        charge.transform.LeanScale(Vector3.zero, 0f);
+        charge.gameObject.SetActive(false);
         anim.Die();
         gameObject.layer = LayerMask.NameToLayer("DieChar");
     }
@@ -168,7 +165,7 @@ public class PlayerController : CharacterBase
         {
             isController = false;
             charge.value = 0;
-            charge.transform.LeanScale(Vector3.zero, 0f);
+            charge.gameObject.SetActive(false);
             anim.StopMove();
             anim.StopDefend();
             if(unit.rangedAttack == RangedAttack.Aim)
@@ -191,10 +188,65 @@ public class PlayerController : CharacterBase
                 }
                 else
                 {
-                    anim.Hit();
-                    StartCoroutine(IsIdel());
+                    if (unit.buff != Buff.Rock && unit.buff != Buff.Stun)
+                    {
+                        anim.Hit();
+                        Hit();//effect
+                        StartCoroutine(IsIdel());
+                    }
                 }
             }
+        }
+    }
+
+    public void TakeBrun(float damage)
+    {
+        Brun();
+        StartCoroutine(Brunning(damage));
+    }
+
+    private IEnumerator Brunning(float damage)
+    {
+        for(int i = 0; i < 2;  i++)
+        {
+            TakeDamage(damage);
+            yield return YieldInstructionCache.WaitForSeconds(1f);
+        }
+        StopBurn();
+    }
+
+    public void TakeStun()
+    {
+        isController = false;
+        Stun();
+        StartCoroutine(WaitStopStun());
+    }
+
+    private IEnumerator WaitStopStun()
+    {
+        yield return YieldInstructionCache.WaitForSeconds(2);
+        StopStun();
+        isController = true;
+    }
+
+    public void TakeRock(float damage)
+    {
+        isController = false;
+        Rock();
+        StartCoroutine(Rocking(damage));
+    }
+    
+    private IEnumerator Rocking(float damage)
+    {
+        for(int i = 0; i < 4; i++) 
+        {
+            TakeDamage(damage);
+            yield return YieldInstructionCache.WaitForSeconds(0.5f);
+        }
+        if (unit.currentHP > 0)
+        {
+            StopRock();
+            isController = true;
         }
     }
 
@@ -267,7 +319,7 @@ public class PlayerController : CharacterBase
                 anim.Drink();
                 isController = false;
                 if (unit.currentHP < unit.maxHP)
-                    ChangeHP(-50);
+                    ChangeHP(-unit.maxHP/4);
                 GameManager.Inst.INVENTORY.DeleteItemAmount(30107, 1);
                 unit.state = State.Idle;
                 unit.moveType = MoveType.None;
@@ -375,6 +427,7 @@ public class PlayerController : CharacterBase
         isController = false;
         Vector3 pos = Vector3.zero;
         float speed = (float)unit.moveType;
+        trail.enabled = true;
         switch (isDash)
         {
             case 0:
@@ -396,6 +449,7 @@ public class PlayerController : CharacterBase
             yield return null;
         }
         isDash = -1;
+        trail.enabled = false;
         isController = true;
         anim.StopMove();
         unit.state = State.Idle;
@@ -411,7 +465,6 @@ public class PlayerController : CharacterBase
             transform.position += ((float)unit.moveType * Time.deltaTime * (Vector3.forward - transform.position));
         }
         unit.state = State.Idle;
-        unit.jumpType = JumpType.None;
         unit.moveType = MoveType.None;
         anim.StopRollBack();
     }
@@ -514,7 +567,7 @@ public class PlayerController : CharacterBase
             StandUp();
             unit.state = State.Idle;
         }
-        else if (moveDir == Vector3.zero && (unit.moveType == MoveType.Walk || unit.moveType == MoveType.Run))
+        else if (moveDir == Vector3.zero && unit.state == State.Move)
         {
             unit.state = State.Idle;
             unit.moveType = MoveType.None;
@@ -564,7 +617,7 @@ public class PlayerController : CharacterBase
         if (!usingRanged && CheckRanged())
         {
             usingRanged = true;
-            charge.transform.LeanScale(Vector3.zero,0f);
+            charge.gameObject.SetActive(false);
             if (CheckOneHand())
             {
                 unit.onehand.transform.parent = unit.back;
@@ -666,6 +719,7 @@ public class PlayerController : CharacterBase
                 {
                     charge.gameObject.LeanScale(new Vector3(4,4,1), 0f);
                     unit.onehandAttack = OnehandAttack.Charge;
+                    charge.gameObject.SetActive(true);
                     charge.value = 0;
                     StartCoroutine(Charging());
                     // todo : charging effect
@@ -686,13 +740,12 @@ public class PlayerController : CharacterBase
             && unit.attackType == AttackType.Onehand
             && unit.onehandAttack == OnehandAttack.Charge)
         {
-            charge.gameObject.LeanScale(Vector3.zero, 0f);
+            charge.gameObject.SetActive(true);
             if (charge.value < 1)
             {
                 unit.onehandAttack = OnehandAttack.Sting;
                 unit.onehand.Sting();
                 anim.Sting();
-                charge.value = 0;
                 StopAllCoroutines();    
                 StartCoroutine(attackDelay());
             }
@@ -701,10 +754,12 @@ public class PlayerController : CharacterBase
                 unit.onehandAttack = OnehandAttack.Swing;
                 unit.onehand.Swing((int)(charge.value));
                 anim.Swing();
-                charge.value = 0;
                 StopAllCoroutines();
                 StartCoroutine(attackDelay());
             }
+
+            charge.value = 0;
+            charge.gameObject.SetActive(false);
         }
     }
 
@@ -761,7 +816,7 @@ public class PlayerController : CharacterBase
         if (unit.ranged.GetDurability() > 0)
         {
             pInfo.isUse = true;
-            GameObject obj= pInfo.pool.SpawnProjectile(pInfo.poolIndex);
+            GameObject obj= pInfo.pool.SpawnProjectile(pInfo.attribute);
             if (!obj.TryGetComponent<Projectile>(out pInfo.projectile))
                 Debug.Log("PlayerController - BowDown - Projectile");
             else
@@ -897,7 +952,6 @@ public class PlayerController : CharacterBase
             if (unit.state == State.Idle && stamina.CheckJumpAttack())
             {
                 unit.state = State.Attack;
-                unit.jumpType = JumpType.Attack;
                 unit.attackType = AttackType.Jump;
                 unit.onehand.JumpAttack();
                 anim.JumpAttack();
@@ -984,7 +1038,6 @@ public class PlayerController : CharacterBase
             if (stamina.CheckJump())
             {
                 unit.state = State.Jump;
-                unit.jumpType = JumpType.Jump;
                 anim.Jump();
                 Jump();
                 SetJumpIdel();
@@ -1027,18 +1080,12 @@ public class PlayerController : CharacterBase
             GetAttackInput();
             GetMoveInput();
             ApplyMoveState();
-            if(unit.state != State.Attack && unit.attackType != AttackType.Onehand)
-            {
-                charge.value = 0;
-                charge.transform.LeanScale(Vector3.zero, 0);
-            }
         }
         else // 행동불가
         {
             moveDir = Vector3.zero;
             unit.state = State.Idle;
             unit.moveType = MoveType.None;
-            unit.jumpType = JumpType.None;
             unit.attackType = AttackType.None;
             unit.onehandAttack = OnehandAttack.None;
             unit.rangedAttack = RangedAttack.None;

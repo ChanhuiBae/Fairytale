@@ -1,19 +1,5 @@
 using UnityEngine;
 
-public enum State
-{
-    Idle,
-    Lay,
-    Move,
-    Jump,
-    Damaged,
-    Stunned,
-    Die,
-    Push,
-    Pull,
-    Attack
-}
-
 public class CharacterAnimationController : MonoBehaviour
 {
     private Animator anim;
@@ -30,9 +16,6 @@ public class CharacterAnimationController : MonoBehaviour
     private int H_Die = Animator.StringToHash("Die");
     private int H_Spawn = Animator.StringToHash("Spawn Ground");
 
-    private int H_Push = Animator.StringToHash("Push");
-    private int H_Pull = Animator.StringToHash("Pull");
-
     private int H_A_R_Swing = Animator.StringToHash("Melee Right Attack 02");
     private int H_A_R_Sting = Animator.StringToHash("Melee Right Attack 01");
     private int H_A_R_Jump = Animator.StringToHash("Jump Right Attack 01");
@@ -40,26 +23,18 @@ public class CharacterAnimationController : MonoBehaviour
     private int H_A_B_Aim = Animator.StringToHash("Longbow Aim 01");
     private int H_A_B_Shoot = Animator.StringToHash("Longbow Shoot Attack 01");
     private int H_A_W_Aim = Animator.StringToHash("Crossbow Aim");
-    private int H_A_W_Shoot = Animator.StringToHash("Crossbow Shoot Attack");
     private int H_A_W_Cast = Animator.StringToHash("Cast Spell 02");
 
     private int H_Defend = Animator.StringToHash("Defend");
 
     private int H_Relax = Animator.StringToHash("Relax");
     private int H_Lay = Animator.StringToHash("Lay Ground");
-    private int H_Victory = Animator.StringToHash("Victory");
-    private int H_PickUp = Animator.StringToHash("Pick Up");
     private int H_Sitting = Animator.StringToHash("Sitting");
     private int H_Drink = Animator.StringToHash("Drink Potion");
     private int H_Talking = Animator.StringToHash("Talking");
     private int H_Digging = Animator.StringToHash("Digging");
     private int H_ChopTree = Animator.StringToHash("Chop Tree");
-    private int H_TreadWater = Animator.StringToHash("Tread Water");
     private int H_Hammering = Animator.StringToHash("Hammering On Anvil");
-    private int H_WaveHand = Animator.StringToHash("Wave Hand");
-    private int H_Swim = Animator.StringToHash("Swim 02");
-    private int H_SwimFast = Animator.StringToHash("Swim 01");
-    private int H_Tread = Animator.StringToHash("Tread Water");
 
 
 
@@ -176,7 +151,7 @@ public class CharacterAnimationController : MonoBehaviour
         anim.SetTrigger(H_TakeDamgae);
     }
 
-    public void Stunned()
+    public void Stun()
     {
         anim.SetBool(H_Stunned, true);
     }
@@ -259,16 +234,6 @@ public class CharacterAnimationController : MonoBehaviour
     public void Cast()
     {
         anim.SetTrigger(H_A_W_Cast);
-    }
-
-    public void Victory()
-    {
-        anim.SetBool(H_Victory,true);
-    }
-
-    public void StopVictory()
-    {
-        anim.SetBool(H_Victory, false);
     }
 
     public bool CheckPlaying()

@@ -300,7 +300,7 @@ public class GameManager : Singleton<GameManager>
         pData.userNickname = newNickName;
         pData.coin = 1000;
         pData.uidCounter = 0;
-        pData.curHP = pData.maxHP = 200;
+        pData.curHP = pData.maxHP = 500;
         pData.DEF = 3;
         pData.maxStamina = 200;
         pData.i_helmet = -1;

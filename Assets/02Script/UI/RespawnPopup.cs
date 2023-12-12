@@ -32,7 +32,7 @@ public class RespawnPopup : MonoBehaviour
             Debug.Log("RespawnPopup - Awake - TextMeshProUGUI");
         else
         {
-            price = 150;
+            price = 300;
         }
         if (!transform.Find("RespawnButton").TryGetComponent<Button>(out respawnBtn))
             Debug.Log("RespawnPopup - Awake - EventTrigger");

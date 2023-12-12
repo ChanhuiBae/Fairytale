@@ -138,15 +138,24 @@ public class Inventory
         return items[index].amount;
     }
 
+    public InventoryItemData GetItem(int uid)
+    {
+        int index = FindIndexByUid(uid);
+        if(index != -1)
+        {
+            return items[index];
+        }
+        return null;
+    }
+
     public bool GetItemEnchant(int uid)
     {
         int index = FindIndexByUid(uid);
-        if (-1 < index)
+        if (index != -1)
         {
             return items[index].enchant;
         }
-        else
-            return false;
+        return false;
     }
 
     public void DeleteItemAmount(int itemID, int amount)

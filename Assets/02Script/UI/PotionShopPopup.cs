@@ -210,7 +210,7 @@ public class PotionShopPopup : MonoBehaviour
         staminaPlus.gameObject.LeanScale(Vector3.one, 0f);
         staminaMinus.gameObject.LeanScale(Vector3.zero, 0f);
 
-        transform.LeanScale(Vector3.one * 2, 0.2f);
+        transform.LeanScale(Vector3.one, 0.2f);
     }
 
     public void ClosePotionShopPopup()

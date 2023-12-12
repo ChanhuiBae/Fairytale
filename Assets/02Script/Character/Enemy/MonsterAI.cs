@@ -20,7 +20,7 @@ public enum AttackDistance
 {
     Ranged = 20,
     Onhand = 3,
-    Both = 10,
+    Both = 9,
 }
 
 public class MonsterAI : MonoBehaviour
@@ -210,8 +210,7 @@ public class MonsterAI : MonoBehaviour
             }
             yield return YieldInstructionCache.WaitForSeconds(1f);
             transform.LookAt(attackTarget.transform);
-            targetState = targetBase.GetTargetAttack();
-            if(targetState == AttackType.Onehand)
+            if(targetBase.GetTargetState() == State.Attack)
             {
                 IBase.StopAttack();
                 if(haveShield)
@@ -223,20 +222,29 @@ public class MonsterAI : MonoBehaviour
                     ChangeAIState(AI_State.Evasion);
                 }
             }
-            if(targetState == AttackType.Jump)
-            {
-                IBase.StopAttack();
-                ChangeAIState(AI_State.Evasion);
-            }
             else
             {
-                if(attackDistance == AttackDistance.Ranged)
+                if (targetBase.GetTargetBuff() != Buff.None)
                 {
-                    IBase.AttackRanged();
+                    if (attackDistance == AttackDistance.Ranged)
+                    {
+                        IBase.SkillRanged();
+                    }
+                    else
+                    {
+                        IBase.SkillOnehand();
+                    }
                 }
                 else
                 {
-                    IBase.AttackOnehand();
+                    if (attackDistance == AttackDistance.Ranged)
+                    {
+                        IBase.AttackRanged();
+                    }
+                    else
+                    {
+                        IBase.AttackOnhand();
+                    }
                 }
             }
             yield return YieldInstructionCache.WaitForSeconds(1f);
@@ -301,5 +309,17 @@ public class MonsterAI : MonoBehaviour
         currentState = AI_State.Idle;
         attackTarget = null;
         StartCoroutine(AI_State.Idle.ToString());
+    }
+
+    public void TakeDebuff(float time)
+    {
+        StopAllCoroutines();
+        StartCoroutine(StopAction(time));
+    }
+
+    protected IEnumerator StopAction(float time)
+    {
+        yield return YieldInstructionCache.WaitForSeconds(time);
+        StartCoroutine(currentState.ToString());
     }
 }

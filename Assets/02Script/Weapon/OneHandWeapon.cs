@@ -6,11 +6,18 @@ public class OneHandWeapon : Weapon
     private BoxCollider col;
     private float[] d_charge = { 0, 1, 2, 3, 4, 5, 6 };
     private float d_jump;
-    private Vector3 size;
-    public void InitOneHandWeapon(float ATK, float durability, bool enchant)
+    private TrailRenderer trail;
+
+    private void Awake()
+    {
+        if (!transform.Find("OneHand/Break").TryGetComponent<ParticleSystem>(out breakEffect))
+            Debug.Log("OnehandWeeapon - Init - ParticleSystem");
+    }
+    public void InitOneHandWeapon(float ATK, float durability, bool enchant, int attribute)
     {
         this.durability = durability;
         this.enchant = enchant;
+        this.attribute = attribute;
         if (enchant)
             this.ATK = ATK * 1.2f;
         else
@@ -27,9 +34,28 @@ public class OneHandWeapon : Weapon
         if (!transform.GetChild(0).TryGetComponent<BoxCollider>(out col))
             Debug.Log("OnehandWeapon - Init - BoxCollider");
         else
-            size = col.size;
-
-        col.enabled = false;
+            col.enabled = false;
+        if (!transform.Find("OneHand/Trail").TryGetComponent<TrailRenderer>(out trail))
+            Debug.Log("OnehandWeeapon - Init - TrailRender");
+        else
+        {
+            switch (attribute)
+            {
+                case 0:
+                    trail.startColor = Color.white; 
+                    break;
+                case 1:
+                    trail.startColor = Color.red; 
+                    break;
+                case 2:
+                    trail.startColor = Color.blue; 
+                    break;
+                case 3:
+                    trail.startColor = Color.green;
+                    break;
+            }
+            trail.enabled = false;
+        }
     }
 
     public void Sting()
@@ -55,6 +81,15 @@ public class OneHandWeapon : Weapon
         StopAllCoroutines();
         StartCoroutine(InitBoxCollider());
     }
+    public void StartTrail()
+    {
+        trail.enabled = true;
+    }
+
+    public void StopTrail()
+    {
+        trail.enabled = false;
+    }
 
     private IEnumerator InitBoxCollider()
     {
@@ -70,9 +105,15 @@ public class OneHandWeapon : Weapon
             GameManager.Inst.WarnOnehand(damage);
             if (durability <= 0)
             {
-                col.enabled = false;
+                StartCoroutine(WaitDestroy());
             }
         }
+    }
+    private IEnumerator WaitDestroy()
+    {
+        breakEffect.Play();
+        yield return YieldInstructionCache.WaitForSeconds(1);
+        gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -86,6 +127,23 @@ public class OneHandWeapon : Weapon
                     col.enabled = false;
                     monster.TakeDamage(curATK);
                     WearOutDurability(curATK);
+                    switch (attribute)
+                    {
+                        case (int)Attribute.None: break;
+                        case (int)Attribute.Fire:
+                            monster.TakeBrun(curATK / 5f);
+                            break;
+                        case (int) Attribute.Ice:
+                            monster.Frozen();
+                            break;
+                        case (int)Attribute.Rock:
+                            monster.TakeRock(curATK / 6f);
+                            break;
+                    }
+                    if (curATK == d_jump && monster.GetTargetBuff() != Buff.Rock)
+                    {
+                        monster.TakeStun();
+                    }
                     InitCurrATK();
                 }
                 else if (other.TryGetComponent<PlayerController>(out PlayerController player) && col.enabled)
@@ -93,6 +151,23 @@ public class OneHandWeapon : Weapon
                     col.enabled = false;
                     player.TakeDamage(curATK);
                     WearOutDurability(curATK);
+                    switch (attribute)
+                    {
+                        case (int)Attribute.None: break;
+                        case (int)Attribute.Fire:
+                            player.TakeBrun(curATK / 5f);
+                            break;
+                        case (int)Attribute.Ice:
+                            player.Frozen();
+                            break;
+                        case (int)Attribute.Rock:
+                            player.TakeRock(curATK / 6f);
+                            break;
+                    }
+                    if (curATK == d_jump && player.GetTargetBuff() != Buff.Rock)
+                    {
+                        player.TakeStun();
+                    }
                     InitCurrATK();
                 }
                 else if (col.enabled && other.CompareTag("Weapon") && other.transform.parent.TryGetComponent<Shield>(out Shield weapon))

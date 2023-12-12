@@ -937,6 +937,85 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dee865f3fc9bc54abb653be1d3c42f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pData:
+    userNickname: 
+    coin: 0
+    curHP: 0
+    maxHP: 0
+    DEF: 0
+    maxStamina: 0
+    uidCounter: 0
+    inventory:
+      items: []
+    onehand:
+      uid: 0
+      type: 0
+      name: 
+      resources: 
+      iconResources: 
+      ATK: 0
+      durability: 0
+      equip: 0
+      dropIndex: 0
+      sellCoin: 0
+      buyCoin: 0
+      fixCoin: 0
+    i_onehand: 0
+    shield:
+      uid: 0
+      type: 0
+      name: 
+      resources: 
+      iconResources: 
+      ATK: 0
+      durability: 0
+      equip: 0
+      dropIndex: 0
+      sellCoin: 0
+      buyCoin: 0
+      fixCoin: 0
+    i_shield: 0
+    ranged:
+      uid: 0
+      type: 0
+      name: 
+      resources: 
+      iconResources: 
+      ATK: 0
+      durability: 0
+      equip: 0
+      dropIndex: 0
+      sellCoin: 0
+      buyCoin: 0
+      fixCoin: 0
+    i_ranged: 0
+    projectile:
+      uid: 0
+      type: 0
+      name: 
+      resources: 
+      iconResources: 
+      ATK: 0
+      durability: 0
+      equip: 0
+      dropIndex: 0
+      sellCoin: 0
+      buyCoin: 0
+      fixCoin: 0
+    helmet:
+      uid: 0
+      type: 0
+      name: 
+      resources: 
+      iconResources: 
+      sellGold: 0
+      DEF: 0
+      equip: 0
+      dropIndex: 0
+    i_helmet: 0
+    usedTime: 
+    shopHpPotion: 0
+    shopStaminaPotion: 0
 --- !u!4 &1786055628
 Transform:
   m_ObjectHideFlags: 0

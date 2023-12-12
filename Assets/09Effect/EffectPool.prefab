@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9173884814771195362
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4436758859618884550}
+  - component: {fileID: 2905668742517398996}
+  - component: {fileID: 2099072353880543634}
+  m_Layer: 6
+  m_Name: EffectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4436758859618884550
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9173884814771195362}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2905668742517398996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9173884814771195362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 733f4e1ff483611408f4a8d4fc9202ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pools:
+  - _name: Hit
+    _component: {fileID: 7097467690223797560, guid: 3dae6fb315938e4429743641b5173e22,
+      type: 3}
+    _count: 1
+    _container: {fileID: 4436758859618884550}
+    _nonLazy: 0
+  - _name: HitFire
+    _component: {fileID: 3047653816085009986, guid: c2d7cf22436de1641960b1c9ea393506,
+      type: 3}
+    _count: 1
+    _container: {fileID: 4436758859618884550}
+    _nonLazy: 0
+  - _name: HitIce
+    _component: {fileID: 1112977949008630120, guid: d654ecd2d65cca649b834ee109d54e46,
+      type: 3}
+    _count: 1
+    _container: {fileID: 4436758859618884550}
+    _nonLazy: 0
+  - _name: Stun
+    _component: {fileID: 5552801807450201032, guid: d7be47f35773cb447a9189660553c88a,
+      type: 3}
+    _count: 1
+    _container: {fileID: 4436758859618884550}
+    _nonLazy: 0
+  - _name: Burn
+    _component: {fileID: 469829788386037615, guid: 8e93d51330bdfd94b98f5890d390daf4,
+      type: 3}
+    _count: 1
+    _container: {fileID: 4436758859618884550}
+    _nonLazy: 0
+  - _name: Frozen
+    _component: {fileID: 6095252424813380369, guid: e1f287f97747c604daaa063a51dfa1a7,
+      type: 3}
+    _count: 1
+    _container: {fileID: 4436758859618884550}
+    _nonLazy: 0
+  - _name: Spawn
+    _component: {fileID: 8180505123687287648, guid: 34771154f88888946b656eafba6d89d2,
+      type: 3}
+    _count: 1
+    _container: {fileID: 4436758859618884550}
+    _nonLazy: 0
+  - _name: Potion
+    _component: {fileID: 6063875048527973157, guid: 5e991ca0058f7d3479771a6c3afbb6c1,
+      type: 3}
+    _count: 1
+    _container: {fileID: 4436758859618884550}
+    _nonLazy: 0
+--- !u!114 &2099072353880543634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9173884814771195362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5e862145440a3449c89021e0eb6942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
