@@ -1605,12 +1605,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8694294545412086281}
+  - {fileID: 8836219159517331247}
+  - {fileID: 7632223375377161130}
   - {fileID: 8423743190097452667}
   - {fileID: 6033460545151730175}
   - {fileID: 1172160295465179171}
   - {fileID: 8403433062665001464}
-  - {fileID: 8836219159517331247}
-  - {fileID: 7632223375377161130}
   - {fileID: 1028468156076027788}
   - {fileID: 8025550889170071551}
   - {fileID: 1693275634627402794}
@@ -2226,6 +2226,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: InventoryPopup
       objectReference: {fileID: 0}
+    - target: {fileID: 7683891086980800843, guid: 7026368119b35cf46bb306666fb9ab69,
+        type: 3}
+      propertyPath: m_Size
+      value: 0.6728972
+      objectReference: {fileID: 0}
+    - target: {fileID: 7683891086980800843, guid: 7026368119b35cf46bb306666fb9ab69,
+        type: 3}
+      propertyPath: m_Value
+      value: 1.0000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 7978547712585178238, guid: 7026368119b35cf46bb306666fb9ab69,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -87.50016
+      objectReference: {fileID: 0}
     - target: {fileID: 8499198961383311414, guid: 7026368119b35cf46bb306666fb9ab69,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2692,17 +2707,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3519530052624978514, guid: 38812fd2586966c42a14f966d5674184,
         type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3519530052624978514, guid: 38812fd2586966c42a14f966d5674184,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 010a6e5305fa7004f89c5d317b7b47d4,
-        type: 3}
-    - target: {fileID: 6856924068536163907, guid: 38812fd2586966c42a14f966d5674184,
-        type: 3}
       propertyPath: m_Maskable
       value: 1
       objectReference: {fileID: 0}
@@ -2710,42 +2714,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MimiMapSpace
-      objectReference: {fileID: 0}
-    - target: {fileID: 8001179569355789240, guid: 38812fd2586966c42a14f966d5674184,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8946302803770578249, guid: 38812fd2586966c42a14f966d5674184,
-        type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8946302803770578249, guid: 38812fd2586966c42a14f966d5674184,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: e09c369f44c61459391787a76940c455,
-        type: 3}
-    - target: {fileID: 8946302803770578249, guid: 38812fd2586966c42a14f966d5674184,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.8459119
-      objectReference: {fileID: 0}
-    - target: {fileID: 8946302803770578249, guid: 38812fd2586966c42a14f966d5674184,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.96477985
-      objectReference: {fileID: 0}
-    - target: {fileID: 8946302803770578249, guid: 38812fd2586966c42a14f966d5674184,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8946302803770578249, guid: 38812fd2586966c42a14f966d5674184,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

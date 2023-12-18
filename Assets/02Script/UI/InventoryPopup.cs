@@ -35,6 +35,10 @@ public class InventoryPopup : MonoBehaviour
     private Button deleteButton;
     private InventoryItemData selectedItem;
 
+    public RectTransform scrollContent;
+
+
+
     private void Awake()
     {
         transform.LeanScale(Vector3.zero, 0);
@@ -65,8 +69,11 @@ public class InventoryPopup : MonoBehaviour
         }
 
         itemButtons = new List<ItemButton>();
+        scrollContent = transform.Find("InvenBack/InvenView/Viewport/Content").GetComponent<RectTransform>();
+        if (scrollContent == null)
+            Debug.Log("InventoryPopup - Awake - RectTransform");
         Transform pointer = transform.Find("InvenBack/InvenView/Viewport/Content");
-        for(int i=0; i < 29; i++)
+        for (int i=0; i < 29; i++)
         {
             itemButtons.Add(pointer.GetChild(i).GetComponent<ItemButton>());
         }
@@ -129,6 +136,11 @@ public class InventoryPopup : MonoBehaviour
             Debug.Log("InventoryPopupManager -Awake - TextMeshProUGUI");
     }
 
+    public void SetRectPosition()
+    {
+        float x = scrollContent.anchoredPosition.x;
+        scrollContent.anchoredPosition = new Vector3(x, 0, 0);
+    }
     public void UpdatePlayer()
     {
         coin.text = GameManager.Inst.PlayerCoin.ToString();
@@ -166,16 +178,19 @@ public class InventoryPopup : MonoBehaviour
             i_shield.enabled = true;
             i_shield.sprite = Resources.Load<Sprite>(GameManager.Inst.PlayerInfo.shield.iconResources);
             data = GameManager.Inst.INVENTORY.GetItem(GameManager.Inst.PlayerInfo.i_shield);
-            if (data.enchant) 
+            if(data != null)
             {
-                i_shield_enchant.enabled = true;
+                if (data.enchant)
+                {
+                    i_shield_enchant.enabled = true;
+                }
+                else
+                {
+                    i_shield_enchant.enabled = false;
+                }
+                i_shield_info.text = data.durability.ToString();
+                i_shield_btn.UpdateItemButton(data);
             }
-            else
-            {
-                i_shield_enchant.enabled = false;
-            }
-            i_shield_info.text = data.durability.ToString();
-            i_shield_btn.UpdateItemButton(data);
         }
         else
         {
@@ -243,8 +258,8 @@ public class InventoryPopup : MonoBehaviour
             i_StaminaP.text = amount.ToString();
         else
             i_StaminaP.text = "0";
-    }
 
+    }
     public void UpdateInventory()
     {
         List<InventoryItemData> inven = GameManager.Inst.INVENTORY.GetItemList();
@@ -253,6 +268,7 @@ public class InventoryPopup : MonoBehaviour
         GameObject itemMeshdata;
 
         int popupIndex = 0;
+        SetRectPosition();
         for (int i = 0; i < inven.Count; i++, popupIndex++)
         {
             if (inven[i].itemID == 10501) // arrow
@@ -280,7 +296,6 @@ public class InventoryPopup : MonoBehaviour
         {
             itemButtons[i].InitButton();
         }
-        Time.timeScale = 0;
     }
 
     public void ShowNamePopup(string name, string amount)

@@ -103,17 +103,7 @@ public class OneHandWeapon : Weapon
         {
             durability -= damage;
             GameManager.Inst.WarnOnehand(damage);
-            if (durability <= 0)
-            {
-                StartCoroutine(WaitDestroy());
-            }
         }
-    }
-    private IEnumerator WaitDestroy()
-    {
-        breakEffect.Play();
-        yield return YieldInstructionCache.WaitForSeconds(1);
-        gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)

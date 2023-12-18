@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
 public enum BGM_Type
 {
     BGM_Home = 0,
@@ -12,13 +10,20 @@ public enum BGM_Type
 
 public enum SFX_Type
 {
-    SFX_Fire01,
-    SFX_Explosion_01,
+    SFX_ChangeWeapon = 0,
+    SFX_OnehandAttack = 1,
+    SFX_Ranged = 2,
+    SFX_Hit = 3,
+    SFX_Coin = 4,
+    SFX_Item = 5,
+    SFX_Drink = 6,
 }
 
 public class SoundManager : MonoBehaviour
 {
+    [SerializeField]
     private AudioSource bgmAudio;
+    [SerializeField]
     private List<AudioClip> bgmList;
 
     public void ChangeBGM(BGM_Type newBGM)
@@ -68,7 +73,7 @@ public class SoundManager : MonoBehaviour
         sfxPlayers[curser].Play();
 
         curser++;
-        if (curser > 9)
+        if (curser > sfxPlayers.Count-1)
         {
             curser = 0;
         }
@@ -80,16 +85,4 @@ public class SoundManager : MonoBehaviour
         get { return instance; }
     }
 
-    private void Awake()
-    {
-        if (instance)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        else
-        {
-            instance = this;
-        }
-    }
 }

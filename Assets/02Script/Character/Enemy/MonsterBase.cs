@@ -170,6 +170,7 @@ public class MonsterBase : CharacterBase
         anim.BowAim();
         GetProjectile();
         anim.BowShoot();
+        soundManager.PlaySFX(SFX_Type.SFX_Ranged);
         StartCoroutine(rangedAttackDelay(unit.ranged.ImmediatelyShoot()));
     }
 
@@ -181,6 +182,7 @@ public class MonsterBase : CharacterBase
         anim.BowAim();
         GetProjectile();
         anim.BowShoot();
+        soundManager.PlaySFX(SFX_Type.SFX_Ranged);
         StartCoroutine(rangedAttackDelay(unit.ranged.Shoot()));
     }
 
@@ -220,10 +222,12 @@ public class MonsterBase : CharacterBase
     public void AttackOnhand()
     {
         Sting();
+        soundManager.PlaySFX(SFX_Type.SFX_OnehandAttack);
     }
     public void SkillOnehand()
     {
         JumpAttack();
+        soundManager.PlaySFX(SFX_Type.SFX_OnehandAttack);
     }
 
     public void StopAttack()
@@ -299,11 +303,14 @@ public class MonsterBase : CharacterBase
         unit.moveType = MoveType.None;
     }
 
-    protected IEnumerator OnDie()
+    protected void OnDie()
     {
         anim.Die();
         unit.state = State.Die;
         gameObject.layer = LayerMask.NameToLayer("DieChar");
+        spawnManager.DropItem(transform.position + Vector3.up * 3);
+        unit.buff = Buff.None;
+        StopAllEffect();
         if (!usingRanged)
         {
             unit.onehand.InitCurrATK();
@@ -316,8 +323,12 @@ public class MonsterBase : CharacterBase
                 pInfo.projectile.TryTakePool();
             }
         }
-        spawnManager.DropItem(transform.position + Vector3.up * 3);
-        yield return YieldInstructionCache.WaitForSeconds(0.5f);
+        StartCoroutine(ReturnMonster());
+    }
+
+    private IEnumerator ReturnMonster()
+    {
+        yield return YieldInstructionCache.WaitForSeconds(2f);
         spawnManager.TakeMonsterPool(this);
     }
 
@@ -325,13 +336,13 @@ public class MonsterBase : CharacterBase
     {
         if (unit.currentHP > 0)
         {
+            soundManager.PlaySFX(SFX_Type.SFX_Hit);
             ChangeHP(CalculateDamage(damage));
             if (unit.currentHP < 1)
             {
-                StopAllCoroutines();
                 ui.Die();
                 ai.Die();
-                StartCoroutine(OnDie());
+                OnDie();
             }
             else
             {
@@ -346,7 +357,8 @@ public class MonsterBase : CharacterBase
     public void TakeBrun(float damage)
     {
         Brun();
-        StartCoroutine(Brunning(damage));
+        if (unit.currentHP > 0)
+            StartCoroutine(Brunning(damage));
     }
 
     private IEnumerator Brunning(float damage)
@@ -363,7 +375,8 @@ public class MonsterBase : CharacterBase
     {
         Stun();
         ai.TakeDebuff(2);
-        StartCoroutine(WaitStopStun());
+        if(unit.currentHP > 0)
+            StartCoroutine(WaitStopStun());
     }
 
     private IEnumerator WaitStopStun()
@@ -376,7 +389,8 @@ public class MonsterBase : CharacterBase
     {
         Rock();
         ai.TakeDebuff(2);
-        StartCoroutine(Rocking(damage));
+        if (unit.currentHP > 0)
+            StartCoroutine(Rocking(damage));
     }
 
     private IEnumerator Rocking(float damage)

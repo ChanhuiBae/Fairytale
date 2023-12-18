@@ -7,6 +7,7 @@ public class SpiderSceneManager : SpawnManager
     private GameObject potal;
     private FollowCamera cam;
     private PlayerController player;
+    private SpiderDemon spiderDemon;
 
     private bool isInit = false;
 
@@ -22,15 +23,17 @@ public class SpiderSceneManager : SpawnManager
         if (!GameObject.Find("Player").TryGetComponent<PlayerController>(out player))
             Debug.Log("SpiderSceneManager - Awake - PlayerController");
     }
-    private void StageClear()
+    public void StageClear()
     {
         potal.SetActive(true);
     }
 
-    private void ResetScene()
+    public void InitSpiderDemon(SpiderDemon monster)
     {
-
+        spiderDemon = monster;
+        StartCoroutine(CheckState());
     }
+
 
     private IEnumerator CheckState()
     {
@@ -44,8 +47,7 @@ public class SpiderSceneManager : SpawnManager
             }
             if (player.GetTargetState() == State.Die)
             {
-                ResetScene();
-                break;
+
             }
             yield return YieldInstructionCache.WaitForSeconds(0.1f);
         }

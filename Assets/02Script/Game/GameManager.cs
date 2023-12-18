@@ -53,6 +53,7 @@ public class GameManager : Singleton<GameManager>
     private PlayerController player;
     private FadeManager fadeManager;
     private MenuManager menuManager;
+    private SoundManager soundManager;
     private List<Transform> targetList;
 
     public void Awake()
@@ -111,6 +112,22 @@ public class GameManager : Singleton<GameManager>
             {
                 spiderSceneSpawn = new Vector3(table.Respawn[i].x, table.Respawn[i].y, table.Respawn[i].z);
             }
+            else if (table.Respawn[i].sceneNumber == 6)
+            {
+                gadianSceneSpawn.Add(new Vector3(table.Respawn[i].x, table.Respawn[i].y, table.Respawn[i].z));
+            }
+            else if (table.Respawn[i].sceneNumber == 7)
+            {
+                dragonSceneSpawn = new Vector3(table.Respawn[i].x, table.Respawn[i].y, table.Respawn[i].z);
+            }
+            else if (table.Respawn[i].sceneNumber == 8)
+            {
+                goblinSceneSpawn = new Vector3(table.Respawn[i].x, table.Respawn[i].y, table.Respawn[i].z);
+            }
+            else if (table.Respawn[i].sceneNumber == 9)
+            {
+                medusaSceneSpawn = new Vector3(table.Respawn[i].x, table.Respawn[i].y, table.Respawn[i].z);
+            }
         }
 
         #endregion
@@ -154,6 +171,29 @@ public class GameManager : Singleton<GameManager>
                 player.ISCONTROLLER = true;
             }
         }
+        if(soundManager == null)
+        {
+            GameObject.Find("SoundManager").TryGetComponent<SoundManager>(out soundManager);
+            if(soundManager != null)
+            {
+                int activeScene = SceneManager.GetActiveScene().buildIndex;
+                if(activeScene > 2)
+                {
+                    if (activeScene == 3)
+                    {
+                        soundManager.ChangeBGM(BGM_Type.BGM_Home);
+                    }
+                    else if (activeScene % 2 == 0)
+                    {
+                        soundManager.ChangeBGM(BGM_Type.BGM_Stage);
+                    }
+                    else
+                    {
+                        soundManager.ChangeBGM(BGM_Type.BGM_Boss);
+                    }
+                }
+            }
+        }
   
     }
 
@@ -187,6 +227,11 @@ public class GameManager : Singleton<GameManager>
     private List<TableEntity_Tip> stageTip = new List<TableEntity_Tip>();
     private List<Vector3> demonSceneSpawn = new List<Vector3>();
     private Vector3 spiderSceneSpawn = Vector3.zero;
+    private List<Vector3> gadianSceneSpawn = new List<Vector3>();
+    private Vector3 dragonSceneSpawn = Vector3.zero;
+    private Vector3 goblinSceneSpawn = Vector3.zero;
+    private Vector3 medusaSceneSpawn = Vector3.zero;
+
     private int random;
 
     public string GetTipMessage(int nextSceneNum)
@@ -225,6 +270,30 @@ public class GameManager : Singleton<GameManager>
         else if (sceneNum == 5)
         {
             return spiderSceneSpawn;
+        }
+        else if (sceneNum == 6)
+        {
+            for (int i = 0; i < gadianSceneSpawn.Count; i++)
+            {
+                distance = Vector3.Distance(player, gadianSceneSpawn[i]);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    result = gadianSceneSpawn[i];
+                }
+            }
+        }
+        else if (sceneNum == 7)
+        {
+            return dragonSceneSpawn;
+        }
+        else if (sceneNum == 8)
+        {
+            return goblinSceneSpawn;
+        }
+        else if (sceneNum == 9)
+        {
+            return medusaSceneSpawn;
         }
         return result;
     }
@@ -599,6 +668,7 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("inventory is null");
         else if (!pData.inventory.IsFull())
         {
+            soundManager.PlaySFX(SFX_Type.SFX_Item);
             if(newItem.itemID > 20000)
             {
                 pData.inventory.AddItem(newItem);
@@ -661,7 +731,11 @@ public class GameManager : Singleton<GameManager>
     public int PlayerCoin
     {
         get => pData.coin;
-        set => pData.coin = value;
+        set
+        {
+            soundManager.PlaySFX(SFX_Type.SFX_Coin);
+            pData.coin = value;
+        } 
     }
 
     public string PlayerName
@@ -709,16 +783,23 @@ public class GameManager : Singleton<GameManager>
             Vector3 result = Vector3.zero;
             float min = 999;
             float distance;
-            for(int i = 0; i < targetList.Count; i++)
+            try
             {
-                distance = Vector3.Distance(player.transform.position, targetList[i].position);
-                if(distance < min)
+                for (int i = 0; i < targetList.Count; i++)
                 {
-                    min = distance;
-                    result = targetList[i].position;
+                    distance = Vector3.Distance(player.transform.position, targetList[i].position);
+                    if (distance < min)
+                    {
+                        min = distance;
+                        result = targetList[i].position;
+                    }
+                }
+                if (min > 10)
+                {
+                    return Vector3.zero;
                 }
             }
-            if(min > 10)
+            catch (MissingReferenceException e)
             {
                 return Vector3.zero;
             }

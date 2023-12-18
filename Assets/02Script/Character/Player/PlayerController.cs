@@ -144,6 +144,8 @@ public class PlayerController : CharacterBase
         rig.isKinematic = true;
         charge.gameObject.SetActive(false);
         anim.Die();
+        unit.buff = Buff.None;
+        StopAllEffect();
         gameObject.layer = LayerMask.NameToLayer("DieChar");
     }
 
@@ -168,6 +170,7 @@ public class PlayerController : CharacterBase
             charge.gameObject.SetActive(false);
             anim.StopMove();
             anim.StopDefend();
+            soundManager.PlaySFX(SFX_Type.SFX_Hit);
             if(unit.rangedAttack == RangedAttack.Aim)
             {
                 anim.StopBowAim();
@@ -317,6 +320,7 @@ public class PlayerController : CharacterBase
             if (unit.state == State.Idle || (unit.state == State.Move) || (unit.state == State.Lay))
             {
                 anim.Drink();
+                soundManager.PlaySFX(SFX_Type.SFX_Drink);
                 isController = false;
                 if (unit.currentHP < unit.maxHP)
                     ChangeHP(-unit.maxHP/4);
@@ -614,10 +618,15 @@ public class PlayerController : CharacterBase
 
     private void ExchangeWeapon()
     {
+        if(unit.rangedAttack == RangedAttack.Aim)
+        {
+            return;
+        }
         if (!usingRanged && CheckRanged())
         {
             usingRanged = true;
             charge.gameObject.SetActive(false);
+            soundManager.PlaySFX(SFX_Type.SFX_ChangeWeapon);
             if (CheckOneHand())
             {
                 unit.onehand.transform.parent = unit.back;
@@ -640,6 +649,7 @@ public class PlayerController : CharacterBase
         else if (usingRanged && CheckOneHand())
         {
             usingRanged = false;
+            soundManager.PlaySFX(SFX_Type.SFX_ChangeWeapon);
             if (CheckOneHand())
             {
                 unit.onehand.transform.parent = unit.righthand;
@@ -741,6 +751,7 @@ public class PlayerController : CharacterBase
             && unit.onehandAttack == OnehandAttack.Charge)
         {
             charge.gameObject.SetActive(true);
+            soundManager.PlaySFX(SFX_Type.SFX_OnehandAttack);
             if (charge.value < 1)
             {
                 unit.onehandAttack = OnehandAttack.Sting;
@@ -869,6 +880,7 @@ public class PlayerController : CharacterBase
                     {
                         GetProjectile();
                         anim.BowShoot();
+                    soundManager.PlaySFX(SFX_Type.SFX_Ranged);
                         unit.ranged.WearOutDurability();
                         StartCoroutine(rangedAttackDelay());
                         if (pInfo.uid == 10501)
@@ -931,6 +943,7 @@ public class PlayerController : CharacterBase
         if (unit.rangedAttack == RangedAttack.Aim)
         {
             unit.rangedAttack = RangedAttack.Shoot;
+            soundManager.PlaySFX(SFX_Type.SFX_Ranged);
             anim.BowShoot();
             StartCoroutine(rangedAttackDelay());
             pInfo.projectile.AimShot(unit.ranged.Shoot());
@@ -953,6 +966,7 @@ public class PlayerController : CharacterBase
             {
                 unit.state = State.Attack;
                 unit.attackType = AttackType.Jump;
+                soundManager.PlaySFX(SFX_Type.SFX_OnehandAttack);
                 unit.onehand.JumpAttack();
                 anim.JumpAttack();
                 Jump();

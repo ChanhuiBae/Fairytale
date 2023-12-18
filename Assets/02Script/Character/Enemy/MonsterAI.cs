@@ -313,8 +313,11 @@ public class MonsterAI : MonoBehaviour
 
     public void TakeDebuff(float time)
     {
-        StopAllCoroutines();
-        StartCoroutine(StopAction(time));
+        if(currentState != AI_State.Die)
+        {
+            StopAllCoroutines();
+            StartCoroutine(StopAction(time));
+        }
     }
 
     protected IEnumerator StopAction(float time)

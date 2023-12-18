@@ -83,6 +83,7 @@ public class CharacterBase : MonoBehaviour
 
     protected CharacterUnit unit = new CharacterUnit();
     protected ProjectileInfo pInfo = new ProjectileInfo();
+    protected SoundManager soundManager;
     protected Vector3 moveDir = Vector3.zero;
 
     protected TrailRenderer trail;
@@ -92,12 +93,14 @@ public class CharacterBase : MonoBehaviour
     {
         material = GetComponentInChildren<SkinnedMeshRenderer>().material;
         material.color = Color.white;
-
+        if(!GameObject.Find("SoundManager").TryGetComponent<SoundManager>(out soundManager))
+            Debug.Log("CharacterBase - Init - SoundManager");
         if (!TryGetComponent<CharacterAnimationController>(out anim))
             Debug.Log("CharacterBase - Init - CharacterAnimationController");
 
         if (!TryGetComponent<Rigidbody>(out rig))
             Debug.Log("CharacterBase - Init - Rigidbody");
+
         if (!TryGetComponent<TrailRenderer>(out trail))
             Debug.Log("CharacterBase - Init - TrailRender");
         else
@@ -331,29 +334,43 @@ public class CharacterBase : MonoBehaviour
         anim.StandUp();
     }
 
-    protected void Hit()
+    protected void StopAllEffect()
     {
-        characterEffect.PlayEffect(0);
+        characterEffect.StopAllEffect();
+    }
+
+    protected void Hit() // effect
+    {
+        if(unit.currentHP > 0)
+        {
+            characterEffect.PlayEffect(0);
+        }
     }
 
     protected void Stun()
     {
-        unit.buff = Buff.Stun;
-        anim.Stun();
-        characterEffect.PlayEffect(1);
+        if (unit.currentHP > 0)
+        {
+            unit.buff = Buff.Stun;
+            anim.Stun();
+            characterEffect.PlayEffect(1);
+        }
     }
 
     protected void StopStun()
     {
         unit.buff = Buff.None;
         anim.StopStun();
-        characterEffect.PlayEffect(1);
+        characterEffect.StopEffect(1);
     }
 
     protected void Brun()
     {
-        unit.buff = Buff.Burn;
-        characterEffect.PlayEffect(2);
+        if (unit.currentHP > 0)
+        {
+            unit.buff = Buff.Burn;
+            characterEffect.PlayEffect(2);
+        }
     }
 
     protected void StopBurn()
@@ -364,9 +381,12 @@ public class CharacterBase : MonoBehaviour
 
     public void Frozen()
     {
-        unit.buff = Buff.Frozen;
-        characterEffect.PlayEffect(3);
-        StartCoroutine(WaitMeltting());
+        if (unit.currentHP > 0)
+        {
+            unit.buff = Buff.Frozen;
+            characterEffect.PlayEffect(3);
+            StartCoroutine(WaitMeltting());
+        }
     }
 
     public void StopFrozen()
@@ -383,9 +403,12 @@ public class CharacterBase : MonoBehaviour
 
     protected void Rock()
     {
-        unit.buff = Buff.Rock;
-        anim.Relax();
-        material.color = Color.gray;
+        if (unit.currentHP > 0)
+        {
+            unit.buff = Buff.Rock;
+            anim.Relax();
+            material.color = Color.gray;
+        }
     }
 
     protected void StopRock()

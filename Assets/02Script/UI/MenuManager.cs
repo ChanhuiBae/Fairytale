@@ -53,7 +53,6 @@ public class MenuManager : MonoBehaviour
             isInventoryOpen = true;
             GameManager.Inst.SaveData();
             StartCoroutine(SetInventory());
-            inventoryManager.gameObject.LeanScale(Vector3.one, 0f);
         }
     }
     private void CloseInventory()
@@ -72,6 +71,9 @@ public class MenuManager : MonoBehaviour
         inventoryManager.UpdatePlayer();
         yield return YieldInstructionCache.WaitForSeconds(0.5f);
         inventoryManager.UpdateInventory();
+        yield return YieldInstructionCache.WaitForSeconds(0.5f);
+        inventoryManager.gameObject.LeanScale(Vector3.one, 0f);
+        Time.timeScale = 0f;
     }
     public void UpdateInventory()
     {

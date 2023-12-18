@@ -30,5 +30,13 @@ public class CharacterEffect : MonoBehaviour
         effects[id].StopEffect();
     }
 
+    public void StopAllEffect()
+    {
+        for(int i= 0; i < effects.Count; i++)
+        {
+            effects[i].StopEffect();
+        }
+    }
+
 
 }

@@ -8,6 +8,9 @@ using static UnityEditor.Progress;
 
 public class SmithyPopup : MonoBehaviour
 {
+    private Canvas canvas;
+    private RectTransform scrollContent;
+
     private Button closeButton;
     private Transform boxPointer;
     private List<WeaponBox> boxes;
@@ -57,6 +60,11 @@ public class SmithyPopup : MonoBehaviour
     private void Awake()
     {
         transform.LeanScale(Vector3.zero, 0f);
+        if (!transform.parent.TryGetComponent<Canvas>(out canvas))
+            Debug.Log("SmithyPopup - Init - Canvas");
+
+        if (!GameObject.Find("Contents").TryGetComponent<RectTransform>(out scrollContent))
+            Debug.Log("SmithyPopup - Init - RectTransform");
         buyList = new List<InventoryItemData>();
         choseList = new List<InventoryItemData>();
         if (!transform.Find("CloseButton").TryGetComponent<Button>(out closeButton))
@@ -65,6 +73,7 @@ public class SmithyPopup : MonoBehaviour
         {
             closeButton.onClick.AddListener(CloseSmithyPopup);
         }
+
         if (!GameObject.Find("WeaponBoxes").TryGetComponent<Transform>(out boxPointer))
             Debug.Log("SmityPopup - Awake - Transform");
         else
@@ -196,9 +205,15 @@ public class SmithyPopup : MonoBehaviour
             Debug.Log("SmithyPopup - Awake - Transform");
     }
 
+    public void SetRectPosition()
+    {
+        float x = scrollContent.anchoredPosition.x;
+        scrollContent.anchoredPosition = new Vector3(x, 0, 0);
+    }
     public void InitSmithyPopup()
     {
-        transform.LeanScale(Vector3.one, 0f);
+        transform.LeanScale(new Vector3(0.7f,0.7f, 1), 0f);
+        SetRectPosition();
         InitFirstBuyPopup();
         chose = -1;
     }
@@ -206,6 +221,9 @@ public class SmithyPopup : MonoBehaviour
     private void InitFirstBuyPopup()
     {
         buySword.LeanMoveLocalX(-430f, 1);
+        sellSword.LeanMoveLocalX(-445f, 1);
+        enchantSword.LeanMoveLocalX(-445f, 1);
+        fixSword.LeanMoveLocalX(-445f, 1);
         sellPopup.gameObject.SetActive(false);
         enchantPopup.gameObject.SetActive(false);
         fixPopup.gameObject.SetActive(false);
