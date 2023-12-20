@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using UnityEditor.Purchasing;
 using UnityEngine;
 using UnityEngine.ProBuilder.Shapes;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
+using static UnityEditor.Timeline.Actions.MenuPriority;
 
 public class SmithyPopup : MonoBehaviour
 {
@@ -15,9 +18,11 @@ public class SmithyPopup : MonoBehaviour
     private Transform boxPointer;
     private List<WeaponBox> boxes;
     private Transform buyPopup;
+    private Transform inventoryWarning;
+    private Transform coinWarning;
     private Transform sellPopup;
     private Transform enchantPopup;
-    private Transform fixPopup; 
+    private Transform fixPopup;
     private Transform tryPopup;
     private Transform successPopup;
     private Transform failPopup;
@@ -65,7 +70,7 @@ public class SmithyPopup : MonoBehaviour
 
         if (!GameObject.Find("Contents").TryGetComponent<RectTransform>(out scrollContent))
             Debug.Log("SmithyPopup - Init - RectTransform");
-        buyList = new List<InventoryItemData>();
+
         choseList = new List<InventoryItemData>();
         if (!transform.Find("CloseButton").TryGetComponent<Button>(out closeButton))
             Debug.Log("SmityPopup - Awake - Button");
@@ -97,6 +102,14 @@ public class SmithyPopup : MonoBehaviour
             {
                 buyButton.onClick.AddListener(Buy);
             }
+            if (!buyPopup.Find("InventoryWarning").TryGetComponent<Transform>(out inventoryWarning))
+                Debug.Log("SmithyPopup - Awake - Transform");
+            else
+                inventoryWarning.gameObject.SetActive(false);
+            if (!buyPopup.Find("CoinWarning").TryGetComponent<Transform>(out coinWarning))
+                Debug.Log("SmithyPopup - Awake - Transform");
+            else
+                coinWarning.gameObject.SetActive(false);    
         }
         if (!transform.Find("SellPopup").TryGetComponent<Transform>(out sellPopup))
             Debug.Log("SmithyPopup - Awake - Transform");
@@ -212,7 +225,7 @@ public class SmithyPopup : MonoBehaviour
     }
     public void InitSmithyPopup()
     {
-        transform.LeanScale(new Vector3(0.7f,0.7f, 1), 0f);
+        transform.LeanScale(new Vector3(0.7f, 0.7f, 1), 0f);
         SetRectPosition();
         InitFirstBuyPopup();
         chose = -1;
@@ -220,45 +233,49 @@ public class SmithyPopup : MonoBehaviour
 
     private void InitFirstBuyPopup()
     {
-        buySword.LeanMoveLocalX(-430f, 1);
-        sellSword.LeanMoveLocalX(-445f, 1);
-        enchantSword.LeanMoveLocalX(-445f, 1);
-        fixSword.LeanMoveLocalX(-445f, 1);
-        sellPopup.gameObject.SetActive(false);
-        enchantPopup.gameObject.SetActive(false);
-        fixPopup.gameObject.SetActive(false);
-        price = 0;
-        buyCoin.text = "0 / " + GameManager.Inst.PlayerCoin.ToString();
-        choseList.Clear();
-
-        for(int i = 0; i < 8; i++)
+        if (buyList == null || buyList.Count == 0)
         {
-            InventoryItemData  item = new InventoryItemData();
-            item.uid = -7 + i;
-            TableEntity_Weapon sellWeapon = GameManager.Inst.GetCanBuyWeapon();
-            item.itemID = sellWeapon.uid;
-            item.enchant = false;
-            item.amount = 1;
-            item.durability = sellWeapon.durability;
-            item.type = sellWeapon.type;
-            buyList.Add(item);
-            boxes[i].SetWeaponBox(item, WeaponBoxType.Buy);
+            buyList = new List<InventoryItemData>();
+            for (int i = 0; i < 8; i++)
+            {
+                InventoryItemData item = new InventoryItemData();
+                TableEntity_Weapon sellWeapon = GameManager.Inst.GetCanBuyWeapon();
+                item.itemID = sellWeapon.uid;
+                item.enchant = false;
+                item.amount = 1;
+                item.durability = sellWeapon.durability;
+                item.type = sellWeapon.type;
+                buyList.Add(item);
+            }
         }
-        for (int i = 8; i < 30; i++)
-        {
-            boxes[i].gameObject.SetActive(false);
-        }
+        InitBuyPopup();
     }
 
     private void InitBuyPopup()
     {
-        buySword.LeanMoveLocalX(-430f, 1);
-        sellSword.LeanMoveLocalX(-445f, 1);
-        enchantSword.LeanMoveLocalX(-445f, 1);
-        fixSword.LeanMoveLocalX(-445f, 1);
+        buySword.LeanMoveLocalX(-430f, 0.5f);
+        sellSword.LeanMoveLocalX(-445f, 0.5f);
+        enchantSword.LeanMoveLocalX(-445f, 0.5f);
+        fixSword.LeanMoveLocalX(-445f, 0.5f);
         sellPopup.gameObject.SetActive(false);
         enchantPopup.gameObject.SetActive(false);
         fixPopup.gameObject.SetActive(false);
+        if (GameManager.Inst.INVENTORY.IsFull || (choseList.Count + 1) > GameManager.Inst.INVENTORY.DeltaSlotCount)
+        {
+            inventoryWarning.gameObject.SetActive(true);
+        }
+        else
+        {
+            inventoryWarning.gameObject.SetActive(false);
+        }
+        if (price > GameManager.Inst.PlayerCoin)
+        {
+            coinWarning.gameObject.SetActive(true);
+        }
+        else
+        {
+            coinWarning.gameObject.SetActive(false);
+        }
         price = 0;
         buyCoin.text = "0 / " + GameManager.Inst.PlayerCoin.ToString();
         choseList.Clear();
@@ -266,6 +283,7 @@ public class SmithyPopup : MonoBehaviour
         for (int i = 0; i < buyList.Count; i++)
         {
             boxes[i].gameObject.SetActive(true);
+            buyList[i].uid = -i -1;
             boxes[i].SetWeaponBox(buyList[i], WeaponBoxType.Buy);
         }
         for (int i = buyList.Count; i < 30; i++)
@@ -278,10 +296,10 @@ public class SmithyPopup : MonoBehaviour
     private void InitSellPopup()
     {
         inventory = GameManager.Inst.INVENTORY.GetItemList();
-        buySword.LeanMoveLocalX(-445f, 1);
-        sellSword.LeanMoveLocalX(-430f, 1);
-        enchantSword.LeanMoveLocalX(-445f, 1);
-        fixSword.LeanMoveLocalX(-445f, 1);
+        buySword.LeanMoveLocalX(-445f, 0.5f);
+        sellSword.LeanMoveLocalX(-430f, 0.5f);
+        enchantSword.LeanMoveLocalX(-445f, 0.5f);
+        fixSword.LeanMoveLocalX(-445f, 0.5f);
         sellPopup.gameObject.SetActive(true);
         enchantPopup.gameObject.SetActive(false);
         fixPopup.gameObject.SetActive(false);
@@ -314,10 +332,10 @@ public class SmithyPopup : MonoBehaviour
     {
         enchantButton.enabled = false;
         inventory = GameManager.Inst.INVENTORY.GetItemList();
-        buySword.LeanMoveLocalX(-445f, 1);
-        sellSword.LeanMoveLocalX(-445f, 1);
-        enchantSword.LeanMoveLocalX(-430f, 1);
-        fixSword.LeanMoveLocalX(-445f, 1);
+        buySword.LeanMoveLocalX(-445f, 0.5f);
+        sellSword.LeanMoveLocalX(-445f, 0.5f);
+        enchantSword.LeanMoveLocalX(-430f, 0.5f);
+        fixSword.LeanMoveLocalX(-445f, 0.5f);
         enchantPopup.gameObject.SetActive(true);
         fixPopup.gameObject.SetActive(false);
         chose = -1;
@@ -349,10 +367,10 @@ public class SmithyPopup : MonoBehaviour
     private void InitFixPopup()
     {
         inventory = GameManager.Inst.INVENTORY.GetItemList();
-        buySword.LeanMoveLocalX(-445f, 1);
-        sellSword.LeanMoveLocalX(-445f, 1);
-        enchantSword.LeanMoveLocalX(-445f, 1);
-        fixSword.LeanMoveLocalX(-430f, 1);
+        buySword.LeanMoveLocalX(-445f, 0.5f);
+        sellSword.LeanMoveLocalX(-445f, 0.5f);
+        enchantSword.LeanMoveLocalX(-445f, 0.5f);
+        fixSword.LeanMoveLocalX(-430f, 0.5f);
         enchantPopup.gameObject.SetActive(false);
         fixPopup.gameObject.SetActive(true);
         price = 0;
@@ -382,17 +400,29 @@ public class SmithyPopup : MonoBehaviour
 
     public void AddBuy(int value, InventoryItemData item)
     {
+        if(GameManager.Inst.INVENTORY.IsFull || (choseList.Count + 1) > GameManager.Inst.INVENTORY.DeltaSlotCount)
+        {
+            inventoryWarning.gameObject.SetActive(true);
+        }
+        if(price > GameManager.Inst.PlayerCoin)
+        {
+            coinWarning.gameObject.SetActive(true);
+        }
         price += value;
         buyCoin.text = price.ToString() + " / " + GameManager.Inst.PlayerCoin.ToString();
         choseList.Add(item);
-        if (price <= GameManager.Inst.PlayerCoin)
-            buyButton.enabled = true;
-        else
-            buyButton.enabled = false;
     }
 
     public void RemoveBuy(int value, InventoryItemData item)
     {
+        if (!GameManager.Inst.INVENTORY.IsFull && (choseList.Count - 1) <= GameManager.Inst.INVENTORY.DeltaSlotCount)
+        {
+            inventoryWarning.gameObject.SetActive(false);
+        }
+        if (price <= GameManager.Inst.PlayerCoin)
+        {
+            coinWarning.gameObject.SetActive(false);
+        }
         price -= value;
         buyCoin.text = price.ToString() + " / " + GameManager.Inst.PlayerCoin.ToString();
         choseList.Remove(item);
@@ -478,10 +508,11 @@ public class SmithyPopup : MonoBehaviour
     private void Buy()
     {
         GameManager.Inst.PlayerCoin -= price;
-        for(int i = choseList.Count - 1; i > -1; i--)
+        List<InventoryItemData> deleteData = choseList.OrderBy(x => x.uid).ToList();
+        for(int i = 0; i < choseList.Count; i++)
         {
-            buyList.Remove(choseList[i]);
-            GameManager.Inst.INVENTORY.AddWeapon(choseList[i]);
+            buyList.RemoveAt(-deleteData[i].uid - 1);
+            GameManager.Inst.INVENTORY.BuyWeapon(choseList[i].itemID);
         }
         InitBuyPopup();
     }

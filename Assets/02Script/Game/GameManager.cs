@@ -367,7 +367,7 @@ public class GameManager : Singleton<GameManager>
     public void CreateUserData(string newNickName)
     {
         pData.userNickname = newNickName;
-        pData.coin = 1000;
+        pData.coin = 10000;
         pData.uidCounter = 0;
         pData.curHP = pData.maxHP = 500;
         pData.DEF = 3;
@@ -666,7 +666,17 @@ public class GameManager : Singleton<GameManager>
     {
         if (pData.inventory == null)
             Debug.Log("inventory is null");
-        else if (!pData.inventory.IsFull())
+        else if(newItem.itemID == 10501 && pData.inventory.GetItemAmount(10501) < 99)
+        {
+            pData.inventory.AddWeapon(newItem);
+            return true;
+        }
+        else if (pData.inventory.IsFull)
+        {
+            WarningInventory();
+            return false;
+        }
+        else
         {
             soundManager.PlaySFX(SFX_Type.SFX_Item);
             if(newItem.itemID > 20000)
@@ -755,6 +765,10 @@ public class GameManager : Singleton<GameManager>
         set => pData.shopStaminaPotion = value;
     }
 
+    public void WarningInventory()
+    {
+        menuManager.ShowWarningPopup();
+    }
 
     public bool CheckItem(int itemID)
     {

@@ -8,7 +8,8 @@ public enum State
     Jump,
     Debuff,
     Die,
-    Attack
+    Attack,
+    Defense,
 }
 public enum MoveType
 {
@@ -24,7 +25,6 @@ public enum AttackType
 {
     None,
     Onehand,
-    Defense,
     Ranged,
     Jump
 }

@@ -6,6 +6,9 @@ public class MenuManager : MonoBehaviour
 {
     private Button inventoryBtn;
     private Button inventoryCloseBtn;
+    private Button helfBtn;
+    private Transform helfPopup;
+    private Transform warningPopup;
     private InventoryPopup inventoryManager;
     private bool isInventoryOpen;
     private RespawnPopup respawnPopup;
@@ -33,6 +36,28 @@ public class MenuManager : MonoBehaviour
         else
         {
             inventoryCloseBtn.onClick.AddListener(CloseInventory);
+        }
+
+
+        if (!GameObject.Find("WarningPopup").TryGetComponent<Transform>(out warningPopup))
+            Debug.Log("MenumManager - Awake - Transform");
+        else
+        {
+            warningPopup.gameObject.SetActive(false);
+        }
+
+        if (!GameObject.Find("HelfPopup").TryGetComponent<Transform>(out helfPopup))
+            Debug.Log("MenumManager - Awake - Transform");
+        else
+        {
+            helfPopup.gameObject.SetActive(false);
+        }
+
+        if (!GameObject.Find("Helf").TryGetComponent<Button>(out helfBtn))
+            Debug.Log("MenumManager - Awake - Button");
+        else
+        {
+            helfBtn.onClick.AddListener(OnClickHelf);
         }
 
         if (!GameObject.Find("RespawnPopup").TryGetComponent<RespawnPopup>(out respawnPopup))
@@ -84,5 +109,31 @@ public class MenuManager : MonoBehaviour
     public void ShowRespawnUI()
     {
         respawnPopup.ShowPopup();
+    }
+
+    public void OnClickHelf()
+    {
+        if (helfPopup.gameObject.activeSelf)
+        {
+            helfPopup.gameObject.SetActive(false);
+            Time.timeScale = 1f;
+        }
+        else
+        {
+            helfPopup.gameObject.SetActive(true);
+            Time.timeScale = 0f;
+        }
+    }
+
+    public void ShowWarningPopup()
+    {
+        warningPopup.gameObject.SetActive(true);
+        StartCoroutine(CloseWarningPopup());
+    }
+
+    private IEnumerator CloseWarningPopup()
+    {
+        yield return YieldInstructionCache.WaitForSeconds(1f);
+        warningPopup.gameObject.SetActive(false);
     }
 }

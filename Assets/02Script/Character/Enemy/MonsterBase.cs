@@ -305,12 +305,11 @@ public class MonsterBase : CharacterBase
 
     protected void OnDie()
     {
-        anim.Die();
         unit.state = State.Die;
         gameObject.layer = LayerMask.NameToLayer("DieChar");
-        spawnManager.DropItem(transform.position + Vector3.up * 3);
         unit.buff = Buff.None;
         StopAllEffect();
+        anim.Die();
         if (!usingRanged)
         {
             unit.onehand.InitCurrATK();
@@ -329,6 +328,7 @@ public class MonsterBase : CharacterBase
     private IEnumerator ReturnMonster()
     {
         yield return YieldInstructionCache.WaitForSeconds(2f);
+        spawnManager.DropItem(transform.position + Vector3.up *2f);
         spawnManager.TakeMonsterPool(this);
     }
 

@@ -792,8 +792,7 @@ public class PlayerController : CharacterBase
         {
             if (unit.state == State.Idle)
             {
-                unit.state = State.Attack;
-                unit.attackType = AttackType.Defense;
+                unit.state = State.Defense;
                 unit.shield.Defense();
                 anim.Defend();
                 StartCoroutine(haveShield());
@@ -812,8 +811,7 @@ public class PlayerController : CharacterBase
     }
     public void DefendUp()
     {
-        if (unit.state == State.Attack
-        && unit.attackType == AttackType.Defense)
+        if (unit.state == State.Defense)
         {
             unit.state = State.Idle;
             unit.attackType = AttackType.None;

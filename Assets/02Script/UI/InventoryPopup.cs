@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,13 +36,15 @@ public class InventoryPopup : MonoBehaviour
     private Button deleteButton;
     private InventoryItemData selectedItem;
 
-    public RectTransform scrollContent;
+    private bool sort;
 
+    public RectTransform scrollContent;
 
 
     private void Awake()
     {
         transform.LeanScale(Vector3.zero, 0);
+        sort = false;
 
         if (!transform.Find("NamePopup").TryGetComponent<Transform>(out namePopup))
             Debug.Log("InventoryPopupManager -Awake - Transform");
@@ -263,6 +266,10 @@ public class InventoryPopup : MonoBehaviour
     public void UpdateInventory()
     {
         List<InventoryItemData> inven = GameManager.Inst.INVENTORY.GetItemList();
+        if (sort)
+        {
+            inven = inven.OrderBy(x => x.itemID).ToList();
+        }
         TableEntity_Weapon weapondata;
         TableEntity_Item Itemdata;
         GameObject itemMeshdata;

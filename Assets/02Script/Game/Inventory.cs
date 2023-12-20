@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 [System.Serializable]
 public class InventoryItemData
@@ -23,6 +25,14 @@ public class Inventory
     {
         get => curSlotCount;
         set => curSlotCount = value;
+    }
+    public bool IsFull
+    {
+        get { return curSlotCount >= maxSlotCount; }
+    }
+    public int DeltaSlotCount
+    {
+        get { return maxSlotCount - curSlotCount; }
     }
 
     [SerializeField]
@@ -59,7 +69,7 @@ public class Inventory
     public void AddItem(InventoryItemData newItem)
     {
         int index = FindIndexByItemID(newItem.itemID);
-        if(index == -1)
+        if(index <= -1)
         {
             if (GameManager.Inst.GetItemData(newItem.itemID, out TableEntity_Item item))
             {
@@ -81,6 +91,10 @@ public class Inventory
         else if(index > -1)
         {
             items[index].amount += newItem.amount;
+            if(items[index].amount > 99)
+            {
+                items[index].amount = 99;
+            }
         }
     }
 
@@ -91,14 +105,13 @@ public class Inventory
             if (item.equip) // ÀåÂø¿©ºÎ
             {
                 newItem.uid = GameManager.Inst.PlayerUIDMaker;
-                newItem.amount = 1;
                 items.Add(newItem);
                 curSlotCount++;
             }
             else
             {
                 int index = FindIndexByItemID(newItem.itemID);
-                if (index == -1) // first item
+                if (index == -1) 
                 {
                     newItem.uid = GameManager.Inst.PlayerUIDMaker;
                     items.Add(newItem);
@@ -107,14 +120,29 @@ public class Inventory
                 else
                 {
                     items[index].amount += newItem.amount;
+                    if (items[index].amount > 99)
+                    {
+                        items[index].amount = 99;
+                    }
                 }
             }
         }
     }
 
-    public bool IsFull()
+    public void BuyWeapon(int itemID)
     {
-        return curSlotCount >= maxSlotCount;
+        if (GameManager.Inst.GetWeaponData(itemID, out TableEntity_Weapon item))
+        {
+            InventoryItemData newItem = new InventoryItemData();
+            newItem.uid = GameManager.Inst.PlayerUIDMaker;
+            newItem.amount = 1;
+            newItem.enchant = false;
+            newItem.itemID = itemID;
+            newItem.durability = item.durability;
+            newItem.type = item.type;
+            items.Add(newItem);
+            curSlotCount++;
+        }
     }
 
     public List<InventoryItemData> GetItemList()

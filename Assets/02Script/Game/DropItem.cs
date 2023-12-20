@@ -105,21 +105,14 @@ public class DropItem : MonoBehaviour
 
             if (isDrop && other.CompareTag("Player"))
             {
-                if(GameManager.Inst.INVENTORY.CURSlotCount < GameManager.Inst.INVENTORY.MAXSlotCount)
+                if (amount > 0)
                 {
-                    if (amount > 0)
-                    {
-                        GameManager.Inst.PlayerCoin += amount;
-                        spawnManager.TakeItemPool(this);
-                    }
-                    else if (GameManager.Inst.LootingItem(item))
-                    {
-                        spawnManager.TakeItemPool(this);
-                    }
+                    GameManager.Inst.PlayerCoin += amount;
+                    spawnManager.TakeItemPool(this);
                 }
-                else
+                else if (GameManager.Inst.LootingItem(item))
                 {
-                    // warrning
+                    spawnManager.TakeItemPool(this);
                 }
             }
         }
