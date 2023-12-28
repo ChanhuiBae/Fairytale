@@ -1,13 +1,13 @@
-배찬희 | 클라이언트 프로그래머
-#Project : 3D Action Game – Fairytale / 1인
-## 기간: 2023.09..18~2013.12.28
-## Github: https://github.com/ChanhuiBae/Fairytale
-## video: 
-## Used Skills
+# 배찬희 | 클라이언트 프로그래머
+# Project : 3D Action Game – Fairytale / 1인
+### 기간: 2023.09..18~2013.12.28
+### Github: https://github.com/ChanhuiBae/Fairytale
+### video: 
+### Used Skills
 - C#, Unity, Singleton, Pool Module, LeanTween, Excel Importer
-## ETC
+### ETC
 - Git
-## Front - End
+### Front - End
 -	LeanTween을 활용한 책 drop & flip motion graphic 제작
 -	Pool을 이용한 projectile, enemy, drop item 재활용
 -	Player input control
@@ -23,7 +23,7 @@
 -	리팩토링: 코드 단순화, 다형성을 위한 interface화
 -	Unity profiler를 이용한 성능 개선 및 확인
 -	Scene 레벨 디자인, UI 제작, 
-##Back – End
+###Back – End
 -	Singleton 패턴을 사용하여 game manager 제작으로 데이터 저장과 공유 효율화
 -	Inventory 구현, full control, add, delete, search 작동
 -	Excel Importer를 이용한 DB 구축 
