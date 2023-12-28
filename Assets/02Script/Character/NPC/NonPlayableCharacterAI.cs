@@ -68,27 +68,14 @@ public class NonPlayableCharacterAI : MonoBehaviour
             anim.Hammering();
             yield return YieldInstructionCache.WaitForSeconds(120f);
             anim.StopHammering();
-            anim.Relax();
             yield return YieldInstructionCache.WaitForSeconds(120f);
-            anim.StopRelax();
         }
     }
 
     private IEnumerator Citizen()
     {
-
         yield return null;
-        while (true)
-        {
-            anim.Sit();
-            yield return YieldInstructionCache.WaitForSeconds(120f);
-            anim.StandUp();
-            yield return YieldInstructionCache.WaitForSeconds(2f);
-            anim.Talking();
-            yield return YieldInstructionCache.WaitForSeconds(30f);
-            anim.StopTalk();
-
-        }
+        anim.Sit();
     }
 
     private IEnumerator Famer()
@@ -122,9 +109,7 @@ public class NonPlayableCharacterAI : MonoBehaviour
             anim.Chop();
             yield return YieldInstructionCache.WaitForSeconds(120f);
             anim.StopChop();
-            anim.Relax();
             yield return YieldInstructionCache.WaitForSeconds(120f);
-            anim.StopRelax();
         }
     }
 
@@ -133,9 +118,6 @@ public class NonPlayableCharacterAI : MonoBehaviour
         yield return null;
         while (true)
         {
-            anim.LieDown();
-            yield return YieldInstructionCache.WaitForSeconds(600f);
-            anim.StandUp();
             anim.Talking();
             yield return YieldInstructionCache.WaitForSeconds(30f);
             anim.StopTalk();

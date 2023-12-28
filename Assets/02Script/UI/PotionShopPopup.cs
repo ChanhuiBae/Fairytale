@@ -35,11 +35,11 @@ public class PotionShopPopup : MonoBehaviour
     private int staminaPotionPrice;
     private int price;
 
-    void OnEnter(PointerEventData data)
+    private void OnEnter(PointerEventData data)
     {
         buyButton.gameObject.LeanScale(Vector3.one, 0f);
     }
-    void OnExit(PointerEventData data)
+    private void OnExit(PointerEventData data)
     {
         buyButton.gameObject.LeanScale(Vector3.zero, 0f);
     }
@@ -204,12 +204,26 @@ public class PotionShopPopup : MonoBehaviour
         hpPotion.gameObject.LeanScale(Vector3.zero, 0f);
         staminaPotion.gameObject.LeanScale(Vector3.zero, 0f);
         buyButton.gameObject.LeanScale(Vector3.zero, 0f);
-
-        hpPlus.gameObject.LeanScale(Vector3.one, 0f);
-        hpMinus.gameObject.LeanScale(Vector3.zero, 0f);
-        staminaPlus.gameObject.LeanScale(Vector3.one, 0f);
-        staminaMinus.gameObject.LeanScale(Vector3.zero, 0f);
-
+        if(hpCurMax == 0)
+        {
+            hpPlus.gameObject.LeanScale(Vector3.zero, 0f);
+            hpMinus.gameObject.LeanScale(Vector3.zero, 0f);
+        }
+        else
+        {
+            hpPlus.gameObject.LeanScale(Vector3.one, 0f);
+            hpMinus.gameObject.LeanScale(Vector3.zero, 0f);
+        }
+        if(staminaCurMax == 0)
+        {
+            staminaPlus.gameObject.LeanScale(Vector3.zero, 0f);
+            staminaMinus.gameObject.LeanScale(Vector3.zero, 0f);
+        }
+        else
+        {
+            staminaPlus.gameObject.LeanScale(Vector3.one, 0f);
+            staminaMinus.gameObject.LeanScale(Vector3.zero, 0f);
+        }
         transform.LeanScale(Vector3.one, 0.2f);
     }
 
@@ -249,6 +263,10 @@ public class PotionShopPopup : MonoBehaviour
             hpPotion.gameObject.LeanScale(Vector3.zero, 0f);
             hpMinus.gameObject.LeanScale(Vector3.zero, 0f);
         }
+        else if (hpCount == hpCurMax - 1)
+        {
+            hpPlus.gameObject.LeanScale(Vector3.one, 0f);
+        }
     }
 
     public void PlusStaminaPotion()
@@ -279,6 +297,10 @@ public class PotionShopPopup : MonoBehaviour
             staminaPotion.gameObject.LeanScale(Vector3.zero, 0f);
             staminaMinus.gameObject.LeanScale(Vector3.zero, 0f);
         }
+        else if(staminaCount == staminaCurMax - 1)
+        {
+            staminaPlus.gameObject.LeanScale(Vector3.one, 0f);
+        }
     }
     
     public void Buy()
@@ -296,7 +318,7 @@ public class PotionShopPopup : MonoBehaviour
                 item.itemID = 30107;
                 item.amount = hpCount;
                 item.durability = 1;
-                GameManager.Inst.LootingItem(item);
+                GameManager.Inst.INVENTORY.AddItem(item);
             }
             if(staminaCount > 0)
             {
@@ -305,7 +327,7 @@ public class PotionShopPopup : MonoBehaviour
                 item.itemID = 30108;
                 item.amount = staminaCount;
                 item.durability = 1;
-                GameManager.Inst.LootingItem(item);
+                GameManager.Inst.INVENTORY.AddItem(item);
             }
 
             priceText.text = "0";

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class MonsterBase : CharacterBase
+public class MonsterBase : CharacterBase, IDamageControl
 {
     protected EnemyUI ui;
     protected MonsterAI ai;
@@ -108,7 +108,6 @@ public class MonsterBase : CharacterBase
     public void Spawn()
     {
         gameObject.layer = LayerMask.NameToLayer("Enemy");
-        material.color = Color.white;
         ui.Spawn();
         ai.Spawn();
     }
@@ -116,21 +115,18 @@ public class MonsterBase : CharacterBase
     public void StopMove()
     {
         unit.state = State.Idle;
-        unit.moveType = MoveType.None;
         anim.StopMove();
     }
 
     public void Walk()
     {
-        unit.state = State.Move;
-        unit.moveType = MoveType.Walk;
+        unit.state = State.Walk;
         anim.Walk();
     }
 
     public void Run()
     {
-        unit.state = State.Move;
-        unit.moveType = MoveType.Run;
+        unit.state = State.Run;
         anim.Run();
     }
 
@@ -159,14 +155,12 @@ public class MonsterBase : CharacterBase
         anim.StopBowAim();
         unit.ranged.InitCurrATK();
         unit.state = State.Idle;
-        unit.attackType = AttackType.None;
-        unit.rangedAttack = RangedAttack.None;
+        unit.attack = AttackType.None;
     }
     protected void ImmediatelyShoot()
     {
         unit.state = State.Attack;
-        unit.attackType = AttackType.Ranged;
-        unit.rangedAttack = RangedAttack.ImmediatelyShoot;
+        unit.attack = AttackType.ImmediatelyShoot;
         anim.BowAim();
         GetProjectile();
         anim.BowShoot();
@@ -177,8 +171,7 @@ public class MonsterBase : CharacterBase
     protected void AimShoot()
     {
         unit.state = State.Attack;
-        unit.attackType = AttackType.Ranged;
-        unit.rangedAttack = RangedAttack.Aim;
+        unit.attack = AttackType.Aim;
         anim.BowAim();
         GetProjectile();
         anim.BowShoot();
@@ -198,14 +191,14 @@ public class MonsterBase : CharacterBase
 
     protected void Sting()
     {
-        unit.onehandAttack = OnehandAttack.Sting;
+        unit.attack = AttackType.Sting;
         anim.Sting();
         unit.onehand.Sting();
     }
 
     protected void Swing(int charge)
     {
-        unit.onehandAttack = OnehandAttack.Swing;
+        unit.attack = AttackType.Swing;
         anim.Swing();
         unit.onehand.Swing(charge);
     }
@@ -219,7 +212,7 @@ public class MonsterBase : CharacterBase
         }
     }
 
-    public void AttackOnhand()
+    public void AttackOnehand()
     {
         Sting();
         soundManager.PlaySFX(SFX_Type.SFX_OnehandAttack);
@@ -235,9 +228,7 @@ public class MonsterBase : CharacterBase
         unit.ranged.InitCurrATK();
         unit.onehand.InitCurrATK();
         unit.state = State.Idle;
-        unit.attackType = AttackType.None;
-        unit.rangedAttack = RangedAttack.None;
-        unit.onehandAttack = OnehandAttack.None;
+        unit.attack= AttackType.None;
     }
     public void Defense()
     {
@@ -249,31 +240,12 @@ public class MonsterBase : CharacterBase
     {
         anim.StopDefend();
         unit.shield.StopDefense();
-        unit.attackType = AttackType.None;
+        unit.attack = AttackType.None;
     }
 
-    public void StartRollBack()
-    {
-        unit.state = State.Move;
-        unit.moveType= MoveType.RollBack;
-        StartCoroutine(RollBack());
-    }
-    protected IEnumerator RollBack()
-    {
-        yield return null;
-        for (int i = 0; i < 10; i++)
-        {
-            yield return null;
-            transform.position += ((float)unit.moveType * Time.deltaTime * (transform.GetChild(0).position - transform.position));
-        }
-        unit.state = State.Idle;
-        unit.moveType = MoveType.None;
-        anim.StopRollBack();
-    }
     public void StartDash()
     {
-        unit.state = State.Move;
-        unit.moveType = MoveType.Dash;
+        unit.state = State.Dash;
         int direction = UnityEngine.Random.Range(0, 10);
         if(direction < 5)
             StartCoroutine(Dash(0));
@@ -283,7 +255,7 @@ public class MonsterBase : CharacterBase
     protected IEnumerator Dash(int isDash)
     {
         Vector3 pos = Vector3.zero;
-        float speed = (float)unit.moveType;
+        float speed = (float)State.Dash;
         switch (isDash)
         {
             case 0:
@@ -293,23 +265,20 @@ public class MonsterBase : CharacterBase
                 pos = speed * Vector3.right;
                 break;
         }
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 6; i++)
         {
             transform.position += Time.deltaTime * pos;
             yield return null;
         }
         anim.StopMove();
         unit.state = State.Idle;
-        unit.moveType = MoveType.None;
     }
 
     protected void OnDie()
     {
         unit.state = State.Die;
         gameObject.layer = LayerMask.NameToLayer("DieChar");
-        unit.buff = Buff.None;
         StopAllEffect();
-        anim.Die();
         if (!usingRanged)
         {
             unit.onehand.InitCurrATK();
@@ -327,8 +296,11 @@ public class MonsterBase : CharacterBase
 
     private IEnumerator ReturnMonster()
     {
+        unit.buff.SetBuff(BuffType.None);
+        yield return YieldInstructionCache.WaitForSeconds(0.5f);
+        anim.Die();
         yield return YieldInstructionCache.WaitForSeconds(2f);
-        spawnManager.DropItem(transform.position + Vector3.up *2f);
+        spawnManager.DropItem(transform.position + Vector3.up);
         spawnManager.TakeMonsterPool(this);
     }
 
@@ -337,43 +309,65 @@ public class MonsterBase : CharacterBase
         if (unit.currentHP > 0)
         {
             soundManager.PlaySFX(SFX_Type.SFX_Hit);
+            StopTrail();
+            if(unit.attack == AttackType.Aim)
+            {
+                anim.StopBowAim();
+                pInfo.projectile.TryTakePool();
+                unit.state = State.Idle;
+                unit.attack = AttackType.None;
+            }
             ChangeHP(CalculateDamage(damage));
             if (unit.currentHP < 1)
             {
                 ui.Die();
                 ai.Die();
+                unit.buff.SetBuff(BuffType.None);
                 OnDie();
             }
             else
             {
-                if(unit.buff != Buff.Rock && unit.buff != Buff.Stun)
+                if(unit.buff.Buff != BuffType.Rock && unit.buff.Buff != BuffType.Stun)
                 {
                     anim.Hit();
-                    Hit(); //effect
+                    characterEffect.PlayEffect((int)EffectType.Hit);
                 }
             }
         }
     }
-    public void TakeBrun(float damage)
+
+    public void TakeFrozen()
     {
-        Brun();
-        if (unit.currentHP > 0)
-            StartCoroutine(Brunning(damage));
+        unit.buff.SetBuff(BuffType.Frozen);
+        StartCoroutine(StopFrozen());
     }
 
-    private IEnumerator Brunning(float damage)
+    private IEnumerator StopFrozen()
+    {
+        yield return YieldInstructionCache.WaitForSeconds(5);
+        unit.buff.SetBuff(BuffType.None);
+    }
+
+    public void TakeBurn(float damage)
+    {
+        unit.buff.SetBuff(BuffType.Burn);
+        if (unit.currentHP > 0)
+            StartCoroutine(Burnning(damage));
+    }
+
+    private IEnumerator Burnning(float damage)
     {
         for (int i = 0; i < 2; i++)
         {
             TakeDamage(damage);
             yield return YieldInstructionCache.WaitForSeconds(1f);
         }
-        StopBurn();
+        unit.buff.SetBuff(BuffType.None);
     }
 
     public void TakeStun()
     {
-        Stun();
+        unit.buff.SetBuff(BuffType.Stun);
         ai.TakeDebuff(2);
         if(unit.currentHP > 0)
             StartCoroutine(WaitStopStun());
@@ -381,13 +375,21 @@ public class MonsterBase : CharacterBase
 
     private IEnumerator WaitStopStun()
     {
-        yield return YieldInstructionCache.WaitForSeconds(2);
-        StopStun();
+        for(int i = 0; i < 4; i++)
+        {
+            if (unit.currentHP > 0)
+            {
+                yield return YieldInstructionCache.WaitForSeconds(0.5f);
+            }
+            else
+                break;
+        }
+        unit.buff.SetBuff(BuffType.None);
     }
 
     public void TakeRock(float damage)
     {
-        Rock();
+        unit.buff.SetBuff(BuffType.Rock);
         ai.TakeDebuff(2);
         if (unit.currentHP > 0)
             StartCoroutine(Rocking(damage));
@@ -397,10 +399,15 @@ public class MonsterBase : CharacterBase
     {
         for (int i = 0; i < 4; i++)
         {
-            TakeDamage(damage);
-            yield return YieldInstructionCache.WaitForSeconds(0.5f);
+            if (unit.currentHP > 0)
+            {
+                TakeDamage(damage);
+                yield return YieldInstructionCache.WaitForSeconds(0.5f);
+            }
+            else
+                break;
         }
-        StopRock();
+        unit.buff.SetBuff(BuffType.None);
     }
 
     protected void ChangeHP(float value)
@@ -414,4 +421,5 @@ public class MonsterBase : CharacterBase
         unit.currentHP = unit.maxHP;
         ui.ResetHP();
     }
+
 }

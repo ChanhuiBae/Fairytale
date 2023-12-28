@@ -7,12 +7,6 @@ public class OneHandWeapon : Weapon
     private float[] d_charge = { 0, 1, 2, 3, 4, 5, 6 };
     private float d_jump;
     private TrailRenderer trail;
-
-    private void Awake()
-    {
-        if (!transform.Find("OneHand/Break").TryGetComponent<ParticleSystem>(out breakEffect))
-            Debug.Log("OnehandWeeapon - Init - ParticleSystem");
-    }
     public void InitOneHandWeapon(float ATK, float durability, bool enchant, int attribute)
     {
         this.durability = durability;
@@ -63,7 +57,8 @@ public class OneHandWeapon : Weapon
         col.enabled = true;
         curATK = ATK;
         StopAllCoroutines();
-        StartCoroutine(InitBoxCollider());
+        if(col != null)
+            StartCoroutine(InitBoxCollider());
     }
 
     public void Swing(int charge)
@@ -71,7 +66,8 @@ public class OneHandWeapon : Weapon
         col.enabled = true;
         curATK = d_charge[charge];
         StopAllCoroutines();
-        StartCoroutine(InitBoxCollider());
+        if (col != null)
+            StartCoroutine(InitBoxCollider());
     }
 
     public void JumpAttack()
@@ -79,16 +75,19 @@ public class OneHandWeapon : Weapon
         col.enabled = true;
         curATK = d_jump;
         StopAllCoroutines();
-        StartCoroutine(InitBoxCollider());
+        if (col != null)
+            StartCoroutine(InitBoxCollider());
     }
     public void StartTrail()
     {
-        trail.enabled = true;
+        if (trail != null)
+            trail.enabled = true;
     }
 
     public void StopTrail()
     {
-        trail.enabled = false;
+        if(trail != null)
+            trail.enabled = false;
     }
 
     private IEnumerator InitBoxCollider()
@@ -112,51 +111,31 @@ public class OneHandWeapon : Weapon
         {
             if (other.transform.root != transform.root) // 사용자에게 데미지 없음
             {
-                if (other.TryGetComponent<MonsterBase>(out MonsterBase monster) && col.enabled)
+                if (other.TryGetComponent<IDamageControl>(out IDamageControl character) && col.enabled)
                 {
                     col.enabled = false;
-                    monster.TakeDamage(curATK);
+                    character.TakeDamage(curATK);
                     WearOutDurability(curATK);
-                    switch (attribute)
+                    int random = Random.Range(0, 99);
+                    if(random < 30)
                     {
-                        case (int)Attribute.None: break;
-                        case (int)Attribute.Fire:
-                            monster.TakeBrun(curATK / 5f);
-                            break;
-                        case (int) Attribute.Ice:
-                            monster.Frozen();
-                            break;
-                        case (int)Attribute.Rock:
-                            monster.TakeRock(curATK / 6f);
-                            break;
-                    }
-                    if (curATK == d_jump && monster.GetTargetBuff() != Buff.Rock)
-                    {
-                        monster.TakeStun();
-                    }
-                    InitCurrATK();
-                }
-                else if (other.TryGetComponent<PlayerController>(out PlayerController player) && col.enabled)
-                {
-                    col.enabled = false;
-                    player.TakeDamage(curATK);
-                    WearOutDurability(curATK);
-                    switch (attribute)
-                    {
-                        case (int)Attribute.None: break;
-                        case (int)Attribute.Fire:
-                            player.TakeBrun(curATK / 5f);
-                            break;
-                        case (int)Attribute.Ice:
-                            player.Frozen();
-                            break;
-                        case (int)Attribute.Rock:
-                            player.TakeRock(curATK / 6f);
-                            break;
-                    }
-                    if (curATK == d_jump && player.GetTargetBuff() != Buff.Rock)
-                    {
-                        player.TakeStun();
+                        switch (attribute)
+                        {
+                            case (int)Attribute.None: break;
+                            case (int)Attribute.Fire:
+                                character.TakeBurn(curATK / 5f);
+                                break;
+                            case (int)Attribute.Ice:
+                                character.TakeFrozen();
+                                break;
+                            case (int)Attribute.Rock:
+                                character.TakeRock(curATK / 6f);
+                                break;
+                        }
+                        if (curATK == d_jump)
+                        {
+                            character.TakeStun();
+                        }
                     }
                     InitCurrATK();
                 }

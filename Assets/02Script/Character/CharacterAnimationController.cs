@@ -8,9 +8,6 @@ public class CharacterAnimationController : MonoBehaviour
     private int H_Run = Animator.StringToHash("Run");
     private int H_Dash = Animator.StringToHash("Dash");
 
-    private int H_Jump = Animator.StringToHash("Jump");
-    private int H_RollBack = Animator.StringToHash("Roll Backward");
-
     private int H_TakeDamgae = Animator.StringToHash("Take Damage");
     private int H_Stunned = Animator.StringToHash("Stunned");
     private int H_Die = Animator.StringToHash("Die");
@@ -28,7 +25,6 @@ public class CharacterAnimationController : MonoBehaviour
     private int H_Defend = Animator.StringToHash("Defend");
 
     private int H_Relax = Animator.StringToHash("Relax");
-    private int H_Lay = Animator.StringToHash("Lay Ground");
     private int H_Sitting = Animator.StringToHash("Sitting");
     private int H_Drink = Animator.StringToHash("Drink Potion");
     private int H_Talking = Animator.StringToHash("Talking");
@@ -69,24 +65,10 @@ public class CharacterAnimationController : MonoBehaviour
         anim.SetBool(H_Dash, true);
     }
     
-    public void Jump()
-    {
-        anim.SetTrigger(H_Jump);
-    }
 
     public void JumpAttack()
     {
         anim.SetTrigger(H_A_R_Jump);
-    }
-
-    public void RollBack()
-    {
-        anim.SetBool(H_RollBack, true);
-    }
-    
-    public void StopRollBack()
-    {
-        anim.SetBool(H_RollBack, false);
     }
 
     public void Sting()
@@ -134,16 +116,6 @@ public class CharacterAnimationController : MonoBehaviour
     public void StopWandAim()
     {
         anim.SetBool(H_A_W_Aim, false);
-    }
-    public void LieDown()
-    {
-        anim.SetBool(H_Lay, true);
-    }
-
-    public void StandUp()
-    {
-        anim.SetBool(H_Lay, false);
-        anim.SetBool(H_Sitting, false);
     }
 
     public void Hit()

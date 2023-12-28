@@ -45,7 +45,6 @@ public class TableEntity_Monster
     public int moveSpeed;
     public int DEF;
     public int maxHP;
-    public int dropID;
     public int spawnType;
     public int onehand;
     public int shield;

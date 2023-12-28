@@ -478,7 +478,21 @@ public class GameManager : Singleton<GameManager>
         item.type = 4;
         item.enchant = true;
         pData.inventory.AddWeapon(item);
-
+        item = new InventoryItemData();
+        item.uid = -1;
+        item.itemID = pData.onehand.uid;
+        item.type = 1;
+        item.durability = pData.onehand.durability;
+        item.amount = 1;
+        item.enchant = false;
+        pData.inventory.AddWeapon(item); item = new InventoryItemData();
+        item.uid = -1;
+        item.itemID = pData.onehand.uid;
+        item.type = 1;
+        item.durability = pData.onehand.durability;
+        item.amount = 1;
+        item.enchant = false;
+        pData.inventory.AddWeapon(item);
         SetUsedTime();
         pData.shopHpPotion = 10;
         pData.shopStaminaPotion = 10;
@@ -622,6 +636,7 @@ public class GameManager : Singleton<GameManager>
                 break;
         }
         SaveData();
+        WarningWeaponBreak();
     }
 
     public void SetWeaponNullAtInven(int type) // change at inventory
@@ -667,6 +682,13 @@ public class GameManager : Singleton<GameManager>
         if (pData.inventory == null)
             Debug.Log("inventory is null");
         else if(newItem.itemID == 10501 && pData.inventory.GetItemAmount(10501) < 99)
+        {
+            pData.inventory.AddWeapon(newItem);
+            return true;
+        }
+        else if (pData.inventory.GetItemAmount(newItem.itemID) != 0 
+            && newItem.itemID > 30000 
+            && pData.inventory.GetItemAmount(newItem.itemID) < 99)
         {
             pData.inventory.AddWeapon(newItem);
             return true;
@@ -767,7 +789,15 @@ public class GameManager : Singleton<GameManager>
 
     public void WarningInventory()
     {
-        menuManager.ShowWarningPopup();
+        menuManager.WarningInventroy();
+    }
+    public void WarningWeaponBreak()
+    {
+        menuManager.WarningWeaponBreak();
+    }
+    public void MessageSave()
+    {
+        menuManager.MessageSave();
     }
 
     public bool CheckItem(int itemID)

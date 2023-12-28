@@ -83,7 +83,7 @@ public class FollowCamera : MonoBehaviour
                 if (!startSpring)
                 {
                     delta = target.position + offset - transform.position;
-                    if (delta == Vector3.zero)
+                    if (delta == Vector3.zero || (delta.x < 0.02f && delta.y < 0.02f && delta.z < 0.02f))
                     {
                         startSpring = true;
                     }

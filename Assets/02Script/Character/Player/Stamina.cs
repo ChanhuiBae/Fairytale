@@ -8,7 +8,6 @@ enum UseStamina
     Dash = 50,
     Jump = 6,
     JumpAttack = 10,
-    RollBack = 20,
 }
 
 public class Stamina : MonoBehaviour
@@ -42,17 +41,7 @@ public class Stamina : MonoBehaviour
         StartCoroutine(UpdateStamina());
     }
 
-    public void ChangeStaminaInfo(float max, float charge)
-    {
-        StopCoroutine(UpdateStamina());
-        StopCoroutine(Charge());
-        available = max;
-        this.max = max;
-        stamina.fillAmount = 1;
-        chargingValue = charge;
-        isUse = false;
-        StartCoroutine(UpdateStamina());
-    }
+
 
     private IEnumerator UpdateStamina()
     {
@@ -134,19 +123,6 @@ public class Stamina : MonoBehaviour
         return false;
     }
 
-    #region Jump
-
-    public bool CheckJump()
-    {
-        if (available - (int)UseStamina.Jump >= 0)
-        {
-            available -= (int)UseStamina.Jump;
-            stamina.fillAmount = available / max;
-            return true;
-        }
-        return false;
-    }
-
     public bool CheckJumpAttack()
     {
         if (available - (int)UseStamina.JumpAttack >= 0)
@@ -157,17 +133,4 @@ public class Stamina : MonoBehaviour
         }
         return false;
     }
-
-
-    public bool CheckRollBack()
-    {
-        if (available - (int)UseStamina.RollBack >= 0)
-        {
-            available -= (int)UseStamina.RollBack;
-            stamina.fillAmount = available / max;
-            return true;
-        }
-        return false;
-    }
-    #endregion
 }

@@ -586,7 +586,6 @@ MonoBehaviour:
     moveSpeed: 0
     DEF: 1
     maxHP: 100
-    dropID: 10101
     spawnType: 2
     onehand: 10106
     shield: 10201
@@ -599,7 +598,6 @@ MonoBehaviour:
     moveSpeed: 0
     DEF: 1
     maxHP: 100
-    dropID: 10101
     spawnType: 2
     onehand: 10106
     shield: 10201
@@ -612,7 +610,6 @@ MonoBehaviour:
     moveSpeed: 1
     DEF: 2
     maxHP: 150
-    dropID: 10102
     spawnType: 2
     onehand: 10111
     shield: 10202
@@ -625,7 +622,6 @@ MonoBehaviour:
     moveSpeed: 1
     DEF: 2
     maxHP: 150
-    dropID: 10102
     spawnType: 2
     onehand: 10111
     shield: 10202
@@ -638,7 +634,6 @@ MonoBehaviour:
     moveSpeed: 7
     DEF: 10
     maxHP: 800
-    dropID: 10201
     spawnType: 0
     onehand: 10115
     shield: 10207
@@ -651,7 +646,6 @@ MonoBehaviour:
     moveSpeed: 3
     DEF: 1
     maxHP: 80
-    dropID: 10301
     spawnType: 2
     onehand: 10103
     shield: 10201
@@ -664,7 +658,6 @@ MonoBehaviour:
     moveSpeed: 3
     DEF: 1
     maxHP: 80
-    dropID: 10301
     spawnType: 2
     onehand: 10103
     shield: 10201
@@ -677,7 +670,6 @@ MonoBehaviour:
     moveSpeed: 0
     DEF: 3
     maxHP: 180
-    dropID: 10401
     spawnType: 2
     onehand: 10101
     shield: 10202
@@ -690,7 +682,6 @@ MonoBehaviour:
     moveSpeed: 0
     DEF: 3
     maxHP: 180
-    dropID: 10401
     spawnType: 2
     onehand: 10101
     shield: 10202
@@ -703,7 +694,6 @@ MonoBehaviour:
     moveSpeed: 0
     DEF: 3
     maxHP: 180
-    dropID: 10402
     spawnType: 2
     onehand: 10112
     shield: 10203
@@ -716,7 +706,6 @@ MonoBehaviour:
     moveSpeed: 0
     DEF: 3
     maxHP: 180
-    dropID: 10402
     spawnType: 2
     onehand: 10112
     shield: 10203
@@ -729,7 +718,6 @@ MonoBehaviour:
     moveSpeed: 5
     DEF: 7
     maxHP: 500
-    dropID: 10501
     spawnType: 0
     onehand: 10114
     shield: 10206
@@ -742,7 +730,6 @@ MonoBehaviour:
     moveSpeed: 0
     DEF: 3
     maxHP: 200
-    dropID: 10601
     spawnType: 2
     onehand: 10108
     shield: 10204
@@ -755,7 +742,6 @@ MonoBehaviour:
     moveSpeed: 0
     DEF: 3
     maxHP: 200
-    dropID: 10601
     spawnType: 2
     onehand: 10108
     shield: 10204
@@ -768,7 +754,6 @@ MonoBehaviour:
     moveSpeed: 5
     DEF: 7
     maxHP: 300
-    dropID: 10701
     spawnType: 0
     onehand: 10110
     shield: 0
@@ -795,7 +780,7 @@ MonoBehaviour:
   - uid: 10201
     coin: 100
     weapon1: 10111
-    weapon2: 0
+    weapon2: 10202
     weapon3: 0
     p50: 30107
     p10: 30103
@@ -827,7 +812,7 @@ MonoBehaviour:
   - uid: 10402
     coin: 50
     weapon1: 10103
-    weapon2: 10201
+    weapon2: 0
     weapon3: 0
     p50: 30107
     p10: 20101
@@ -1112,7 +1097,7 @@ MonoBehaviour:
     sceneNumber: 7
     x: 0
     y: 4
-    z: -20
+    z: -27
   - uid: 8
     sceneNumber: 8
     x: 0

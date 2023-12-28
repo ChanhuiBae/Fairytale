@@ -32,7 +32,7 @@ public class DropItem : MonoBehaviour
         }
         this.spawnManager = spawnManager;
         this.amount = amount;
-        transform.position = pos;
+        transform.position = pos + new Vector3(Random.Range(-3, 3), 0, Random.Range(-3, 3));
         isDrop = false;
     }
     public void InitDropItem(int itemID, int amount, float durability, int type,  Vector3 pos, SpawnManager spawnManager)
@@ -71,7 +71,8 @@ public class DropItem : MonoBehaviour
     public void Drop()
     {
         isDrop = true;
-        rig.velocity = new Vector3(Random.Range(-4, 4), 2, Random.Range(-4, 4));
+        Vector3 vec = new Vector3(Random.Range(-5, 5), 2, Random.Range(-5, 5));
+        rig.velocity = vec;
     }
 
     public bool IsCoin()

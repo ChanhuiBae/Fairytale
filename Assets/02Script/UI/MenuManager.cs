@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using TMPro;
 
 public class MenuManager : MonoBehaviour
 {
@@ -8,7 +9,8 @@ public class MenuManager : MonoBehaviour
     private Button inventoryCloseBtn;
     private Button helfBtn;
     private Transform helfPopup;
-    private Transform warningPopup;
+    private Transform messagePopup;
+    private TextMeshProUGUI message;
     private InventoryPopup inventoryManager;
     private bool isInventoryOpen;
     private RespawnPopup respawnPopup;
@@ -39,11 +41,13 @@ public class MenuManager : MonoBehaviour
         }
 
 
-        if (!GameObject.Find("WarningPopup").TryGetComponent<Transform>(out warningPopup))
+        if (!GameObject.Find("MessagePopup").TryGetComponent<Transform>(out messagePopup))
             Debug.Log("MenumManager - Awake - Transform");
         else
         {
-            warningPopup.gameObject.SetActive(false);
+            messagePopup.gameObject.SetActive(false);
+            if (!messagePopup.transform.GetChild(0).TryGetComponent<TextMeshProUGUI>(out message))
+                Debug.Log("MenumManager - Awake - TextMeshProUGUI");
         }
 
         if (!GameObject.Find("HelfPopup").TryGetComponent<Transform>(out helfPopup))
@@ -94,9 +98,9 @@ public class MenuManager : MonoBehaviour
     {
         yield return null;
         inventoryManager.UpdatePlayer();
-        yield return YieldInstructionCache.WaitForSeconds(0.5f);
+        yield return YieldInstructionCache.WaitForSeconds(0.1f);
         inventoryManager.UpdateInventory();
-        yield return YieldInstructionCache.WaitForSeconds(0.5f);
+        yield return YieldInstructionCache.WaitForSeconds(0.1f);
         inventoryManager.gameObject.LeanScale(Vector3.one, 0f);
         Time.timeScale = 0f;
     }
@@ -125,15 +129,30 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void ShowWarningPopup()
+    public void WarningInventroy()
     {
-        warningPopup.gameObject.SetActive(true);
+        messagePopup.gameObject.SetActive(true);
+        message.text = "Inventory is full.";
+        StartCoroutine(CloseWarningPopup());
+    }
+
+    public void WarningWeaponBreak()
+    {
+        messagePopup.gameObject.SetActive(true);
+        message.text = "The Weapon is breaken.";
+        StartCoroutine(CloseWarningPopup());
+    }
+
+    public void MessageSave()
+    {
+        messagePopup.gameObject.SetActive(true);
+        message.text = "Your data is saved.";
         StartCoroutine(CloseWarningPopup());
     }
 
     private IEnumerator CloseWarningPopup()
     {
         yield return YieldInstructionCache.WaitForSeconds(1f);
-        warningPopup.gameObject.SetActive(false);
+        messagePopup.gameObject.SetActive(false);
     }
 }

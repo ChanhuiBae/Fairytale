@@ -155,16 +155,19 @@ public class InventoryPopup : MonoBehaviour
             i_onehand.enabled = true;
             i_onehand.sprite = Resources.Load<Sprite>(GameManager.Inst.PlayerInfo.onehand.iconResources);
             data = GameManager.Inst.INVENTORY.GetItem(GameManager.Inst.PlayerInfo.i_onehand);
-            if (data.enchant)
+            if (data != null)
             {
-                i_onehand_enchant.enabled = true;
+                if (data.enchant)
+                {
+                    i_onehand_enchant.enabled = true;
+                }
+                else
+                {
+                    i_onehand_enchant.enabled = false;
+                }
+                i_onehand_info.text = data.durability.ToString();
+                i_onehand_btn.UpdateItemButton(data);
             }
-            else
-            {
-                i_onehand_enchant.enabled = false;
-            }
-            i_onehand_info.text = data.durability.ToString();
-            i_onehand_btn.UpdateItemButton(data);
         }
         else
         {
@@ -210,13 +213,16 @@ public class InventoryPopup : MonoBehaviour
             i_ranged.enabled = true;
             i_ranged.sprite = Resources.Load<Sprite>(GameManager.Inst.PlayerInfo.ranged.iconResources);
             data = GameManager.Inst.INVENTORY.GetItem(GameManager.Inst.PlayerInfo.i_ranged);
-            if (data.enchant)
+            if (data != null)
             {
-                i_ranged_enchant.enabled = true;
-            }
-            else
-            {
-                i_ranged_enchant.enabled = false;
+                if (data.enchant)
+                {
+                    i_ranged_enchant.enabled = true;
+                }
+                else
+                {
+                    i_ranged_enchant.enabled = false;
+                }
             }
             i_ranged_info.text = data.durability.ToString();
             i_ranged_btn.UpdateItemButton(data);

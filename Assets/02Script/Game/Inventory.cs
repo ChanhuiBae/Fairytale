@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 [System.Serializable]
 public class InventoryItemData
@@ -202,7 +200,7 @@ public class Inventory
 
     public void DeleteItem(InventoryItemData deleteItem)
     {
-        int index = FindIndexByItemID(deleteItem.itemID);
+        int index = FindIndexByUid(deleteItem.uid);
         if (-1 < index)
         {
             items[index].amount -= deleteItem.amount;

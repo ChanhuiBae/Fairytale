@@ -82,47 +82,32 @@ public class Projectile : Weapon, IPoolObject
     {
         if (other.transform.tag != pInfo.owner.tag) // 사용자에게 데미지 없음
         {
-            if (other.CompareTag("Enemy") && other.TryGetComponent<MonsterBase>(out MonsterBase monster) && pInfo.isUse)
+            if (other.TryGetComponent<IDamageControl>(out IDamageControl character) && pInfo.isUse)
             {
                 pInfo.isUse = false;
                 rig.velocity = Vector3.zero;
-                if (monster != null)
+                if (character != null)
                 {
-                    monster.TakeDamage(curATK);
-                    switch (attribute)
+                    character.TakeDamage(curATK);
+                    int random = UnityEngine.Random.Range(0, 99);
+                    if (random < 30)
                     {
-                        case (int)Attribute.None: break;
-                        case (int)Attribute.Fire:
-                            monster.TakeBrun(curATK / 5f);
-                            break;
-                        case (int)Attribute.Ice:
-                            monster.Frozen();
-                            break;
-                        case (int)Attribute.Rock:
-                            monster.TakeRock(curATK / 6f);
-                            break;
+                        switch (attribute)
+                        {
+                            case (int)Attribute.None:
+                                character.TakeStun();
+                                break;
+                            case (int)Attribute.Fire:
+                                character.TakeBurn(curATK / 5f);
+                                break;
+                            case (int)Attribute.Ice:
+                                character.TakeFrozen();
+                                break;
+                            case (int)Attribute.Rock:
+                                character.TakeRock(curATK / 6f);
+                                break;
+                        }
                     }
-                }
-                InitCurrATK();
-                ReturnPool();
-            }
-            else if (other.CompareTag("Player") && other.TryGetComponent<PlayerController>(out PlayerController player) && pInfo.isUse)
-            {
-                pInfo.isUse = false;
-                rig.velocity = Vector3.zero;
-                player.TakeDamage(curATK);
-                switch (attribute)
-                {
-                    case (int)Attribute.None: break;
-                    case (int)Attribute.Fire:
-                        player.TakeBrun(curATK / 5f);
-                        break;
-                    case (int)Attribute.Ice:
-                        player.Frozen();
-                        break;
-                    case (int)Attribute.Rock:
-                        player.TakeRock(curATK / 6f);
-                        break;
                 }
                 InitCurrATK();
                 ReturnPool();

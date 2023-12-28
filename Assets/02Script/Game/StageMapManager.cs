@@ -24,6 +24,7 @@ public class StageMapManager : MonoBehaviour
             stageMap.planeDistance = 1f;
             stageMap.enabled = false;
 
+
             if (!GameObject.Find("MainCanvas").TryGetComponent<Canvas>(out mainCanvas))
                 Debug.Log("StageMapManager - Awake - Canvas");
 
@@ -47,19 +48,26 @@ public class StageMapManager : MonoBehaviour
             Debug.Log(e.Message);
         }
     }
+
+    public void InitStageMap()
+    {
+        stageMap.gameObject.SetActive(false);
+    }
     
     public void OpenStageMap()
     {
         GameManager.Inst.PlayerIsController(false);
+        stageMap.gameObject.SetActive(true);
         stageMap.enabled = true;
         mainCanvas.enabled = false;
     }
 
     private void CloseStageMap()
     {
-        stageMap.enabled = true;
-        mainCanvas.enabled = false;
-        GameManager.Inst.PlayerIsController(false);
+        stageMap.enabled = false;
+        mainCanvas.enabled = true;
+        GameManager.Inst.PlayerIsController(true);
+        stageMap.gameObject.SetActive(false);
     }
 
     private void GoHome()

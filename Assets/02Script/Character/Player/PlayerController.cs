@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
-public class PlayerController : CharacterBase
+public class PlayerController : CharacterBase, IDamageControl
 {
     private int isDash;
     private EventTrigger onehandET;
@@ -24,6 +24,7 @@ public class PlayerController : CharacterBase
 
     private bool usingRanged;
 
+    [SerializeField]
     private bool isController;
     public bool ISCONTROLLER
     {
@@ -126,14 +127,13 @@ public class PlayerController : CharacterBase
         }
         isController = true;
         unit.state = State.Idle;
-        unit.moveType = MoveType.None;
-        unit.attackType = AttackType.None;
+        unit.attack = AttackType.None;
     }
 
     private void SetJumpIdel()
     {
         unit.state = State.Idle;
-        unit.attackType = AttackType.None;
+        unit.attack = AttackType.None;
     }
 
     private void OnDie()
@@ -143,16 +143,15 @@ public class PlayerController : CharacterBase
         charge.gameObject.SetActive(false);
         rig.isKinematic = true;
         charge.gameObject.SetActive(false);
-        anim.Die();
-        unit.buff = Buff.None;
+        unit.buff.SetBuff(BuffType.None);
         StopAllEffect();
         gameObject.layer = LayerMask.NameToLayer("DieChar");
+        anim.Die();
     }
 
     public void Spawn()
     {
         gameObject.layer = LayerMask.NameToLayer("Player");
-        material.color = Color.white;
         InitHP();
         stamina.SetMaxStamina();
         transform.position = GameManager.Inst.GetSpawnPos(SceneManager.GetActiveScene().buildIndex, transform.position);
@@ -163,22 +162,22 @@ public class PlayerController : CharacterBase
 
     public void TakeDamage(float damage)
     {
-        if(unit.moveType != MoveType.Dash)
+        if(unit.state != State.Dash)
         {
             isController = false;
             charge.value = 0;
             charge.gameObject.SetActive(false);
             anim.StopMove();
             anim.StopDefend();
+            
             soundManager.PlaySFX(SFX_Type.SFX_Hit);
-            if(unit.rangedAttack == RangedAttack.Aim)
+            if(unit.attack == AttackType.Aim)
             {
                 anim.StopBowAim();
                 f_cam.SetPlay();
                 pInfo.projectile.TryTakePool();
                 unit.state = State.Idle;
-                unit.attackType = AttackType.None;
-                unit.rangedAttack = RangedAttack.None;
+                unit.attack = AttackType.None;
             }
             if (unit.currentHP > 0)
             {
@@ -187,55 +186,70 @@ public class PlayerController : CharacterBase
                 {
                     StopAllCoroutines();
                     stamina.StopAllCoroutines();
+                    StopTrail();
                     OnDie();
                 }
                 else
                 {
-                    if (unit.buff != Buff.Rock && unit.buff != Buff.Stun)
+                    if (unit.buff.Buff != BuffType.Rock && unit.buff.Buff != BuffType.Stun)
                     {
                         anim.Hit();
-                        Hit();//effect
+                        characterEffect.PlayEffect((int)EffectType.Hit);
                         StartCoroutine(IsIdel());
                     }
                 }
             }
         }
     }
-
-    public void TakeBrun(float damage)
+    public void TakeFrozen()
     {
-        Brun();
-        StartCoroutine(Brunning(damage));
+        unit.buff.SetBuff(BuffType.Frozen);
+        StartCoroutine(StopFrozen());
     }
 
-    private IEnumerator Brunning(float damage)
+    private IEnumerator StopFrozen()
+    {
+        yield return YieldInstructionCache.WaitForSeconds(5);
+        unit.buff.SetBuff(BuffType.None);
+    }
+    public void TakeBurn(float damage)
+    {
+        unit.buff.SetBuff(BuffType.Burn);
+        StartCoroutine(Burnning(damage));
+    }
+
+    private IEnumerator Burnning(float damage)
     {
         for(int i = 0; i < 2;  i++)
         {
             TakeDamage(damage);
             yield return YieldInstructionCache.WaitForSeconds(1f);
         }
-        StopBurn();
+        unit.buff.SetBuff(BuffType.None);
     }
 
     public void TakeStun()
     {
-        isController = false;
-        Stun();
+        isController = false; 
+        unit.state = State.Idle;
+        unit.attack = AttackType.None;
+        unit.buff.SetBuff(BuffType.Stun);
         StartCoroutine(WaitStopStun());
     }
 
     private IEnumerator WaitStopStun()
     {
         yield return YieldInstructionCache.WaitForSeconds(2);
-        StopStun();
+        unit.buff.SetBuff(BuffType.None);
         isController = true;
     }
 
     public void TakeRock(float damage)
     {
         isController = false;
-        Rock();
+        unit.state = State.Idle;
+        unit.attack = AttackType.None;
+        unit.buff.SetBuff(BuffType.Rock);
         StartCoroutine(Rocking(damage));
     }
     
@@ -248,7 +262,7 @@ public class PlayerController : CharacterBase
         }
         if (unit.currentHP > 0)
         {
-            StopRock();
+            unit.buff.SetBuff(BuffType.None);
             isController = true;
         }
     }
@@ -267,29 +281,6 @@ public class PlayerController : CharacterBase
         GameManager.Inst.UpdateHP(unit.currentHP);
     }
 
-    private void LieDown()
-    {
-        if (unit.state == State.Idle)
-        {
-            LieDown();
-            StartCoroutine(ChargeHpStamina());
-        }
-        else if (unit.state == State.Lay)
-        {
-            StopAllCoroutines();
-            StandUp();
-        }
-    }
-
-    private IEnumerator ChargeHpStamina()
-    {
-        while (true)
-        {
-            yield return YieldInstructionCache.WaitForSeconds(1f);
-            ChangeHP(-5);
-            stamina.GetStamina(2);           
-        }
-    }
 
     private void OnHpPotion()
     {
@@ -299,15 +290,9 @@ public class PlayerController : CharacterBase
             {
                 DrinkHpPotion();
             }
-            else if (unit.state == State.Move)
+            else if (unit.state == State.Walk || unit.state == State.Run)
             {
                 anim.StopMove();
-                DrinkHpPotion();
-            }
-            else if (unit.state == State.Lay)
-            {
-                StandUp();
-                StopAllCoroutines();
                 DrinkHpPotion();
             }
         }
@@ -317,18 +302,14 @@ public class PlayerController : CharacterBase
     {
         if (!anim.IsDrinking())
         {
-            if (unit.state == State.Idle || (unit.state == State.Move) || (unit.state == State.Lay))
-            {
-                anim.Drink();
-                soundManager.PlaySFX(SFX_Type.SFX_Drink);
-                isController = false;
-                if (unit.currentHP < unit.maxHP)
-                    ChangeHP(-unit.maxHP/4);
-                GameManager.Inst.INVENTORY.DeleteItemAmount(30107, 1);
-                unit.state = State.Idle;
-                unit.moveType = MoveType.None;
-                StartCoroutine(IsIdel());
-            }
+            anim.Drink();
+            soundManager.PlaySFX(SFX_Type.SFX_Drink);
+            isController = false;
+            if (unit.currentHP < unit.maxHP)
+                ChangeHP(-unit.maxHP/4);
+            GameManager.Inst.INVENTORY.DeleteItemAmount(30107, 1);
+            unit.state = State.Idle;
+            StartCoroutine(IsIdel());
         }
     }
 
@@ -340,18 +321,11 @@ public class PlayerController : CharacterBase
             {
                 DrinkStaminaPotion();
             }
-            else if (unit.state == State.Move)
+            else if (unit.state == State.Walk || unit.state == State.Run)
             {
                 anim.StopMove();
                 DrinkStaminaPotion();
             }
-        }
-        else if (unit.state == State.Lay)
-        {
-            StandUp();
-            StopAllCoroutines();
-            DrinkStaminaPotion();
-
         }
     }
 
@@ -359,16 +333,13 @@ public class PlayerController : CharacterBase
     {
         if (!anim.IsDrinking())
         {
-            if (unit.state == State.Idle || (unit.state == State.Move) || (unit.state == State.Lay))
-            {
-                anim.Drink();
-                isController = false;
-                stamina.GetStamina(50);
-                GameManager.Inst.INVENTORY.DeleteItemAmount(30108, 1);
-                unit.state = State.Idle;
-                unit.moveType = MoveType.None;
-                StartCoroutine(IsIdel());
-            }
+            anim.Drink();
+            soundManager.PlaySFX(SFX_Type.SFX_Drink);
+            isController = false;
+            stamina.GetStamina(50);
+            GameManager.Inst.INVENTORY.DeleteItemAmount(30108, 1);
+            unit.state = State.Idle;
+            StartCoroutine(IsIdel());
         }
     }
 
@@ -383,22 +354,20 @@ public class PlayerController : CharacterBase
     }
     private void RunDown()
     {
-        if (unit.state == State.Idle || unit.moveType == MoveType.Walk)
+        if (unit.state == State.Idle || unit.state ==State.Walk)
         {
-            unit.state = State.Move;
-            unit.moveType = MoveType.Run;
+            unit.state= State.Run;
             anim.Run();
         }
     }
 
     private void DashDown()
     {
-        if (unit.state == State.Idle || unit.state == State.Move)
+        if (unit.state == State.Walk && unit.attack != AttackType.Charge)
         {
             if (stamina.CheckDash())
             {
-                unit.state = State.Move;
-                unit.moveType = MoveType.Dash;
+                unit.state = State.Dash;
                 anim.Dash();
                 StartCoroutine(Dash());
             }
@@ -406,22 +375,7 @@ public class PlayerController : CharacterBase
             {
                 isDash = -1;
                 anim.StopMove();
-                unit.moveType = MoveType.None;
                 unit.state = State.Idle;
-            }
-        }
-    }
-
-    private void RollBackDown()
-    {
-        if (unit.state == State.Idle)
-        {
-            if (stamina.CheckRollBack())
-            {
-                unit.state = State.Move;
-                unit.moveType = MoveType.RollBack;
-                anim.RollBack();
-                StartCoroutine(RollBack());
             }
         }
     }
@@ -430,7 +384,7 @@ public class PlayerController : CharacterBase
     {
         isController = false;
         Vector3 pos = Vector3.zero;
-        float speed = (float)unit.moveType;
+        float speed = (float)State.Dash;
         trail.enabled = true;
         switch (isDash)
         {
@@ -447,7 +401,7 @@ public class PlayerController : CharacterBase
                 pos = speed * Vector3.right;
                 break;
         }
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 6; i++)
         {
             transform.position += Time.deltaTime * pos;
             yield return null;
@@ -457,21 +411,8 @@ public class PlayerController : CharacterBase
         isController = true;
         anim.StopMove();
         unit.state = State.Idle;
-        unit.moveType = MoveType.None;
     }
 
-    private IEnumerator RollBack()
-    {
-        yield return null;
-        for (int i = 0; i < 30; i++)
-        {
-            yield return null;
-            transform.position += ((float)unit.moveType * Time.deltaTime * (Vector3.forward - transform.position));
-        }
-        unit.state = State.Idle;
-        unit.moveType = MoveType.None;
-        anim.StopRollBack();
-    }
 
     private IEnumerator InitIsDash()
     {
@@ -488,7 +429,7 @@ public class PlayerController : CharacterBase
         {
             if(isDash == 0)
             {
-                if(unit.state == State.Idle || unit.moveType == MoveType.Walk)
+                if(unit.state == State.Idle || unit.state == State.Walk)
                 {
                     DashDown();
                 }
@@ -504,7 +445,7 @@ public class PlayerController : CharacterBase
         {
             if (isDash == 1)
             {
-                if (unit.state == State.Idle || unit.moveType == MoveType.Walk)
+                if (unit.state == State.Idle || unit.state == State.Walk)
                 {
                     DashDown();
                 }
@@ -520,7 +461,7 @@ public class PlayerController : CharacterBase
         {
             if (isDash == 2)
             {
-                if (unit.state == State.Idle || unit.moveType == MoveType.Walk)
+                if (unit.state == State.Idle || unit.state == State.Walk)
                 {
                     DashDown();
                 }
@@ -536,7 +477,7 @@ public class PlayerController : CharacterBase
         {
             if (isDash == 3)
             {
-                if (unit.state == State.Idle || unit.moveType == MoveType.Walk)
+                if (unit.state == State.Idle || unit.state == State.Walk)
                 {
                     DashDown();
                 }
@@ -550,11 +491,11 @@ public class PlayerController : CharacterBase
 
         if(Input.GetKeyUp(KeyCode.LeftShift))
         {
-            if(unit.state == State.Move && unit.moveType == MoveType.Run)
+            if(unit.state == State.Run)
             {
                 anim.StopMove();
                 anim.Walk();
-                unit.moveType = MoveType.Walk;
+                unit.state = State.Walk;
             }
             else
                 RunDown();
@@ -562,21 +503,15 @@ public class PlayerController : CharacterBase
 
         if (unit.state == State.Idle && moveDir != Vector3.zero)
         {
-            unit.state = State.Move;
-            unit.moveType = MoveType.Walk;
+            unit.state = State.Walk;
             anim.Walk();
         }
-        else if (moveDir != Vector3.zero && unit.state == State.Lay)
-        {
-            StandUp();
-            unit.state = State.Idle;
-        }
-        else if (moveDir == Vector3.zero && unit.state == State.Move)
+        else if (moveDir == Vector3.zero && (unit.state == State.Walk || unit.state == State.Run))
         {
             unit.state = State.Idle;
-            unit.moveType = MoveType.None;
             anim.StopMove();
         }
+
     }
     #endregion
 
@@ -618,7 +553,7 @@ public class PlayerController : CharacterBase
 
     private void ExchangeWeapon()
     {
-        if(unit.rangedAttack == RangedAttack.Aim)
+        if(unit.attack == AttackType.Aim)
         {
             return;
         }
@@ -675,7 +610,8 @@ public class PlayerController : CharacterBase
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            ExchangeWeapon();
+            if(unit.state != State.Defense)
+                ExchangeWeapon();
         }
     }
 
@@ -686,11 +622,10 @@ public class PlayerController : CharacterBase
 
     private void GetAttackInput() 
     {
-        if (unit.rangedAttack == RangedAttack.ImmediatelyShoot && anim.IsAimming() && moveDir != Vector3.zero)
+        if (unit.attack == AttackType.ImmediatelyShoot && anim.IsAimming() && moveDir != Vector3.zero)
         {
-            unit.rangedAttack = RangedAttack.None;
             unit.state = State.Idle;
-            unit.attackType = AttackType.None;
+            unit.attack = AttackType.None;
             anim.StopBowAim();
         }
 
@@ -724,11 +659,10 @@ public class PlayerController : CharacterBase
             if(unit.state == State.Idle)
             {
                 unit.state = State.Attack;
-                unit.attackType = AttackType.Onehand;
-                if (unit.onehandAttack != OnehandAttack.Charge)
+                if (unit.attack != AttackType.Charge)
                 {
                     charge.gameObject.LeanScale(new Vector3(4,4,1), 0f);
-                    unit.onehandAttack = OnehandAttack.Charge;
+                    unit.attack = AttackType.Charge;
                     charge.gameObject.SetActive(true);
                     charge.value = 0;
                     StartCoroutine(Charging());
@@ -746,15 +680,13 @@ public class PlayerController : CharacterBase
 
     public void OneHandUp()
     {
-        if (unit.state == State.Attack
-            && unit.attackType == AttackType.Onehand
-            && unit.onehandAttack == OnehandAttack.Charge)
+        if (unit.attack == AttackType.Charge)
         {
-            charge.gameObject.SetActive(true);
+            charge.gameObject.SetActive(false);
             soundManager.PlaySFX(SFX_Type.SFX_OnehandAttack);
             if (charge.value < 1)
             {
-                unit.onehandAttack = OnehandAttack.Sting;
+                unit.attack = AttackType.Sting;
                 unit.onehand.Sting();
                 anim.Sting();
                 StopAllCoroutines();    
@@ -762,7 +694,7 @@ public class PlayerController : CharacterBase
             }
             else
             {
-                unit.onehandAttack = OnehandAttack.Swing;
+                unit.attack = AttackType.Swing;
                 unit.onehand.Swing((int)(charge.value));
                 anim.Swing();
                 StopAllCoroutines();
@@ -770,7 +702,6 @@ public class PlayerController : CharacterBase
             }
 
             charge.value = 0;
-            charge.gameObject.SetActive(false);
         }
     }
 
@@ -782,8 +713,7 @@ public class PlayerController : CharacterBase
         }
         unit.onehand.InitCurrATK();
         unit.state = State.Idle;
-        unit.attackType = AttackType.None;
-        unit.onehandAttack = OnehandAttack.None;
+        unit.attack = AttackType.None;
     }
 
     public void DefendDown()
@@ -805,22 +735,19 @@ public class PlayerController : CharacterBase
     {
         while (unit.shield.GetDurability() > 0)
         {
-            yield return YieldInstructionCache.WaitForSeconds(1f);
+            yield return null;
         }
         DefendUp();
     }
     public void DefendUp()
     {
-        if (unit.state == State.Defense)
-        {
-            unit.state = State.Idle;
-            unit.attackType = AttackType.None;
-            unit.shield.StopDefense();
-            anim.StopDefend();
-        }
+        StopAllCoroutines();
+        unit.state = State.Idle;
+        unit.shield.StopDefense();
+        anim.StopDefend();
     }
 
-     private void GetProjectile()
+    private void GetProjectile()
     {
         if (unit.ranged.GetDurability() > 0)
         {
@@ -850,8 +777,7 @@ public class PlayerController : CharacterBase
         anim.StopBowAim();
         unit.ranged.InitCurrATK();
         unit.state = State.Idle;
-        unit.attackType = AttackType.None;
-        unit.rangedAttack = RangedAttack.None;
+        unit.attack = AttackType.None;
     }
 
     public void ImmediatelyShootDown()
@@ -871,8 +797,8 @@ public class PlayerController : CharacterBase
 
                 if (checkProjectile && CheckRanged())
                 {
-                    unit.attackType = AttackType.Ranged;
-                    unit.rangedAttack = RangedAttack.ImmediatelyShoot;
+                    unit.state = State.Attack;
+                    unit.attack = AttackType.ImmediatelyShoot;
                     anim.BowAim();
                     if (anim.IsIdle())
                     {
@@ -886,9 +812,8 @@ public class PlayerController : CharacterBase
                     }
                     else
                     {
-                        unit.state = State.Idle;
-                        unit.attackType = AttackType.None;
-                        unit.rangedAttack = RangedAttack.None;
+                    unit.state = State.Idle;
+                        unit.attack = AttackType.None;
                         anim.StopBowAim();
                         // todo: warring
                     }
@@ -906,8 +831,6 @@ public class PlayerController : CharacterBase
     {
         if (unit.state == State.Idle)
         {
-            unit.state = State.Attack;
-            aimPoint.LeanScale(Vector3.one, 0);
             bool checkProjectile = false;
             if (pInfo.uid == 10501 && GameManager.Inst.CheckItem(pInfo.uid))
             {
@@ -920,8 +843,9 @@ public class PlayerController : CharacterBase
 
             if (checkProjectile && CheckRanged())
             {
-                unit.attackType = AttackType.Ranged;
-                unit.rangedAttack = RangedAttack.Aim;
+                aimPoint.LeanScale(Vector3.one, 0);
+                unit.state = State.Attack;
+                unit.attack = AttackType.Aim;
                 f_cam.SetAim();
                 anim.BowAim();
                 if (anim.IsIdle())
@@ -930,6 +854,7 @@ public class PlayerController : CharacterBase
             else
             {
                 unit.state = State.Idle;
+                unit.attack = AttackType.None;
                 anim.StopBowAim();
                 // todo : warring
             }
@@ -938,9 +863,9 @@ public class PlayerController : CharacterBase
 
     public void AimUp()
     {
-        if (unit.rangedAttack == RangedAttack.Aim)
+        if (unit.attack == AttackType.Aim)
         {
-            unit.rangedAttack = RangedAttack.Shoot;
+            unit.attack = AttackType.Shoot;
             soundManager.PlaySFX(SFX_Type.SFX_Ranged);
             anim.BowShoot();
             StartCoroutine(rangedAttackDelay());
@@ -952,8 +877,7 @@ public class PlayerController : CharacterBase
         aimPoint.LeanScale(Vector3.zero, 0);
         f_cam.SetPlay();
         unit.state = State.Idle;
-        unit.attackType = AttackType.None;
-        unit.rangedAttack = RangedAttack.None;
+        unit.attack = AttackType.None;
     }
 
     public void JumpAttackDown()
@@ -963,7 +887,7 @@ public class PlayerController : CharacterBase
             if (unit.state == State.Idle && stamina.CheckJumpAttack())
             {
                 unit.state = State.Attack;
-                unit.attackType = AttackType.Jump;
+                unit.attack = AttackType.Jump;
                 soundManager.PlaySFX(SFX_Type.SFX_OnehandAttack);
                 unit.onehand.JumpAttack();
                 anim.JumpAttack();
@@ -1001,7 +925,7 @@ public class PlayerController : CharacterBase
         {
             if (usingRanged)
             {
-                if(unit.state == State.Idle && unit.moveType == MoveType.None)
+                if(unit.state == State.Idle)
                 AimDown();
             }
             else
@@ -1040,41 +964,9 @@ public class PlayerController : CharacterBase
     }
     #endregion
 
-    #region Jump
-
-    public void JumpDown()
-    {
-        if (unit.state == State.Idle || unit.state == State.Move)
-        {
-            if (stamina.CheckJump())
-            if (stamina.CheckJump())
-            {
-                unit.state = State.Jump;
-                anim.Jump();
-                Jump();
-                SetJumpIdel();
-            }
-        }
-    }
-
-    #endregion
-
     private void ApplyMoveState()
     {
-        if (unit.moveType == MoveType.Walk)
-            Move();
-        else if(unit.moveType == MoveType.Run)
-        {
-            if (stamina.CheckRun())
-                Move();
-            else
-            {
-                unit.state = State.Idle;
-                unit.moveType = MoveType.None;
-                anim.StopMove();
-            }
-        }
-        else if (unit.attackType == AttackType.Ranged && unit.rangedAttack == RangedAttack.Aim)
+        if (unit.attack == AttackType.Aim)
         {
             HorizontalRotationMoving();
             rangedMove.y = moveDir.x;
@@ -1082,6 +974,19 @@ public class PlayerController : CharacterBase
             f_cam.VerticalRotationCam(rangedMove);
             pInfo.projectile.InitProjectile(pInfo);
         }
+        else if (unit.state == State.Walk)
+            Move();
+        else if(unit.state == State.Run)
+        {
+            if (stamina.CheckRun())
+                Move();
+            else
+            {
+                unit.state = State.Idle;
+                anim.StopMove();
+            }
+        }
+
     }
 
     private void Update()
@@ -1093,14 +998,14 @@ public class PlayerController : CharacterBase
             GetMoveInput();
             ApplyMoveState();
         }
-        else // 행동불가
+        else
         {
-            moveDir = Vector3.zero;
             unit.state = State.Idle;
-            unit.moveType = MoveType.None;
-            unit.attackType = AttackType.None;
-            unit.onehandAttack = OnehandAttack.None;
-            unit.rangedAttack = RangedAttack.None;
+            unit.attack = AttackType.None;
+            if(rig != null)
+            {
+                rig.velocity = Vector3.zero;
+            }
         }
     }
 }

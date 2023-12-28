@@ -16,7 +16,7 @@ public class SpiderSceneManager : SpawnManager
         potal = GameObject.Find("Potal");
         if (potal != null)
         {
-            potal.SetActive(false);
+            //potal.SetActive(false);
         }
         if (!GameObject.Find("MainCamera").TryGetComponent<FollowCamera>(out cam))
             Debug.Log("SpiderSceneManager - Awake - FollowCamera");

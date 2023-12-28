@@ -15,7 +15,6 @@ public class Weapon : MonoBehaviour
     protected bool enchant;
     protected float curATK;
     protected int attribute;
-    protected ParticleSystem breakEffect;
     public float GetDurability()
     {
         return durability;

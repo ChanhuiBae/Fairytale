@@ -6,7 +6,6 @@ using UnityEngine.AI;
 public enum AI_State
 {
     Idle,
-    Lay,
     Roaming,    // 스폰 위피를 기준으로 반경 일정 거리를 배회하는 상태
     ReturnHome,
     Chase,
@@ -111,7 +110,7 @@ public class MonsterAI : MonoBehaviour
 
     protected IEnumerator Roaming()
     {
-        navAgent.speed = (float)MoveType.Walk;
+        navAgent.speed = (float)State.Walk;
         yield return null;
         while (true)
         {
@@ -132,7 +131,7 @@ public class MonsterAI : MonoBehaviour
 
     protected IEnumerator Chase()
     {
-        navAgent.speed = (float)MoveType.Run;
+        navAgent.speed = (float)State.Run;
         IBase.Run();
         yield return null;
         while (attackTarget != null)
@@ -151,7 +150,7 @@ public class MonsterAI : MonoBehaviour
             {
                 SetMoveTarget(attackTarget.transform.position); // 이동 목표점을 갱신
                 targetState = targetBase.GetTargetAttack();
-                if (targetState == AttackType.Ranged)
+                if (targetState == AttackType.Aim || targetState == AttackType.Shoot)
                 {
                     if (haveShield)
                     {
@@ -224,7 +223,7 @@ public class MonsterAI : MonoBehaviour
             }
             else
             {
-                if (targetBase.GetTargetBuff() != Buff.None)
+                if (targetBase.GetTargetBuff() != BuffType.None)
                 {
                     if (attackDistance == AttackDistance.Ranged)
                     {
@@ -243,7 +242,7 @@ public class MonsterAI : MonoBehaviour
                     }
                     else
                     {
-                        IBase.AttackOnhand();
+                        IBase.AttackOnehand();
                     }
                 }
             }
@@ -274,16 +273,10 @@ public class MonsterAI : MonoBehaviour
 
     protected IEnumerator Evasion()
     {
-        if(targetState == AttackType.Ranged)
+        if(targetState == AttackType.Aim)
         {
             yield return null;
             IBase.StartDash();
-            yield return YieldInstructionCache.WaitForSeconds(1f);
-        }
-        else
-        {
-            yield return null;
-            IBase.StartRollBack();
             yield return YieldInstructionCache.WaitForSeconds(1f);
         }
         yield return null;

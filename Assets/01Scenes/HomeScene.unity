@@ -316,6 +316,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9156018781249293169, guid: a21584c19d71a7c4196f515c7df7048a,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -87.50008
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -730,7 +735,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 1
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!224 &660058115
 RectTransform:
@@ -1455,6 +1460,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Vilige
       objectReference: {fileID: 0}
+    - target: {fileID: 1084393971977371486, guid: 44d32d93c30dfd142aa7c6ab23a7f2c9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 95
+      objectReference: {fileID: 0}
     - target: {fileID: 3443963814315260656, guid: 44d32d93c30dfd142aa7c6ab23a7f2c9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1505,10 +1515,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4677521727199239512, guid: 44d32d93c30dfd142aa7c6ab23a7f2c9,
+    - target: {fileID: 8977698693776315429, guid: 44d32d93c30dfd142aa7c6ab23a7f2c9,
         type: 3}
-      propertyPath: m_Center.y
-      value: -0.58
+      propertyPath: m_StaticEditorFlags
+      value: 95
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

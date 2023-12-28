@@ -2,12 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using UnityEditor.Purchasing;
 using UnityEngine;
-using UnityEngine.ProBuilder.Shapes;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
-using static UnityEditor.Timeline.Actions.MenuPriority;
 
 public class SmithyPopup : MonoBehaviour
 {
@@ -225,7 +221,7 @@ public class SmithyPopup : MonoBehaviour
     }
     public void InitSmithyPopup()
     {
-        transform.LeanScale(new Vector3(0.7f, 0.7f, 1), 0f);
+        transform.LeanScale(new Vector3(0.82f, 0.82f, 1), 0f);
         SetRectPosition();
         InitFirstBuyPopup();
         chose = -1;
@@ -514,6 +510,7 @@ public class SmithyPopup : MonoBehaviour
             buyList.RemoveAt(-deleteData[i].uid - 1);
             GameManager.Inst.INVENTORY.BuyWeapon(choseList[i].itemID);
         }
+        GameManager.Inst.SaveData();
         InitBuyPopup();
     }
 
@@ -524,6 +521,7 @@ public class SmithyPopup : MonoBehaviour
         {
             GameManager.Inst.INVENTORY.DeleteItem(choseList[i]);
         }
+        GameManager.Inst.SaveData();
         InitSellPopup();
     }
 
@@ -563,7 +561,6 @@ public class SmithyPopup : MonoBehaviour
         }
         else
         {
-            value = 1 - value;
             value /= 100;
             while (i <= value)
             {
@@ -576,12 +573,14 @@ public class SmithyPopup : MonoBehaviour
             yield return YieldInstructionCache.WaitForSeconds(1);
             failPopup.gameObject.SetActive(false);
         }
+        GameManager.Inst.SaveData();
         InitEnchantPopup();
     }
 
     private void Fix()
     {
         GameManager.Inst.INVENTORY.FixItem(choseList[0].uid);
+        GameManager.Inst.SaveData();
         InitFixPopup();
     }
 

@@ -15,7 +15,6 @@ public class SpiderDemon : MonsterBase
     new public void Spawn()
     {
         gameObject.layer = LayerMask.NameToLayer("Enemy");
-        material.color = Color.white;
         ui.Spawn();
 
         StartCoroutine(SpawnAnimation());
@@ -24,9 +23,6 @@ public class SpiderDemon : MonsterBase
     private IEnumerator SpawnAnimation()
     {
         yield return null;
-        anim.LieDown();
-        yield return YieldInstructionCache.WaitForSeconds(2);
-        anim.StandUp();
         ai.Spawn();
         sceneManager.InitSpiderDemon(this);
     }

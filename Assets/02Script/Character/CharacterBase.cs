@@ -1,58 +1,27 @@
 using System.Collections;
 using UnityEngine;
+
 public enum State
 {
-    Idle,
-    Lay,
-    Move,
-    Jump,
-    Debuff,
-    Die,
-    Attack,
-    Defense,
-}
-public enum MoveType
-{
-    None = 0,
-    Debuff = 3,
+    Idle = 0,
     Walk = 5,
-    Run = 7,
+    Run = 8,
     Dash = 40,
-    RollBack = 13
+    Attack = 5,
+    Defense = 5,
+    Die = 0,
 }
 
 public enum AttackType
 {
     None,
-    Onehand,
-    Ranged,
-    Jump
-}
-
-public enum OnehandAttack
-{
-    None,
-    Charge,
     Sting,
-    Swing
-}
-
-public enum RangedAttack
-{
-    None,
+    Charge,
+    Swing,
+    Jump,
     ImmediatelyShoot,
     Aim,
     Shoot,
-    Cast
-}
-
-public enum Buff
-{
-    None,
-    Stun,
-    Burn,
-    Frozen,
-    Rock,
 }
 
 public class CharacterUnit
@@ -61,11 +30,8 @@ public class CharacterUnit
     public float maxHP;
     public float DEF;
     public State state;
-    public MoveType moveType; // It is used move speed.
-    public AttackType attackType;
-    public OnehandAttack onehandAttack;
-    public RangedAttack rangedAttack;
-    public Buff buff;
+    public AttackType attack;
+    public BuffState buff;
     public Transform back;
     public Transform lefthand;
     public Transform righthand;
@@ -79,20 +45,16 @@ public class CharacterBase : MonoBehaviour
 {
     protected CharacterAnimationController anim;
     protected Rigidbody rig;
-    protected Material material;
-
     protected CharacterUnit unit = new CharacterUnit();
     protected ProjectileInfo pInfo = new ProjectileInfo();
     protected SoundManager soundManager;
     protected Vector3 moveDir = Vector3.zero;
 
     protected TrailRenderer trail;
-    private CharacterEffect characterEffect;
+    protected CharacterEffect characterEffect;
 
     public void InitCharBase(float maxhp, float DEF)
     {
-        material = GetComponentInChildren<SkinnedMeshRenderer>().material;
-        material.color = Color.white;
         if(!GameObject.Find("SoundManager").TryGetComponent<SoundManager>(out soundManager))
             Debug.Log("CharacterBase - Init - SoundManager");
         if (!TryGetComponent<CharacterAnimationController>(out anim))
@@ -101,7 +63,7 @@ public class CharacterBase : MonoBehaviour
         if (!TryGetComponent<Rigidbody>(out rig))
             Debug.Log("CharacterBase - Init - Rigidbody");
 
-        if (!TryGetComponent<TrailRenderer>(out trail))
+        if (!transform.Find("Trail").TryGetComponent<TrailRenderer>(out trail))
             Debug.Log("CharacterBase - Init - TrailRender");
         else
         {
@@ -113,10 +75,14 @@ public class CharacterBase : MonoBehaviour
         anim.InitAinmController();
 
         unit.state = State.Idle;
-        unit.moveType = MoveType.None;
-        unit.attackType = AttackType.None;
-        unit.onehandAttack = OnehandAttack.None;
-        unit.buff = Buff.None;
+        unit.attack = AttackType.None;
+
+        if(!transform.Find("Buff").TryGetComponent<BuffState>(out unit.buff))
+            Debug.Log("CharacterBase -Init - BuffState");
+        else
+        {
+            unit.buff.SetBuff(BuffType.None);
+        }
 
         if (!transform.Find("RigPelvis/RigSpine1/RigSpine2/RigRibcage/RigNeck/RigHead/Dummy Prop Head/Helmet").TryGetComponent<Transform>(out unit.helmet))
             Debug.Log("CharacterBase -Init - Transform");
@@ -161,6 +127,7 @@ public class CharacterBase : MonoBehaviour
         unit.onehand.InitOneHandWeapon(onehand.ATK, onehand.durability, enchant, onehand.attribute);
         if (onehand.ATK == 0)
         {
+            characterEffect.PlayEffect((int)EffectType.BreakWeapon);
             unit.onehand.gameObject.SetActive(false);
         }
         else
@@ -191,6 +158,7 @@ public class CharacterBase : MonoBehaviour
         unit.shield.InitShield(shield.ATK, shield.durability, enchant);
         if (shield.ATK == 0)
         {
+            characterEffect.PlayEffect((int)EffectType.BreakWeapon);
             unit.shield.gameObject.SetActive(false);
         }
         else
@@ -220,6 +188,7 @@ public class CharacterBase : MonoBehaviour
         unit.ranged.InitRangedWeapon(ranged.ATK, ranged.durability, enchant);
         if (ranged.ATK == 0)
         {
+            characterEffect.PlayEffect((int)EffectType.BreakWeapon);
             unit.ranged.gameObject.SetActive(false);
             unit.back.parent.GetChild(0).gameObject.SetActive(false);
         }
@@ -298,149 +267,6 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    protected float CalculateDamage(float takeDamage)
-    {
-        float result = takeDamage - unit.DEF;
-        return result > 0 ? result : 0;
-    }
-
-    protected void Move()
-    {
-        if (unit.buff == Buff.Frozen)
-        {
-            transform.position += ((float)MoveType.Debuff * Time.deltaTime * moveDir);
-        }
-        else
-        {
-            transform.position += ((float)unit.moveType * Time.deltaTime * moveDir);
-        }
-        transform.LookAt(transform.position + moveDir);
-    }
-
-    protected void Jump()
-    {
-        rig.velocity = Vector3.up * 3f;
-    }
-
-    protected void LieDown()
-    {
-        unit.state = State.Lay;
-        anim.LieDown();
-    }
-
-    protected void StandUp()
-    {
-        unit.state = State.Idle;
-        anim.StandUp();
-    }
-
-    protected void StopAllEffect()
-    {
-        characterEffect.StopAllEffect();
-    }
-
-    protected void Hit() // effect
-    {
-        if(unit.currentHP > 0)
-        {
-            characterEffect.PlayEffect(0);
-        }
-    }
-
-    protected void Stun()
-    {
-        if (unit.currentHP > 0)
-        {
-            unit.buff = Buff.Stun;
-            anim.Stun();
-            characterEffect.PlayEffect(1);
-        }
-    }
-
-    protected void StopStun()
-    {
-        unit.buff = Buff.None;
-        anim.StopStun();
-        characterEffect.StopEffect(1);
-    }
-
-    protected void Brun()
-    {
-        if (unit.currentHP > 0)
-        {
-            unit.buff = Buff.Burn;
-            characterEffect.PlayEffect(2);
-        }
-    }
-
-    protected void StopBurn()
-    {
-        unit.buff = Buff.None;
-        characterEffect.StopEffect(2);
-    }
-
-    public void Frozen()
-    {
-        if (unit.currentHP > 0)
-        {
-            unit.buff = Buff.Frozen;
-            characterEffect.PlayEffect(3);
-            StartCoroutine(WaitMeltting());
-        }
-    }
-
-    public void StopFrozen()
-    {
-        unit.buff = Buff.None;
-        characterEffect.StopEffect(3);
-    }
-
-    protected IEnumerator WaitMeltting()
-    {
-        yield return YieldInstructionCache.WaitForSeconds(5f);
-        StopFrozen();
-    }
-
-    protected void Rock()
-    {
-        if (unit.currentHP > 0)
-        {
-            unit.buff = Buff.Rock;
-            anim.Relax();
-            material.color = Color.gray;
-        }
-    }
-
-    protected void StopRock()
-    {
-        unit.buff = Buff.None;
-        anim.StopRelax();
-        material.color = Color.white;
-    }
-
-    virtual protected IEnumerator RollBack() { yield return null; }
-
-    #region Hit&Die
-    virtual protected IEnumerator OnDie() { yield return null; }
-    virtual public void TakeDamge(float damage) { }
-    virtual protected void ChangeHP(float value) { }
-    #endregion
-
-    public State GetTargetState()
-    {
-        return unit.state;
-    }
-
-    public AttackType GetTargetAttack()
-    {
-        return unit.attackType;
-    }
-
-    public Buff GetTargetBuff()
-    {
-        return unit.buff;
-    }
-
     public void StartTrail()
     {
         unit.onehand.StartTrail();
@@ -452,11 +278,54 @@ public class CharacterBase : MonoBehaviour
 
     public void SpawnEffect()
     {
-        characterEffect.PlayEffect(4);
+        characterEffect.PlayEffect((int)EffectType.Spawn);
     }
 
     public void PotionEffect()
     {
-        characterEffect.PlayEffect(5);
+        characterEffect.PlayEffect((int)EffectType.Potion);
+    }
+
+    protected float CalculateDamage(float takeDamage)
+    {
+        float result = takeDamage - unit.DEF;
+        return result > 0 ? result : 0;
+    }
+
+    protected void Move()
+    {
+        if (unit.buff.Buff == BuffType.Frozen)
+        {
+            rig.MovePosition(transform.position + moveDir * Time.deltaTime * 3f);
+        }
+        else
+        {
+            rig.MovePosition(transform.position + moveDir * Time.deltaTime * (float)unit.state);
+        }
+        transform.LookAt(transform.position + moveDir);
+    }
+
+    protected void Jump()
+    {
+        rig.velocity = Vector3.up * 3f;
+    }
+
+    protected void StopAllEffect()
+    {
+        characterEffect.StopAllEffect();
+    }
+
+
+    public State GetTargetState()
+    {
+        return unit.state;
+    }
+    public AttackType GetTargetAttack()
+    {
+        return unit.attack;
+    }
+    public BuffType GetTargetBuff()
+    {
+        return unit.buff.Buff;
     }
 }

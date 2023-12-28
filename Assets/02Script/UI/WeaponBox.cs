@@ -99,6 +99,7 @@ public class WeaponBox : MonoBehaviour
                 ATKValue.text = weaponInfo.ATK.ToString();
                 priceValue.text = enchantInfo.coin.ToString();
                 price = enchantInfo.coin;
+                enchant.enabled = false;
                 durabilityValue.text = item.durability.ToString();
                 if(item.uid == GameManager.Inst.PlayerInfo.i_onehand 
                     || item.uid == GameManager.Inst.PlayerInfo.i_shield
@@ -110,7 +111,7 @@ public class WeaponBox : MonoBehaviour
                 {
                     use.enabled= false;
                 }
-                    break;
+                break;
             case WeaponBoxType.Fix:
                 priceValue.text = weaponInfo.fixCoin.ToString();
                 
@@ -137,26 +138,16 @@ public class WeaponBox : MonoBehaviour
                 break;
         }
 
-        if (this.item.uid == -1 || this.item.uid != item.uid)
-        {
-            this.item.uid = item.uid;
-            this.item.itemID = item.itemID;
-            this.item.type = item.type;
-            this.item.durability = item.durability;
-            this.item.enchant = item.enchant;
-            this.item.amount = item.amount;
+        this.item.uid = item.uid;
+        this.item.itemID = item.itemID;
+        this.item.type = item.type;
+        this.item.durability = item.durability;
+        this.item.enchant = item.enchant;
+        this.item.amount = item.amount;
 
-            TableEntity_Weapon data; 
-            GameManager.Inst.GetWeaponData(item.itemID, out data);
-            weapon.sprite = Resources.Load<Sprite>(data.iconResources);
-        }
-        else if(this.item.uid == item.uid)
-        {
-            if(this.item.enchant != item.enchant)
-            {
-                this.item.enchant = item.enchant;
-            }
-        }
+        TableEntity_Weapon data; 
+        GameManager.Inst.GetWeaponData(item.itemID, out data);
+        weapon.sprite = Resources.Load<Sprite>(data.iconResources);
     }
 
     private void OnClick()
