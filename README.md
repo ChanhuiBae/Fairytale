@@ -23,7 +23,7 @@
 -	리팩토링: 코드 단순화, 다형성을 위한 interface화
 -	Unity profiler를 이용한 성능 개선 및 확인
 -	Scene 레벨 디자인, UI 제작, 
-###Back – End
+### Back – End
 -	Singleton 패턴을 사용하여 game manager 제작으로 데이터 저장과 공유 효율화
 -	Inventory 구현, full control, add, delete, search 작동
 -	Excel Importer를 이용한 DB 구축 
