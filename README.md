@@ -12,7 +12,7 @@
 -	Pool을 이용한 projectile, enemy, drop item 재활용
 -	Player input control
 -	Character 간 상호작용 프레임워크 구축
-(Class 구성 diagram: https://drive.google.com/file/d/1nivt5d7GVE67ztwwpzj2XJhaV6s68QCX/view?usp=sharing)
+(Class 구성 diagram: https://drive.google.com/file/d/1j-Qp-eyjHCL7w-Mq1_Z5DwozigdpPYK1/view?usp=drive_link)
 -	Enemy 전투 AI 구축
 -	Unity navigation을 활용한 최단거리 이동
 -	Render texture을 이용한 mini map 제작
@@ -26,7 +26,7 @@
 -	Singleton 패턴을 사용하여 game manager 제작으로 데이터 저장과 공유 효율화
 -	Inventory 구현, full control, add, delete, search 작동
 -	Excel Importer를 이용한 DB 구축 
-(DB 구성 diagram: https://drive.google.com/file/d/1bGlKacpDYM4yHLBOguSsAnTldX9OQOd4/view?usp=sharing)
+(DB 구성 diagram: https://drive.google.com/file/d/1aqWFW4ysjW8XCKN7xYs8CM2LqkkZq-Cp/view?usp=drive_link)
 
 
 
