@@ -2,7 +2,7 @@
 # Project : 3D Action Game – Fairytale / 1인
 ### 기간: 2023.09..18~2013.12.28
 ### Github: https://github.com/ChanhuiBae/Fairytale
-### video: 
+### video: https://youtu.be/0JlfJaSG3R8
 ### Used Skills
 - C#, Unity, Singleton, Pool Module, LeanTween, Excel Importer
 ### ETC
